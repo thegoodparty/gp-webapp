@@ -469,10 +469,14 @@ const PlanSections = ({
   // there's nothing useful to show, and rendering three empty
   // subsections under the intro paragraph would look broken. We still
   // show the section while generating so the skeleton has a place.
+  //
+  // Guard only on opportunities/challenges, NOT opponents:
+  // `buildOpponents` falls back to `raceCandidates` (and other
+  // pre-strategy fallbacks) when the LLM strategy is empty, so
+  // `plan.opponents` is often populated even in the ready-empty case.
+  // Including it here would defeat the guard.
   const hasStrategyContent =
-    plan.opportunities.length > 0 ||
-    plan.challenges.length > 0 ||
-    plan.opponents.length > 0
+    plan.opportunities.length > 0 || plan.challenges.length > 0
   const showSection2 =
     !isStrategyError && (isStrategyGenerating || hasStrategyContent)
   const navSections = showSection2

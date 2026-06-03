@@ -126,31 +126,38 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   )?.onboarding?.structuredOffice
   const ballotReadyPositionId = onboardingStructuredOffice?.positionId
 
-  // Section 7 press outlets — reuse the onboarding local-news endpoint
-  // that was already populated during the LocalNewsSourcesSection step.
-  // Cache key MUST match what onboarding sent for both halves of the
-  // hit to land:
-  //   - React Query cache (in the browser): same keyArgs → no refetch
-  //   - gp-api persisted cache (campaign.data.onboarding.localMediaOutlets):
-  //     same (office, city, state) → no re-generation
-  // Onboarding uses `answers.structuredOffice.{positionName, city, state}`
-  // verbatim. The success page's polished `race` (election-api's
-  // officialOfficeName, e.g. "Anytown Council") differs from BR's
-  // positionName ("City Council Member"), so reading from race here would
-  // miss both caches and trigger a fresh Gemini run.
+  // Cache-key alignment with onboarding: any query that was warmed by
+  // onboarding must use the SAME (office, city, state) tuple onboarding
+  // sent, otherwise React Query cold-misses and gp-api re-runs the
+  // upstream call. Two consumers below depend on this:
   //
-  // The endpoint's Zod schema rejects empty-string city/office/state
-  // (min 1 char). Pass `undefined` for empty values so the request shape
-  // omits the field — onboarding-only-typed `city` is optional, but
-  // serializing `city: ''` hits the validator and 400s.
-  const localNewsOffice = onboardingStructuredOffice?.positionName || race
-  const localNewsCity = onboardingStructuredOffice?.city || city
-  const localNewsState = onboardingStructuredOffice?.state || stateValue
+  //   1. local-news query (Section 7 press outlets) — onboarding's
+  //      `LocalNewsSourcesSection` populated both React Query and
+  //      `campaign.data.onboarding.localMediaOutlets` using
+  //      `answers.structuredOffice.{positionName, city, state}`.
+  //   2. voter-issues query + `voterInsightsContext` (Section 3 + 4) —
+  //      onboarding's `TopVoterIssuesSection` populated React Query
+  //      with the same triple.
+  //
+  // The success page's polished `race` is election-api's
+  // `officialOfficeName` (e.g. "Anytown Council"), which differs from
+  // BR's `positionName` ("City Council Member") that onboarding used.
+  // Reading from `race` here would miss both warm caches. Pull from
+  // `onboardingStructuredOffice` first, fall back to the existing
+  // chain for manual-office-entry candidates who never populated it.
+  //
+  // The endpoints' Zod schemas reject empty-string fields (min 1
+  // char). Pass `undefined` for empty values so the request shape
+  // omits the field — serializing `city: ''` would hit the validator
+  // and 400.
+  const onboardingOffice = onboardingStructuredOffice?.positionName || race
+  const onboardingCity = onboardingStructuredOffice?.city || city
+  const onboardingState = onboardingStructuredOffice?.state || stateValue
   const localNewsQuery = useQuery(
     localNewsQueryOptions({
-      city: localNewsCity || undefined,
-      state: localNewsState || undefined,
-      office: localNewsOffice || undefined,
+      city: onboardingCity || undefined,
+      state: onboardingState || undefined,
+      office: onboardingOffice || undefined,
     }),
   )
   const pressOutletsFromApi: ApiPressOutlet[] | undefined =
@@ -165,13 +172,15 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     localNewsQuery.isPending || localNewsQuery.data?.status === 'pending'
 
   // Same cache key as TopVoterIssuesSection in onboarding — keeps the PDF's
-  // Section 3 in sync with what the user already saw on screen.
+  // Section 3 in sync with what the user already saw on screen. See the
+  // onboardingOffice/City/State derivation above for why we don't use
+  // `race`/`city`/`stateValue` directly.
   const voterIssuesQuery = useQuery(
     voterIssuesQueryOptions({
       ballotReadyPositionId,
-      city,
-      state: stateValue,
-      office: race,
+      city: onboardingCity,
+      state: onboardingState,
+      office: onboardingOffice,
     }),
   )
   const voterIssuesFromApi = voterIssuesQuery.data?.issues
@@ -287,9 +296,9 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             }}
             voterInsightsContext={{
               ballotReadyPositionId,
-              city,
-              state: stateValue,
-              office: race,
+              city: onboardingCity,
+              state: onboardingState,
+              office: onboardingOffice,
             }}
           />
         </div>
