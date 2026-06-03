@@ -65,9 +65,7 @@ export default function BudgetStep({
               onChange={(e) => {
                 onChangeCallback('voicemail', e.target.checked)
               }}
-              value={voicemailValue}
               checked={!!voicemailValue}
-              color="secondary"
             />
             <div>Check this box if you&apos;d like to leave voicemails. </div>
           </div>

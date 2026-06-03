@@ -289,11 +289,10 @@ const CustomVoterAudienceFilters = ({
             <div key={option.key} className="flex items-center mt-3">
               <Checkbox
                 label={<Body2>{option.label}</Body2>}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                onChange={(e) => {
                   handleChangeAudience(option.key, e.target.checked)
                 }}
                 checked={Boolean(state[option.key])}
-                color="secondary"
                 disabled={readOnly}
               />
             </div>
