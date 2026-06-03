@@ -44,13 +44,12 @@ const EmptyChat = (): React.JSX.Element => {
         <Body2>
           Ask me anything related to your campaign. Or click a topic below:
         </Body2>
-        <div className="flex mt-4">
+        <div className="flex flex-wrap justify-center gap-2 mt-4">
           {prompts.map((prompt) => (
             <Button
               key={prompt.label}
               color="neutral"
               size="small"
-              className="mr-2"
               onClick={() => handleClick(prompt)}
             >
               {prompt.label}

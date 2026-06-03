@@ -89,3 +89,17 @@ invalid_urls.csv
 
 .clerk
 scripts/output
+
+# Performance tooling output (scripts/perf/*.sh)
+/perf-reports/
+/profiles/
+*.cpuprofile
+*.heapprofile
+*.heapsnapshot
+isolate-*.log
+isolate-*.json
+flamegraph.html
+lh-*.report.html
+lh-*.report.json
+bundle-*.html
+bundle-*.json

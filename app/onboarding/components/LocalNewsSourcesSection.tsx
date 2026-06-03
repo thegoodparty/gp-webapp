@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery, queryOptions } from '@tanstack/react-query'
 import { Card, CardContent, Badge } from '@styleguide'
-import { Newspaper, RadioTower, Tv } from 'lucide-react'
 import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 
@@ -64,24 +63,6 @@ const localNewsQueryOptions = (params: {
   })
 
 export { localNewsQueryOptions }
-
-const typeIcon: Record<OutletType, React.JSX.Element> = {
-  [OUTLET_TYPE.PRINT]: (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-components-input-active">
-      <Newspaper className="size-5" />
-    </span>
-  ),
-  [OUTLET_TYPE.TV]: (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500">
-      <Tv className="size-5" />
-    </span>
-  ),
-  [OUTLET_TYPE.RADIO]: (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-      <RadioTower className="size-5" />
-    </span>
-  ),
-}
 
 const typeLabel: Record<OutletType, string> = {
   [OUTLET_TYPE.TV]: 'Television',
@@ -150,7 +131,6 @@ const OutletRow = ({
         : 'flex items-start gap-4'
     }
   >
-    {typeIcon[outlet.type]}
     <div className="min-w-0 flex-1">
       <h3 className="text-base font-semibold text-foreground">{outlet.name}</h3>
       <p className="mt-1 text-sm leading-6 text-muted-foreground">

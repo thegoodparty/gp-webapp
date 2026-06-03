@@ -18,7 +18,7 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
   },
   {
     id: 'party-affiliation',
-    title: 'Are you running with a party designation?',
+    title: 'Are you running with an official party designation?',
     description:
       'Pick the party label voters would see on their official ballots for you as a candidate, not your personal voting history or party preference.',
     whyThisMatters:
@@ -88,6 +88,15 @@ export const ONBOARDING_STEPS: NonEmptyArray<OnboardingStepConfig> = [
       'We use survey and voter data along with your district demographics to project likely top issues for your race.',
     whyThisMatters:
       'We use this data to help you understand what voters care most about, and to customize your campaign plan.',
+    shouldSkip: ({ answers }) => answers.officePath === 'manual',
+  },
+  {
+    id: 'outreach-plan',
+    title: 'Projected minimum resources needed',
+    description:
+      'Commit at least this much money and time, and you’ll have a real shot at winning your race.',
+    whyThisMatters:
+      'These two minimums are the foundation of your campaign plan. Everything else — your weekly tasks, volunteer asks, outreach mix — is sized against what you can commit here.',
     shouldSkip: ({ answers }) => answers.officePath === 'manual',
   },
   {
