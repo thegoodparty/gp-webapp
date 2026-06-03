@@ -1,8 +1,7 @@
 'use client'
 import React, { useState } from 'react'
-import IconButton from '@mui/material/IconButton'
+import { IconButton, EyeIcon, EyeOffIcon } from '@styleguide'
 import TextField from './TextField'
-import { RemoveRedEyeRounded, VisibilityOffRounded } from '@mui/icons-material'
 import { isValidPassword } from './IsValidPassword'
 
 interface PasswordInputProps {
@@ -68,8 +67,14 @@ const PasswordInput = ({
           aria-label="toggle password visibility"
           onClick={handleClickShowPassword}
           type="button"
+          variant="ghost"
+          size="small"
         >
-          {showPassword ? <VisibilityOffRounded /> : <RemoveRedEyeRounded />}
+          {showPassword ? (
+            <EyeOffIcon className="size-4" />
+          ) : (
+            <EyeIcon className="size-4" />
+          )}
         </IconButton>,
         ...(error ? ['error' as const] : []),
       ]}

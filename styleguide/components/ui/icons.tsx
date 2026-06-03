@@ -1,5 +1,8 @@
 export {
   AlignCenter as AlignCenterIcon,
+  Eye as EyeIcon,
+  EyeOff as EyeOffIcon,
+  Phone as PhoneIcon,
   AlignLeft as AlignLeftIcon,
   AlignRight as AlignRightIcon,
   ArrowLeft as ArrowLeftIcon,
