@@ -4,25 +4,29 @@ import { screen, fireEvent } from '@testing-library/react'
 import { render } from 'helpers/test-utils/render'
 import ResponsiveModal from './ResponsiveModal'
 
+const modalOrDrawerSpy = vi.fn()
+
 vi.mock('@shared/ui/ModalOrDrawer', () => ({
-  ModalOrDrawer: ({
-    open,
-    onOpenChange,
-    children,
-    title,
-  }: {
+  ModalOrDrawer: (props: {
     open: boolean
     onOpenChange: (open: boolean) => void
     children: React.ReactNode
     title: string
-  }) =>
-    open ? (
+    preventOutsideClose?: boolean
+    preventEscClose?: boolean
+    hideClose?: boolean
+    fullSize?: boolean
+  }) => {
+    modalOrDrawerSpy(props)
+    const { open, onOpenChange, children, title } = props
+    return open ? (
       <div role="dialog">
         {title && <h2>{title}</h2>}
         <button onClick={() => onOpenChange(false)}>Close</button>
         {children}
       </div>
-    ) : null,
+    ) : null
+  },
 }))
 
 beforeEach(() => {
@@ -78,43 +82,63 @@ describe('ResponsiveModal', () => {
     expect(onClose).not.toHaveBeenCalled()
   })
 
-  it('accepts preventBackdropClose prop without error', () => {
-    expect(() =>
-      render(
-        <ResponsiveModal open preventBackdropClose onClose={() => {}}>
-          <p>Content</p>
-        </ResponsiveModal>,
-      ),
-    ).not.toThrow()
+  it('forwards preventBackdropClose to ModalOrDrawer as preventOutsideClose', () => {
+    render(
+      <ResponsiveModal open preventBackdropClose onClose={() => {}}>
+        <p>Content</p>
+      </ResponsiveModal>,
+    )
+    expect(modalOrDrawerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ preventOutsideClose: true }),
+    )
   })
 
-  it('accepts preventEscClose prop without error', () => {
-    expect(() =>
-      render(
-        <ResponsiveModal open preventEscClose onClose={() => {}}>
-          <p>Content</p>
-        </ResponsiveModal>,
-      ),
-    ).not.toThrow()
+  it('forwards preventEscClose to ModalOrDrawer', () => {
+    render(
+      <ResponsiveModal open preventEscClose onClose={() => {}}>
+        <p>Content</p>
+      </ResponsiveModal>,
+    )
+    expect(modalOrDrawerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ preventEscClose: true }),
+    )
   })
 
-  it('accepts hideClose prop without error', () => {
-    expect(() =>
-      render(
-        <ResponsiveModal open hideClose onClose={() => {}}>
-          <p>Content</p>
-        </ResponsiveModal>,
-      ),
-    ).not.toThrow()
+  it('forwards hideClose to ModalOrDrawer', () => {
+    render(
+      <ResponsiveModal open hideClose onClose={() => {}}>
+        <p>Content</p>
+      </ResponsiveModal>,
+    )
+    expect(modalOrDrawerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ hideClose: true }),
+    )
   })
 
-  it('accepts fullSize prop without error', () => {
-    expect(() =>
-      render(
-        <ResponsiveModal open fullSize onClose={() => {}}>
-          <p>Content</p>
-        </ResponsiveModal>,
-      ),
-    ).not.toThrow()
+  it('forwards fullSize to ModalOrDrawer', () => {
+    render(
+      <ResponsiveModal open fullSize onClose={() => {}}>
+        <p>Content</p>
+      </ResponsiveModal>,
+    )
+    expect(modalOrDrawerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ fullSize: true }),
+    )
+  })
+
+  it('defaults the dismissal/sizing props to false when unset', () => {
+    render(
+      <ResponsiveModal open onClose={() => {}}>
+        <p>Content</p>
+      </ResponsiveModal>,
+    )
+    expect(modalOrDrawerSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        preventOutsideClose: false,
+        preventEscClose: false,
+        hideClose: false,
+        fullSize: false,
+      }),
+    )
   })
 })

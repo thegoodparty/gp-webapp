@@ -19,6 +19,10 @@ const ResponsiveModal = ({
   onClose,
   title = '',
   children,
+  preventBackdropClose = false,
+  preventEscClose = false,
+  hideClose = false,
+  fullSize = false,
 }: ResponsiveModalProps) => (
   <ModalOrDrawer
     open={open}
@@ -26,6 +30,10 @@ const ResponsiveModal = ({
       if (!next) onClose?.()
     }}
     title={title}
+    preventOutsideClose={preventBackdropClose}
+    preventEscClose={preventEscClose}
+    hideClose={hideClose}
+    fullSize={fullSize}
   >
     {children}
   </ModalOrDrawer>

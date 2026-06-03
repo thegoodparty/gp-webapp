@@ -1,6 +1,7 @@
 'use client'
 
 import { useTailwindBreakpoints } from '@shared/hooks/useTailwindBreakpoints'
+import { cn } from '@styleguide/lib/utils'
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,10 @@ interface ModalOrDrawerProps {
   description?: string
   dialogClassName?: string
   drawerClassName?: string
+  preventOutsideClose?: boolean
+  preventEscClose?: boolean
+  hideClose?: boolean
+  fullSize?: boolean
 }
 
 export function ModalOrDrawer({
@@ -32,16 +37,31 @@ export function ModalOrDrawer({
   description,
   dialogClassName,
   drawerClassName,
+  preventOutsideClose = false,
+  preventEscClose = false,
+  hideClose = false,
+  fullSize = false,
 }: ModalOrDrawerProps) {
   const breakpoint = useTailwindBreakpoints()
   const isSmall = breakpoint === 'xs' || breakpoint === 'sm'
 
   if (isSmall) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer
+        open={open}
+        onOpenChange={onOpenChange}
+        dismissible={!preventOutsideClose}
+      >
         <DrawerContent
-          className={drawerClassName}
+          className={cn(
+            hideClose && '[&>button:first-child]:hidden',
+            fullSize && 'h-[90vh] max-h-[90vh]',
+            drawerClassName,
+          )}
           aria-describedby={description ? undefined : undefined}
+          onEscapeKeyDown={(e) => {
+            if (preventEscClose) e.preventDefault()
+          }}
         >
           <DrawerTitle className="sr-only">{title}</DrawerTitle>
           {description ? (
@@ -58,8 +78,18 @@ export function ModalOrDrawer({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={dialogClassName}
+        className={cn(
+          hideClose && '[&>button:last-child]:hidden',
+          fullSize && 'w-[90vw] max-w-[90vw] h-[90vh] max-h-[90vh]',
+          dialogClassName,
+        )}
         aria-describedby={description ? undefined : undefined}
+        onInteractOutside={(e) => {
+          if (preventOutsideClose) e.preventDefault()
+        }}
+        onEscapeKeyDown={(e) => {
+          if (preventEscClose) e.preventDefault()
+        }}
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         {description ? (
