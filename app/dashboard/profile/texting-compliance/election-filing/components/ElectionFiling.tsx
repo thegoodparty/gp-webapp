@@ -2,7 +2,7 @@
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { FormDataProvider, FormDataState } from '@shared/hooks/useFormData'
 import { useUser } from '@shared/hooks/useUser'
@@ -35,11 +35,17 @@ export default function ElectionFiling(): React.JSX.Element {
 
   const ready = !userLoading && Boolean(user) && Boolean(campaign)
 
-  // Funnel "viewed" event for the agentic compliance flow (ENG-10294). The
-  // matching "submitted" signal is the existing RegistrationSubmitted event.
+  // Funnel "viewed" event for the agentic compliance flow (ENG-10294). Fire
+  // only once the form is actually shown — the form is gated behind `ready`, so
+  // a bare mount event would count users who only see the Loading… spinner. The
+  // matching "submitted" signal is the existing RegistrationSubmitted event in
+  // handleFormSubmit.
+  const filingViewTrackedRef = useRef(false)
   useEffect(() => {
+    if (!ready || filingViewTrackedRef.current) return
+    filingViewTrackedRef.current = true
     trackEvent(EVENTS.ProUpgrade.Compliance.FilingDetailsViewed)
-  }, [])
+  }, [ready])
 
   const handleFormSubmit = async (formData: FormDataState) => {
     setLoading(true)

@@ -15,12 +15,20 @@ vi.mock('helpers/analyticsHelper', async (importOriginal) => {
   }
 })
 
+// [user, setUser, userLoading] — default to a loaded user so `ready` is true.
+type UseUserReturn = [
+  { email: string; phone: string } | null,
+  () => void,
+  boolean,
+]
+const readyUser: UseUserReturn = [
+  { email: 'jane@example.com', phone: '5551234567' },
+  vi.fn(),
+  false,
+]
+const mockUseUser = vi.fn<() => UseUserReturn>(() => readyUser)
 vi.mock('@shared/hooks/useUser', () => ({
-  useUser: () => [
-    { email: 'jane@example.com', phone: '5551234567' },
-    vi.fn(),
-    false,
-  ],
+  useUser: () => mockUseUser(),
 }))
 
 vi.mock('@shared/hooks/useCampaign', () => ({
@@ -45,15 +53,30 @@ vi.mock(
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mockUseUser.mockReturnValue(readyUser)
 })
 
 describe('ElectionFiling — funnel view event (ENG-10294)', () => {
-  it('fires Filing Details Viewed when the step renders', async () => {
+  it('fires Filing Details Viewed when the form is shown (ready)', async () => {
     render(<ElectionFiling />)
     await waitFor(() => {
       expect(mockTrackEvent).toHaveBeenCalledWith(
         EVENTS.ProUpgrade.Compliance.FilingDetailsViewed,
       )
     })
+  })
+
+  it('does not fire while only the loading state is shown (not ready)', async () => {
+    // userLoading=true → `ready` is false → the form is hidden behind the
+    // Loading… spinner, so the view event must not fire (matches EnterPin's
+    // gated behavior — no over-counting users who never see the form).
+    mockUseUser.mockReturnValue([null, vi.fn(), true])
+    render(<ElectionFiling />)
+    await waitFor(() => {
+      expect(mockUseUser).toHaveBeenCalled()
+    })
+    expect(mockTrackEvent).not.toHaveBeenCalledWith(
+      EVENTS.ProUpgrade.Compliance.FilingDetailsViewed,
+    )
   })
 })
