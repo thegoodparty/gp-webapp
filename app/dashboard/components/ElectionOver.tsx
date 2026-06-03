@@ -20,16 +20,16 @@ const ElectionOver = (): React.JSX.Element => {
         height={172}
         alt="election over"
       />
+      <Body1 className="my-5">
+        {isPro
+          ? 'Contact us for a debrief about how the election went.'
+          : "You ran a great race, sorry you didn't come out on top"}
+      </Body1>
       {isPro && (
-        <>
-          <Body1 className="my-5">
-            Contact us for a debrief about how the election went.
-          </Body1>
-          <ScheduleModal
-            calendar="https://join.goodparty.org/meetings/campaign-success/election-debrief"
-            btn={<PrimaryButton>Contact us for a debrief</PrimaryButton>}
-          />
-        </>
+        <ScheduleModal
+          calendar="https://join.goodparty.org/meetings/campaign-success/election-debrief"
+          btn={<PrimaryButton>Contact us for a debrief</PrimaryButton>}
+        />
       )}
     </section>
   )
