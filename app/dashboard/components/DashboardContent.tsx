@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFlagOn } from '@shared/experiments/FeatureFlagsProvider'
 import DashboardPage from './DashboardPage'
 import type { Task } from './tasks/TaskItem'
@@ -9,6 +9,7 @@ import CampaignManager from './campaignManager/CampaignManager'
 import { WebsiteSunsetModal } from '../shared/WebsiteSunsetModal'
 
 const AI_CAMPAIGN_MANAGER_FLAG_KEY = 'ai-campaign-manager'
+const WEBSITE_SUNSET_MODAL_DISMISSED_KEY = 'websiteSunsetModalDismissed'
 
 interface DashboardContentProps {
   pathname: string
@@ -26,14 +27,30 @@ export default function DashboardContent({
   const { ready, on: aiCampaignManagerEnabled } = useFlagOn(
     AI_CAMPAIGN_MANAGER_FLAG_KEY,
   )
-  const [sunsetModalOpen, setSunsetModalOpen] = useState(true)
+  const [sunsetModalOpen, setSunsetModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (
+      hasWebsite &&
+      localStorage.getItem(WEBSITE_SUNSET_MODAL_DISMISSED_KEY) !== '1'
+    ) {
+      setSunsetModalOpen(true)
+    }
+  }, [hasWebsite])
+
+  const handleSunsetModalOpenChange = (open: boolean): void => {
+    if (!open) {
+      localStorage.setItem(WEBSITE_SUNSET_MODAL_DISMISSED_KEY, '1')
+    }
+    setSunsetModalOpen(open)
+  }
 
   return (
     <>
       {hasWebsite && (
         <WebsiteSunsetModal
           open={sunsetModalOpen}
-          onOpenChange={setSunsetModalOpen}
+          onOpenChange={handleSunsetModalOpenChange}
         />
       )}
       {ready && aiCampaignManagerEnabled ? (
