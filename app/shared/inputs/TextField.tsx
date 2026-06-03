@@ -35,8 +35,8 @@ interface LabelShrinkProps {
 }
 
 export interface TextFieldProps<Variant = unknown> {
-  value?: unknown
-  defaultValue?: unknown
+  value?: InputHTMLAttributes<HTMLInputElement>['value']
+  defaultValue?: InputHTMLAttributes<HTMLInputElement>['defaultValue']
   onChange?: (
     event: ChangeEvent<HTMLInputElement & HTMLTextAreaElement>,
   ) => void
@@ -126,14 +126,14 @@ const TextField = ({
     ) : null
   const startAdornment = InputProps?.startAdornment ?? null
 
-  const resolvedMaxLength = maxLength ?? inputProps?.maxLength
+  const resolvedMaxLength: number | undefined =
+    maxLength ?? (inputProps?.maxLength as number | undefined)
 
   const sharedProps = {
     id: inputId,
     name,
-    value: value as InputHTMLAttributes<HTMLInputElement>['value'],
-    defaultValue:
-      defaultValue as InputHTMLAttributes<HTMLInputElement>['defaultValue'],
+    value,
+    defaultValue,
     placeholder,
     disabled,
     required,

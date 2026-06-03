@@ -36,7 +36,7 @@ beforeEach(() => {
 describe('ResponsiveModal', () => {
   it('renders children when open', () => {
     render(
-      <ResponsiveModal open onClose={() => {}}>
+      <ResponsiveModal open onClose={vi.fn()}>
         <p>Modal content</p>
       </ResponsiveModal>,
     )
@@ -45,7 +45,7 @@ describe('ResponsiveModal', () => {
 
   it('does not render children when closed', () => {
     render(
-      <ResponsiveModal open={false} onClose={() => {}}>
+      <ResponsiveModal open={false} onClose={vi.fn()}>
         <p>Hidden content</p>
       </ResponsiveModal>,
     )
@@ -54,7 +54,7 @@ describe('ResponsiveModal', () => {
 
   it('renders title when provided', () => {
     render(
-      <ResponsiveModal open onClose={() => {}} title="My Title">
+      <ResponsiveModal open onClose={vi.fn()} title="My Title">
         <p>Content</p>
       </ResponsiveModal>,
     )
@@ -84,7 +84,7 @@ describe('ResponsiveModal', () => {
 
   it('forwards preventBackdropClose to ModalOrDrawer as preventOutsideClose', () => {
     render(
-      <ResponsiveModal open preventBackdropClose onClose={() => {}}>
+      <ResponsiveModal open preventBackdropClose onClose={vi.fn()}>
         <p>Content</p>
       </ResponsiveModal>,
     )
@@ -95,7 +95,7 @@ describe('ResponsiveModal', () => {
 
   it('forwards preventEscClose to ModalOrDrawer', () => {
     render(
-      <ResponsiveModal open preventEscClose onClose={() => {}}>
+      <ResponsiveModal open preventEscClose onClose={vi.fn()}>
         <p>Content</p>
       </ResponsiveModal>,
     )
@@ -106,7 +106,7 @@ describe('ResponsiveModal', () => {
 
   it('forwards hideClose to ModalOrDrawer', () => {
     render(
-      <ResponsiveModal open hideClose onClose={() => {}}>
+      <ResponsiveModal open hideClose onClose={vi.fn()}>
         <p>Content</p>
       </ResponsiveModal>,
     )
@@ -117,7 +117,7 @@ describe('ResponsiveModal', () => {
 
   it('forwards fullSize to ModalOrDrawer', () => {
     render(
-      <ResponsiveModal open fullSize onClose={() => {}}>
+      <ResponsiveModal open fullSize onClose={vi.fn()}>
         <p>Content</p>
       </ResponsiveModal>,
     )
@@ -128,7 +128,7 @@ describe('ResponsiveModal', () => {
 
   it('defaults the dismissal/sizing props to false when unset', () => {
     render(
-      <ResponsiveModal open onClose={() => {}}>
+      <ResponsiveModal open onClose={vi.fn()}>
         <p>Content</p>
       </ResponsiveModal>,
     )

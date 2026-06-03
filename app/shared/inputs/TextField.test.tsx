@@ -6,7 +6,7 @@ import TextField from './TextField'
 
 describe('TextField', () => {
   it('renders the label and associates it with the input', () => {
-    render(<TextField label="Email" value="" onChange={() => {}} />)
+    render(<TextField label="Email" value="" onChange={vi.fn()} />)
     const input = screen.getByLabelText('Email')
     expect(input).toBeInTheDocument()
   })
@@ -25,7 +25,7 @@ describe('TextField', () => {
       <TextField
         label="Zip"
         value=""
-        onChange={() => {}}
+        onChange={vi.fn()}
         error
         helperText="Invalid zip"
       />,
@@ -39,7 +39,7 @@ describe('TextField', () => {
       <TextField
         label="Phone"
         value=""
-        onChange={() => {}}
+        onChange={vi.fn()}
         endAdornments={['error']}
       />,
     )
@@ -47,9 +47,7 @@ describe('TextField', () => {
   })
 
   it('applies maxLength to the input', () => {
-    render(
-      <TextField label="EIN" value="" onChange={() => {}} maxLength={10} />,
-    )
+    render(<TextField label="EIN" value="" onChange={vi.fn()} maxLength={10} />)
     expect(screen.getByLabelText('EIN')).toHaveAttribute('maxlength', '10')
   })
 
@@ -58,7 +56,7 @@ describe('TextField', () => {
       <TextField
         label="Zip"
         value=""
-        onChange={() => {}}
+        onChange={vi.fn()}
         inputProps={{ maxLength: 5 }}
       />,
     )
@@ -66,7 +64,7 @@ describe('TextField', () => {
   })
 
   it('renders a textarea when multiline is set', () => {
-    render(<TextField label="Bio" value="" onChange={() => {}} multiline />)
+    render(<TextField label="Bio" value="" onChange={vi.fn()} multiline />)
     expect(screen.getByLabelText('Bio').tagName).toBe('TEXTAREA')
   })
 
@@ -75,7 +73,7 @@ describe('TextField', () => {
       <TextField
         label="Link"
         value=""
-        onChange={() => {}}
+        onChange={vi.fn()}
         endAdornments={['error']}
       />,
     )
@@ -87,7 +85,7 @@ describe('TextField', () => {
       <TextField
         label="Budget"
         value=""
-        onChange={() => {}}
+        onChange={vi.fn()}
         InputProps={{ startAdornment: <span>$</span> }}
       />,
     )
@@ -99,7 +97,7 @@ describe('TextField', () => {
       <TextField
         label="Both"
         value=""
-        onChange={() => {}}
+        onChange={vi.fn()}
         endAdornments={['error']}
         InputProps={{ endAdornment: <span>extra adornment</span> }}
       />,
@@ -112,7 +110,7 @@ describe('TextField', () => {
       <TextField
         label="Email"
         value=""
-        onChange={() => {}}
+        onChange={vi.fn()}
         error
         helperText="Invalid email"
       />,
