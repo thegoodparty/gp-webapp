@@ -1,24 +1,12 @@
 'use client'
 
 import * as React from 'react'
-import MuiModal from '@mui/material/Modal'
-import Box from '@mui/material/Box'
-import { IoIosCloseCircle } from 'react-icons/io'
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'white',
-  boxShadow: 8,
-  p: 4,
-  borderRadius: 2,
-  outline: 'none',
-  maxHeight: '90vh',
-  minWidth: 280,
-  overflowY: 'auto',
-} as const
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@styleguide/components/ui/dialog'
+import { cn } from '@styleguide/lib/utils'
 
 interface ModalProps {
   open: boolean
@@ -43,40 +31,27 @@ const Modal = ({
   preventBackdropClose = false,
   preventEscClose = false,
   hideClose = false,
-  disableEnforceFocus = false,
-}: ModalProps): React.JSX.Element => {
-  const handleClose = (_e: React.SyntheticEvent, reason: string) => {
-    if (
-      (reason === 'backdropClick' && preventBackdropClose) ||
-      (reason === 'escapeKeyDown' && preventEscClose)
-    ) {
-      return
-    }
-    closeCallback()
-  }
-  return (
-    <MuiModal
-      open={open}
-      onClose={handleClose}
-      disableEnforceFocus={disableEnforceFocus}
+  disableEnforceFocus: _disableEnforceFocus = false,
+}: ModalProps): React.JSX.Element => (
+  <Dialog open={open} onOpenChange={(next) => !next && closeCallback()}>
+    <DialogContent
+      className={cn(
+        '!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 max-h-[90vh] overflow-y-auto',
+        hideClose && '[&>button:last-child]:hidden',
+        boxClassName,
+      )}
+      style={boxStyle}
+      onInteractOutside={(e) => {
+        if (preventBackdropClose) e.preventDefault()
+      }}
+      onEscapeKeyDown={(e) => {
+        if (preventEscClose) e.preventDefault()
+      }}
     >
-      <Box
-        className={`!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 ${boxClassName}`}
-        sx={style}
-        style={boxStyle}
-      >
-        {!hideClose && (
-          <div
-            className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center modal-close"
-            onClick={closeCallback}
-          >
-            <IoIosCloseCircle size={24} />
-          </div>
-        )}
-        {children}
-      </Box>
-    </MuiModal>
-  )
-}
+      <DialogTitle className="sr-only">Dialog</DialogTitle>
+      {children}
+    </DialogContent>
+  </Dialog>
+)
 
 export default Modal
