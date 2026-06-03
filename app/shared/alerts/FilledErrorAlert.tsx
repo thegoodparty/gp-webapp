@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react'
-import { Alert, AlertProps } from '@mui/material'
-import { MdError } from 'react-icons/md'
+import { Alert, AlertDescription } from '@styleguide/components/ui/alert'
+import { CircleAlertIcon } from '@styleguide/components/ui/icons'
+import { cn } from '@styleguide/lib/utils'
 
-interface FilledErrorAlertProps
-  extends Omit<AlertProps, 'severity' | 'variant'> {
+interface FilledErrorAlertProps {
   children: ReactNode
   className?: string
 }
@@ -11,15 +11,15 @@ interface FilledErrorAlertProps
 export const FilledErrorAlert = ({
   children,
   className = '',
-  ...restProps
 }: FilledErrorAlertProps): React.JSX.Element => (
   <Alert
-    severity="error"
-    variant="filled"
-    icon={<MdError className="text-white" />}
-    className={`[&&]:rounded-lg [&&]:p-2 [&&]:bg-error-main [&&]:text-white [&>div.MuiAlert-icon]:py-2 [&>div.MuiAlert-icon]:ml-2 [&>div.MuiAlert-icon]:mr-4 [&>div.MuiAlert-message]:p-0 [&>div.MuiAlert-message]:flex-grow ${className}`}
-    {...restProps}
+    className={cn(
+      'rounded-lg p-2 bg-error-main text-white border-error-main',
+      '[&>svg]:text-white',
+      className,
+    )}
+    icon={<CircleAlertIcon />}
   >
-    {children}
+    <AlertDescription>{children}</AlertDescription>
   </Alert>
 )
