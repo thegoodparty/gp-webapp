@@ -2,7 +2,7 @@
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { FormDataProvider, FormDataState } from '@shared/hooks/useFormData'
 import { useUser } from '@shared/hooks/useUser'
@@ -34,6 +34,12 @@ export default function ElectionFiling(): React.JSX.Element {
   const [hasSubmissionError, setHasSubmissionError] = useState(false)
 
   const ready = !userLoading && Boolean(user) && Boolean(campaign)
+
+  // Funnel "viewed" event for the agentic compliance flow (ENG-10294). The
+  // matching "submitted" signal is the existing RegistrationSubmitted event.
+  useEffect(() => {
+    trackEvent(EVENTS.ProUpgrade.Compliance.FilingDetailsViewed)
+  }, [])
 
   const handleFormSubmit = async (formData: FormDataState) => {
     setLoading(true)

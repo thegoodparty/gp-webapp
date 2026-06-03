@@ -76,6 +76,12 @@ export default function CandidateProfile(): React.JSX.Element {
     seededRef.current = true
   }, [isSuccess, website])
 
+  // Funnel "viewed" event for the agentic compliance flow (ENG-10294). The
+  // matching "submitted" signal is the existing SubmitSuccess event below.
+  useEffect(() => {
+    trackEvent(EVENTS.ProUpgrade.Compliance.CandidateProfileViewed)
+  }, [])
+
   const bioError = getBioError(bioPlainLength)
   const prioritiesError = getPolicyPrioritiesError(issues.length)
 
