@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -53,6 +53,18 @@ export default function EnterPin(): React.JSX.Element {
       router.push(PROFILE_ROUTE)
     }
   }, [shouldRedirect, router])
+
+  // Funnel "viewed" event for the agentic compliance flow (ENG-10294). Fire
+  // only once the PIN entry UI is actually shown — this page redirects away for
+  // PENDING/APPROVED, so a bare mount event would count users who never see it.
+  // The matching "submitted" signal is the existing PinVerificationCompleted
+  // event in handleSubmit below.
+  const pinViewTrackedRef = useRef(false)
+  useEffect(() => {
+    if (isPending || !isAwaitingPin || pinViewTrackedRef.current) return
+    pinViewTrackedRef.current = true
+    trackEvent(EVENTS.ProUpgrade.Compliance.PinEntryViewed)
+  }, [isPending, isAwaitingPin])
 
   const handleSubmit = async (pin: string): Promise<void> => {
     if (!tcrCompliance) return
