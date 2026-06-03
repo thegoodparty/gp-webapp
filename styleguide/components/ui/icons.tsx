@@ -1,5 +1,6 @@
 export {
   AlignCenter as AlignCenterIcon,
+  EllipsisVertical as EllipsisVerticalIcon,
   Eye as EyeIcon,
   EyeOff as EyeOffIcon,
   Phone as PhoneIcon,
