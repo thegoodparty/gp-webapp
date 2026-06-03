@@ -14,7 +14,7 @@ Cross-route building blocks: providers, hooks, UI primitives, layouts, and featu
 | `experiments/FeatureFlagsProvider.tsx`, `FeatureFlagGuard.tsx` | Amplitude feature flags + JSX gate |
 | `layouts/`, `cards/`, `inputs/`, `buttons/`, `typography/`, `ui/` | Reusable primitives |
 | `query-client.tsx` | React Query client + provider |
-| `materialTheme.ts`, `sentry.tsx`, `AmplitudeInit.tsx` | App bootstrap pieces |
+| `sentry.tsx`, `AmplitudeInit.tsx` | App bootstrap pieces |
 
 ## Patterns
 
