@@ -336,36 +336,6 @@ const OppositionResearch = ({
               <li>Party: {opp.partyAffiliation}</li>
             ) : null}
             {opp.incumbent === true ? <li>Incumbent</li> : null}
-            {opp.politicalSummary ? <li>{opp.politicalSummary}</li> : null}
-            {opp.keyFacts.length > 0 ? (
-              <li>
-                Key facts:
-                <ul className="mt-1 space-y-1 pl-5 [list-style:circle]">
-                  {opp.keyFacts.map((fact) => (
-                    <li key={fact}>{fact}</li>
-                  ))}
-                </ul>
-              </li>
-            ) : null}
-            {opp.websites.length > 0 ? (
-              <li>
-                Websites:
-                <ul className="mt-1 space-y-1 pl-5 [list-style:circle]">
-                  {opp.websites.map((w) => (
-                    <li key={w}>
-                      <a
-                        href={w}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-components-input-active hover:underline"
-                      >
-                        {w}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ) : null}
           </ul>
         </li>
       ))}
