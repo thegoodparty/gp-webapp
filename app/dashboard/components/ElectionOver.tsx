@@ -19,7 +19,7 @@ const ElectionOver = (): React.JSX.Element => {
         Contact us for a debrief about how the election went.
       </Body1>
       <ScheduleModal
-        calendar="https://meetings.hubspot.com/kennedy-mason/candidate-debrief-interviews"
+        calendar="https://join.goodparty.org/meetings/campaign-success/election-debrief"
         btn={<PrimaryButton>Contact us for a debrief</PrimaryButton>}
       />
     </section>
