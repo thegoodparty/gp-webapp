@@ -462,9 +462,23 @@ const PlanSections = ({
   const isEventsError = eventsState?.isError ?? false
   const isPressOutletsGenerating = pressOutletsState?.isGenerating ?? false
   const isPressOutletsError = pressOutletsState?.isError ?? false
-  // Hide section 2 entirely on error (per product decision); keep it in
-  // the nav only when we're either showing the skeleton or have data.
-  const showSection2 = !isStrategyError
+  // Hide section 2 entirely on error (per product decision), and also
+  // hide it when the strategy resolved ready-but-empty. Ready-empty
+  // happens when gp-api short-circuits an election-api 404 with
+  // `{ status: 'ready', data: <empty> }` to break the polling loop —
+  // there's nothing useful to show, and rendering three empty
+  // subsections under the intro paragraph would look broken. We still
+  // show the section while generating so the skeleton has a place.
+  //
+  // Guard only on opportunities/challenges, NOT opponents:
+  // `buildOpponents` falls back to `raceCandidates` (and other
+  // pre-strategy fallbacks) when the LLM strategy is empty, so
+  // `plan.opponents` is often populated even in the ready-empty case.
+  // Including it here would defeat the guard.
+  const hasStrategyContent =
+    plan.opportunities.length > 0 || plan.challenges.length > 0
+  const showSection2 =
+    !isStrategyError && (isStrategyGenerating || hasStrategyContent)
   const navSections = showSection2
     ? PLAN_SECTIONS
     : PLAN_SECTIONS.filter((s) => s.id !== 'plan-section-2')

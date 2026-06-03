@@ -97,20 +97,67 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   // fires after office submit in onboarding, so the cache is usually warm
   // by the time the user lands here.
   const events = useCommunityEvents()
-  // Section 7 press outlets — reuse the onboarding local-news endpoint
-  // that was already populated during the LocalNewsSourcesSection step.
-  // Cache key matches (city, state, office) so we hit the same persisted
-  // row from `campaign.data.onboarding.localMediaOutlets`.
+  // The BR position ID is in-memory on `answers.structuredOffice.positionId`
+  // during onboarding. After pledge submit, `OnboardingFlow` persists the
+  // whole `answers` object under `campaign.data.onboarding`, so it survives
+  // the navigation to /onboarding/success.
   //
-  // The endpoint's Zod schema rejects empty-string city/office/state
-  // (min 1 char). Pass `undefined` for empty values so the request shape
-  // omits the field — onboarding-only-typed `city` is optional, but
-  // serializing `city: ''` hits the validator and 400s.
+  // gp-api separately resolves the BR ID to an internal Position UUID and
+  // stores that on `organization.positionId` — which is NOT what the
+  // /onboarding/contacts/stats endpoint expects, so we read directly from
+  // the persisted onboarding answers instead.
+  //
+  // We also pull positionName / city / state from the same source for the
+  // local-news query below so the cache key matches what
+  // LocalNewsSourcesSection used during onboarding — see comment there.
+  const onboardingStructuredOffice = (
+    campaign?.data as
+      | {
+          onboarding?: {
+            structuredOffice?: {
+              positionId?: string
+              positionName?: string
+              city?: string
+              state?: string
+            }
+          }
+        }
+      | undefined
+  )?.onboarding?.structuredOffice
+  const ballotReadyPositionId = onboardingStructuredOffice?.positionId
+
+  // Cache-key alignment with onboarding: any query that was warmed by
+  // onboarding must use the SAME (office, city, state) tuple onboarding
+  // sent, otherwise React Query cold-misses and gp-api re-runs the
+  // upstream call. Two consumers below depend on this:
+  //
+  //   1. local-news query (Section 7 press outlets) — onboarding's
+  //      `LocalNewsSourcesSection` populated both React Query and
+  //      `campaign.data.onboarding.localMediaOutlets` using
+  //      `answers.structuredOffice.{positionName, city, state}`.
+  //   2. voter-issues query + `voterInsightsContext` (Section 3 + 4) —
+  //      onboarding's `TopVoterIssuesSection` populated React Query
+  //      with the same triple.
+  //
+  // The success page's polished `race` is election-api's
+  // `officialOfficeName` (e.g. "Anytown Council"), which differs from
+  // BR's `positionName` ("City Council Member") that onboarding used.
+  // Reading from `race` here would miss both warm caches. Pull from
+  // `onboardingStructuredOffice` first, fall back to the existing
+  // chain for manual-office-entry candidates who never populated it.
+  //
+  // The endpoints' Zod schemas reject empty-string fields (min 1
+  // char). Pass `undefined` for empty values so the request shape
+  // omits the field — serializing `city: ''` would hit the validator
+  // and 400.
+  const onboardingOffice = onboardingStructuredOffice?.positionName || race
+  const onboardingCity = onboardingStructuredOffice?.city || city
+  const onboardingState = onboardingStructuredOffice?.state || stateValue
   const localNewsQuery = useQuery(
     localNewsQueryOptions({
-      city: city || undefined,
-      state: stateValue || undefined,
-      office: race || undefined,
+      city: onboardingCity || undefined,
+      state: onboardingState || undefined,
+      office: onboardingOffice || undefined,
     }),
   )
   const pressOutletsFromApi: ApiPressOutlet[] | undefined =
@@ -123,36 +170,17 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   // table or stale templated rows.
   const isLocalNewsGenerating =
     localNewsQuery.isPending || localNewsQuery.data?.status === 'pending'
-  // Section 3 voter insights — share the cache key with the on-screen
-  // TopVoterIssuesSection from the earlier onboarding step, so this is
-  // almost always a synchronous cache hit. When the cache misses (direct
-  // nav to /success), buildVoterInsights falls through to candidate
-  // customIssues/stances and finally the stub copy.
-  // The BR position ID is in-memory on `answers.structuredOffice.positionId`
-  // during onboarding. After pledge submit, `OnboardingFlow` persists the
-  // whole `answers` object under `campaign.data.onboarding`, so it survives
-  // the navigation to /onboarding/success.
-  //
-  // gp-api separately resolves the BR ID to an internal Position UUID and
-  // stores that on `organization.positionId` — which is NOT what the
-  // /onboarding/contacts/stats endpoint expects, so we read directly from
-  // the persisted onboarding answers instead.
-  const onboardingAnswers = (
-    campaign?.data as
-      | { onboarding?: { structuredOffice?: { positionId?: string } } }
-      | undefined
-  )?.onboarding
-  const ballotReadyPositionId =
-    onboardingAnswers?.structuredOffice?.positionId ?? undefined
 
   // Same cache key as TopVoterIssuesSection in onboarding — keeps the PDF's
-  // Section 3 in sync with what the user already saw on screen.
+  // Section 3 in sync with what the user already saw on screen. See the
+  // onboardingOffice/City/State derivation above for why we don't use
+  // `race`/`city`/`stateValue` directly.
   const voterIssuesQuery = useQuery(
     voterIssuesQueryOptions({
       ballotReadyPositionId,
-      city,
-      state: stateValue,
-      office: race,
+      city: onboardingCity,
+      state: onboardingState,
+      office: onboardingOffice,
     }),
   )
   const voterIssuesFromApi = voterIssuesQuery.data?.issues
@@ -268,9 +296,9 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             }}
             voterInsightsContext={{
               ballotReadyPositionId,
-              city,
-              state: stateValue,
-              office: race,
+              city: onboardingCity,
+              state: onboardingState,
+              office: onboardingOffice,
             }}
           />
         </div>
