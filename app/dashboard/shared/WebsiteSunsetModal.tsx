@@ -11,9 +11,14 @@ import {
 import { Button } from '@styleguide/components/ui/button'
 
 // Set to the real HubSpot domain-transfer form URL once the form is built in
-// HubSpot (ENG-10295). While empty, the "Transfer website" button is disabled
-// so we never ship a link to a non-existent form. Opened in a new tab.
+// HubSpot (ENG-10295). While empty, WEBSITE_SUNSET_NOTICE_ENABLED is false and
+// the notice is never shown (see DashboardContent). This avoids both linking to
+// a non-existent form and opting users out of the notice before the form they
+// need exists. The URL is opened in a new tab from the CTA.
 const HUBSPOT_DOMAIN_TRANSFER_FORM_URL = ''
+
+export const WEBSITE_SUNSET_NOTICE_ENABLED =
+  HUBSPOT_DOMAIN_TRANSFER_FORM_URL.length > 0
 
 interface WebsiteSunsetModalProps {
   open: boolean
@@ -24,7 +29,6 @@ export function WebsiteSunsetModal({
   open,
   onOpenChange,
 }: WebsiteSunsetModalProps): React.JSX.Element {
-  const formReady = HUBSPOT_DOMAIN_TRANSFER_FORM_URL.length > 0
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -39,7 +43,6 @@ export function WebsiteSunsetModal({
         </DialogHeader>
         <DialogFooter>
           <Button
-            disabled={!formReady}
             onClick={() =>
               window.open(
                 HUBSPOT_DOMAIN_TRANSFER_FORM_URL,
