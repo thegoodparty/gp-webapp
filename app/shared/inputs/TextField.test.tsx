@@ -69,4 +69,54 @@ describe('TextField', () => {
     render(<TextField label="Bio" value="" onChange={() => {}} multiline />)
     expect(screen.getByLabelText('Bio').tagName).toBe('TEXTAREA')
   })
+
+  it('reserves padding for an end adornment so text does not overlap', () => {
+    render(
+      <TextField
+        label="Link"
+        value=""
+        onChange={() => {}}
+        endAdornments={['error']}
+      />,
+    )
+    expect(screen.getByLabelText('Link')).toHaveClass('pr-9')
+  })
+
+  it('reserves padding for a start adornment so text does not overlap', () => {
+    render(
+      <TextField
+        label="Budget"
+        value=""
+        onChange={() => {}}
+        InputProps={{ startAdornment: <span>$</span> }}
+      />,
+    )
+    expect(screen.getByLabelText('Budget')).toHaveClass('pl-9')
+  })
+
+  it('renders both endAdornments and InputProps.endAdornment when given together', () => {
+    render(
+      <TextField
+        label="Both"
+        value=""
+        onChange={() => {}}
+        endAdornments={['error']}
+        InputProps={{ endAdornment: <span>extra adornment</span> }}
+      />,
+    )
+    expect(screen.getByText('extra adornment')).toBeInTheDocument()
+  })
+
+  it('renders the error helperText with the destructive color token', () => {
+    render(
+      <TextField
+        label="Email"
+        value=""
+        onChange={() => {}}
+        error
+        helperText="Invalid email"
+      />,
+    )
+    expect(screen.getByText('Invalid email')).toHaveClass('text-destructive')
+  })
 })

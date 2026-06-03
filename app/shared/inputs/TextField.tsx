@@ -15,7 +15,7 @@ import {
 import { Input, Textarea, Label, cn, CircleAlertIcon } from '@styleguide'
 
 const ADORNMENTS = {
-  error: <CircleAlertIcon className="text-red size-5" />,
+  error: <CircleAlertIcon className="text-destructive size-5" />,
 }
 
 type EndAdornment = keyof typeof ADORNMENTS | JSX.Element
@@ -117,7 +117,13 @@ const TextField = ({
       )
     : null
 
-  const endAdornment = resolvedEndAdornments ?? InputProps?.endAdornment ?? null
+  const endAdornment =
+    resolvedEndAdornments || InputProps?.endAdornment ? (
+      <>
+        {resolvedEndAdornments}
+        {InputProps?.endAdornment}
+      </>
+    ) : null
   const startAdornment = InputProps?.startAdornment ?? null
 
   const resolvedMaxLength = maxLength ?? inputProps?.maxLength
@@ -148,7 +154,12 @@ const TextField = ({
       {...sharedProps}
       rows={rows}
       ref={inputRef as Ref<HTMLTextAreaElement>}
-      className={cn(error && 'border-destructive', className)}
+      className={cn(
+        error && 'border-destructive',
+        startAdornment ? 'pl-9' : null,
+        endAdornment ? 'pr-9' : null,
+        className,
+      )}
       {...inputProps}
     />
   ) : (
@@ -156,7 +167,12 @@ const TextField = ({
       {...sharedProps}
       type={type}
       ref={inputRef ?? InputProps?.ref}
-      className={cn(error && 'border-destructive', className)}
+      className={cn(
+        error && 'border-destructive',
+        startAdornment ? 'pl-9' : null,
+        endAdornment ? 'pr-9' : null,
+        className,
+      )}
       {...inputProps}
     />
   )
@@ -185,7 +201,12 @@ const TextField = ({
       {label ? <Label htmlFor={inputId}>{label}</Label> : null}
       {adorned}
       {helperText ? (
-        <div className={cn('text-sm', error ? 'text-red' : 'text-gray-500')}>
+        <div
+          className={cn(
+            'text-sm',
+            error ? 'text-destructive' : 'text-gray-500',
+          )}
+        >
           {helperText}
         </div>
       ) : null}
