@@ -1,10 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Autocomplete } from '@mui/material'
-import TextField from '@shared/inputs/TextField'
+import { Combobox } from '@styleguide'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { noop } from '@shared/utils/noop'
 
 interface DistrictName {
   id?: string
@@ -55,49 +53,57 @@ export default function DistrictNameAutocomplete({
 }: DistrictNameAutocompleteProps) {
   const [options, setOptions] = useState<DistrictName[]>([])
   const [loading, setLoading] = useState(false)
+  const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
+    setInputValue('')
     if (!districtType) {
       setOptions([])
       return
     }
 
+    let ignore = false
     setLoading(true)
 
-    async function load() {
+    const load = async () => {
       const data = await fetchDistrictNames(
         districtType,
         state,
         electionYear,
         excludeInvalidOverride,
       )
-      setOptions(data)
-      setLoading(false)
+      if (!ignore) {
+        setOptions(data)
+        setLoading(false)
+      }
     }
 
     load()
-    return noop
+    return () => {
+      ignore = true
+    }
   }, [districtType, state, electionYear, excludeInvalidOverride])
 
+  const filtered = inputValue
+    ? options.filter((o) =>
+        o.L2DistrictName.toLowerCase().includes(inputValue.toLowerCase()),
+      )
+    : options
+
   return (
-    <Autocomplete
-      fullWidth
-      loading={loading}
-      options={options}
+    <Combobox
+      options={filtered}
       value={value}
+      onChange={onChange}
+      onInputChange={setInputValue}
+      inputValue={inputValue}
       getOptionLabel={(o) => o.L2DistrictName}
-      isOptionEqualToValue={(o, v) => o.id === v?.id}
-      onChange={(_, v) => onChange(v)}
+      getOptionKey={(o) => o.id ?? o.L2DistrictName}
+      disableClientFilter
+      loading={loading}
       disabled={disabled}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="District Name"
-          required
-          variant="outlined"
-          InputProps={{ ...params.InputProps, style: { borderRadius: 4 } }}
-        />
-      )}
+      placeholder="District Name"
+      searchPlaceholder="Search district names..."
     />
   )
 }
