@@ -15,7 +15,8 @@ import { Button } from '@styleguide/components/ui/button'
 // the notice is never shown (see DashboardContent). This avoids both linking to
 // a non-existent form and opting users out of the notice before the form they
 // need exists. The URL is opened in a new tab from the CTA.
-const HUBSPOT_DOMAIN_TRANSFER_FORM_URL = ''
+const HUBSPOT_DOMAIN_TRANSFER_FORM_URL =
+  'https://cuqn1.share.hsforms.com/24lFrnq6gQ6-FWs_7qUr5SQ'
 
 export const WEBSITE_SUNSET_NOTICE_ENABLED =
   HUBSPOT_DOMAIN_TRANSFER_FORM_URL.length > 0
