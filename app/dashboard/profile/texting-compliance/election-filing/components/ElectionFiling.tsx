@@ -57,7 +57,13 @@ export default function ElectionFiling(): React.JSX.Element {
         'Failed to submit election filing',
       )
       trackEvent(EVENTS.Outreach.DlcCompliance.RegistrationSubmitted, {
-        email: user?.email,
+        // The filing email the candidate just submitted, not their account
+        // email (user?.email). The two deliberately differ here (see
+        // getInitialFormState), and trackEvent already attaches the account
+        // email to every event by default — so this override is only useful if
+        // it records the filing value. isValid gates submit on isEmail, so this
+        // is always a valid non-empty string.
+        email: formData.email,
         dlcComplianceStatus: 'Pending',
       })
       successSnackbar('Election filing submitted')
