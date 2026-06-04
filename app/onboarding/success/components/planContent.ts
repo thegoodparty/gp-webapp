@@ -236,8 +236,6 @@ export interface PlanData {
   voterContactGoal: number
 
   opponentCount: number
-  matchedCellRecords: number
-  matchedLandlineRecords: number
   volunteerHourTarget: number
   totalBudget: number
   averageTouchesPerVoter: number
@@ -288,8 +286,6 @@ export interface PlanData {
   filingRequirementsText: string | null
 }
 
-const PLACEHOLDER_MATCH_RATE_CELL = 0.65
-const PLACEHOLDER_MATCH_RATE_LANDLINE = 0.35
 
 const placeholderCity = (city: string): string => city || 'your district'
 
@@ -620,14 +616,19 @@ interface BudgetBreakdown {
 }
 
 const buildBudgetBreakdown = (
-  matchedCell: number,
-  matchedLandline: number,
+  voterContactGoal: number,
   filingFee: number | null,
 ): BudgetBreakdown => {
   const filing = filingFee ?? DEFAULT_FILING_FEE
-  const textCampaignsCost = TEXT_CAMPAIGN_COUNT * matchedCell * TEXT_COST
-  const robocallCampaignsCost =
-    ROBOCALL_CAMPAIGN_COUNT * matchedLandline * ROBOCALL_COST
+  // Spread the voter contact goal evenly across every text and robocall
+  // campaign, then price each channel at its per-contact rate.
+  const contactsPerCampaign = Math.floor(
+    voterContactGoal / (TEXT_CAMPAIGN_COUNT + ROBOCALL_CAMPAIGN_COUNT),
+  )
+  const textContacts = TEXT_CAMPAIGN_COUNT * contactsPerCampaign
+  const robocallContacts = ROBOCALL_CAMPAIGN_COUNT * contactsPerCampaign
+  const textCampaignsCost = textContacts * TEXT_COST
+  const robocallCampaignsCost = robocallContacts * ROBOCALL_COST
   const subtotal =
     filing +
     YARD_SIGNS_COST +
@@ -661,16 +662,20 @@ const buildBudgetBreakdown = (
     {
       category: 'Text campaigns',
       amount: formatDollars(textCampaignsCost),
-      rationale: `${TEXT_CAMPAIGN_COUNT} text campaigns to ${matchedCell.toLocaleString(
+      rationale: `${TEXT_CAMPAIGN_COUNT} text campaigns, ${contactsPerCampaign.toLocaleString(
         'en-US',
-      )} at $${TEXT_COST.toFixed(3)} per text.`,
+      )} contacts each (${textContacts.toLocaleString(
+        'en-US',
+      )} texts) at $${TEXT_COST.toFixed(3)} per text.`,
     },
     {
       category: 'Robocall campaigns',
       amount: formatDollars(robocallCampaignsCost),
-      rationale: `${ROBOCALL_CAMPAIGN_COUNT} robocall campaigns to ${matchedLandline.toLocaleString(
+      rationale: `${ROBOCALL_CAMPAIGN_COUNT} robocall campaigns, ${contactsPerCampaign.toLocaleString(
         'en-US',
-      )} at $${ROBOCALL_COST.toFixed(3)} per call.`,
+      )} contacts each (${robocallContacts.toLocaleString(
+        'en-US',
+      )} calls) at $${ROBOCALL_COST.toFixed(3)} per call.`,
     },
     {
       category: 'Contingency (5%)',
@@ -1082,34 +1087,13 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const registeredVotersLow = Math.max(0, Math.round(registeredVoters * 0.9))
   const registeredVotersHigh = Math.round(registeredVoters * 1.1)
 
-  // Real phone-match counts when available. Each L2 record can carry up to
-  // 4 cell numbers and 2 landlines per household — keep the same multipliers
-  // the placeholder heuristic used so downstream budget math stays
-  // consistent regardless of source.
-  const cellMatchRate =
-    input.uniqueCellphones != null && registeredVoters > 0
-      ? input.uniqueCellphones / registeredVoters
-      : PLACEHOLDER_MATCH_RATE_CELL
-  const landlineMatchRate =
-    input.uniqueLandlines != null && registeredVoters > 0
-      ? input.uniqueLandlines / registeredVoters
-      : PLACEHOLDER_MATCH_RATE_LANDLINE
-  const matchedCellRecords = Math.max(
-    0,
-    Math.round(projectedTurnout * cellMatchRate * 4),
-  )
-  const matchedLandlineRecords = Math.max(
-    0,
-    Math.round(projectedTurnout * landlineMatchRate * 2),
-  )
   const averageTouchesPerVoter =
     projectedTurnout > 0
       ? Number((voterContactGoal / projectedTurnout).toFixed(1))
       : 0
 
   const { totalBudget, lineItems: budgetLineItems } = buildBudgetBreakdown(
-    matchedCellRecords,
-    matchedLandlineRecords,
+    voterContactGoal,
     input.filingFee,
   )
 
@@ -1283,8 +1267,6 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     registeredVotersHigh,
     voterContactGoal,
     opponentCount,
-    matchedCellRecords,
-    matchedLandlineRecords,
     volunteerHourTarget,
     totalBudget,
     averageTouchesPerVoter,
