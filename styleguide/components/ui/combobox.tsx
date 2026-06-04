@@ -12,7 +12,7 @@ import {
   CommandList,
 } from './command'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
-import { ChevronsUpDownIcon, SearchIcon, XMarkIcon } from './icons'
+import { CheckIcon, ChevronsUpDownIcon, SearchIcon, XMarkIcon } from './icons'
 
 interface ComboboxProps<T> {
   options: T[]
@@ -48,6 +48,7 @@ const Combobox = <T,>({
   id,
 }: ComboboxProps<T>) => {
   const [open, setOpen] = React.useState(false)
+  const [commandValue, setCommandValue] = React.useState('')
   const contentId = React.useId()
 
   const keyFor = getOptionKey ?? getOptionLabel
@@ -69,18 +70,33 @@ const Combobox = <T,>({
 
   const selectedLabel = value !== null ? getOptionLabel(value) : null
 
-  const renderItem = (option: T) => (
-    <CommandItem
-      key={keyFor(option)}
-      value={getOptionLabel(option)}
-      onSelect={() => {
-        onChange(option)
-        setOpen(false)
-      }}
-    >
-      {getOptionLabel(option)}
-    </CommandItem>
-  )
+  React.useEffect(() => {
+    if (open) {
+      setCommandValue(selectedLabel ?? '')
+    }
+  }, [open, selectedLabel])
+
+  const renderItem = (option: T) => {
+    const isSelected = value !== null && keyFor(option) === keyFor(value)
+    return (
+      <CommandItem
+        key={keyFor(option)}
+        value={getOptionLabel(option)}
+        onSelect={() => {
+          onChange(option)
+          setOpen(false)
+        }}
+      >
+        {getOptionLabel(option)}
+        <CheckIcon
+          className={cn(
+            'ml-auto size-4',
+            isSelected ? 'opacity-100' : 'opacity-0',
+          )}
+        />
+      </CommandItem>
+    )
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -131,7 +147,7 @@ const Combobox = <T,>({
         className="w-(--radix-popover-trigger-width) p-0"
         aria-label={placeholder}
       >
-        <Command>
+        <Command value={commandValue} onValueChange={setCommandValue}>
           <CommandInput
             placeholder={searchPlaceholder}
             onValueChange={onInputChange}

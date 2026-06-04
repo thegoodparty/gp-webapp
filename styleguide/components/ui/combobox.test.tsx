@@ -99,6 +99,16 @@ describe('Combobox', () => {
     expect(onChange).toHaveBeenCalledWith(null)
   })
 
+  it('shows a check indicator on the preselected item when opened', async () => {
+    const user = userEvent.setup()
+    render(
+      <Combobox {...baseProps} value={offices[0] ?? null} onChange={vi.fn()} />,
+    )
+    await user.click(screen.getByRole('combobox'))
+    const item = await screen.findByRole('option', { name: /Mayor/ })
+    expect(item).toHaveAttribute('aria-selected', 'true')
+  })
+
   it('renders group headings when groupBy is provided', async () => {
     const user = userEvent.setup()
     render(

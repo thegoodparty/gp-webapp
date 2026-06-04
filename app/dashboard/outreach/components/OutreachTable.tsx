@@ -223,8 +223,17 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
         handlePopoverClose()
       }
     }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handlePopoverClose()
+      }
+    }
     document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }, [actOnOutreach])
 
   // Sort table data by date, placing entries without a date at the end

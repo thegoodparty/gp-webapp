@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useIsMobile } from '@styleguide/hooks/use-mobile'
+import { useTailwindBreakpoints } from '@shared/hooks/useTailwindBreakpoints'
 import { Camera, FileText, Pencil, Plus } from 'lucide-react'
 import {
   Button,
@@ -106,8 +106,8 @@ export default function AddNotesDialog({
   onDeleteExisting,
   deletingIds,
 }: Props): React.JSX.Element {
-  const isMobile = useIsMobile()
-  const isDesktop = !isMobile
+  const breakpoint = useTailwindBreakpoints()
+  const isDesktop = breakpoint !== 'xs' && breakpoint !== 'sm'
   const [typedDraft, setTypedDraft] = useState('')
   const [staged, setStaged] = useState<StagedDraft[]>([])
   const [submitting, setSubmitting] = useState(false)
