@@ -6,6 +6,7 @@ import Body2 from '@shared/typography/Body2'
 import Button from '@shared/buttons/Button'
 import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 import type { TcrComplianceStatus } from 'helpers/types'
+import { useProUpgradeFlag } from '@shared/experiments/proUpgradeFlag'
 
 interface ComplianceModalProps {
   open: boolean
@@ -18,6 +19,29 @@ export function ComplianceModal({
   tcrComplianceStatus,
   onClose,
 }: ComplianceModalProps): React.JSX.Element {
+  const { ready, enabled } = useProUpgradeFlag()
+  const phase1Enabled = ready && enabled
+
+  const helpTrailer = (
+    <>
+      <br />
+      <br />
+      Have questions? Visit{' '}
+      <a
+        href="https://support.goodparty.org/help-center/getting-text-compliant"
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        className="underline"
+      >
+        our help center
+      </a>{' '}
+      for more information or send us an email at{' '}
+      <a href="mailto:campaignsuccess@goodparty.org" className="underline">
+        campaignsuccess@goodparty.org
+      </a>
+    </>
+  )
+
   let title: string,
     description: string | React.ReactNode,
     cta: string,
@@ -49,26 +73,10 @@ export function ComplianceModal({
       title = 'Action required: register for texting compliance'
       description = (
         <>
-          Carrier requirements mean you must register before sending your first
-          text. You&apos;ll need your Campaign EIN, your official filing link,
-          and an active website purchased through GoodParty.org. Don&apos;t have
-          a site yet? You can build and launch one right from your dashboard
-          before getting started.
-          <br />
-          <br />
-          Have questions? Visit{' '}
-          <a
-            href="https://support.goodparty.org/help-center/getting-text-compliant"
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            className="underline"
-          >
-            our help center
-          </a>{' '}
-          for more information or send us an email at{' '}
-          <a href="mailto:campaignsuccess@goodparty.org" className="underline">
-            campaignsuccess@goodparty.org
-          </a>
+          {phase1Enabled
+            ? "Carrier requirements mean you must register before sending your first text. You'll need your Campaign EIN and your official filing link. Ready? Click Start Your Registration to get started."
+            : "Carrier requirements mean you must register before sending your first text. You'll need your Campaign EIN, your official filing link, and an active website purchased through GoodParty.org. Don't have a site yet? You can build and launch one right from your dashboard before getting started."}
+          {helpTrailer}
         </>
       )
       cta = 'Start Registration'

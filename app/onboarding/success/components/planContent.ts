@@ -196,17 +196,13 @@ export interface GlossaryRow {
   definition: string
 }
 
-// Mirrors `StrategicLandscapeOpponent` from gp-api. Some pre-strategy
-// fallbacks (hubspotIncumbent, runningAgainst) still produce records with
-// `politicalSummary === ''` and `keyFacts === []` when no rich data is
-// available — the renderer hides empty fields.
+// Mirrors `StrategicLandscapeOpponent` from gp-api. Who is running: name,
+// party, incumbency. Narrative profiling (summary, key facts, websites) isn't
+// part of this section.
 export interface Opponent {
   fullName: string
   partyAffiliation: string
   incumbent: boolean | null
-  politicalSummary: string
-  keyFacts: string[]
-  websites: string[]
 }
 
 export interface VoterInsightIssue {
@@ -820,11 +816,9 @@ const buildOpponents = (
   hubspotIncumbentName: string | null,
 ): Opponent[] => {
   // Source priority:
-  //   1. strategicLandscape — full shape (politicalSummary, keyFacts,
-  //      websites). The LLM endpoint is the richest source.
+  //   1. strategicLandscape — the CAP endpoint's opponent roster.
   //   2. raceCandidates — BR/election-api filings via raceTargetMetrics.
-  //      Authoritative for who's on the ballot + incumbent flag, but no
-  //      narrative fields.
+  //      Authoritative for who's on the ballot + incumbent flag.
   //   3. runningAgainst — user-entered onboarding answers.
   //   4. hubspotIncumbent — last-ditch incumbent name from HubSpot.
   if (strategicLandscape?.opponents.length) {
@@ -832,9 +826,6 @@ const buildOpponents = (
       fullName: o.fullName,
       partyAffiliation: o.partyAffiliation,
       incumbent: o.incumbent,
-      politicalSummary: o.politicalSummary,
-      keyFacts: o.keyFacts,
-      websites: o.websites,
     }))
   }
   const fromRaceCandidates: Opponent[] = raceCandidates
@@ -843,9 +834,6 @@ const buildOpponents = (
       fullName: c.fullName.trim(),
       partyAffiliation: c.party?.trim() ?? '',
       incumbent: c.isIncumbent,
-      politicalSummary: '',
-      keyFacts: [],
-      websites: c.websiteUrl ? [c.websiteUrl] : [],
     }))
   if (fromRaceCandidates.length > 0) return fromRaceCandidates
   const fromRunningAgainst: Opponent[] = runningAgainst
@@ -854,9 +842,6 @@ const buildOpponents = (
       fullName: o.name?.trim() ?? '',
       partyAffiliation: o.party?.trim() ?? '',
       incumbent: false,
-      politicalSummary: o.description?.trim() ?? '',
-      keyFacts: [],
-      websites: [],
     }))
   if (fromRunningAgainst.length > 0) return fromRunningAgainst
   if (hubspotIncumbentName && hubspotIncumbentName.trim() !== '') {
@@ -865,9 +850,6 @@ const buildOpponents = (
         fullName: hubspotIncumbentName.trim(),
         partyAffiliation: '',
         incumbent: true,
-        politicalSummary: '',
-        keyFacts: [],
-        websites: [],
       },
     ]
   }
