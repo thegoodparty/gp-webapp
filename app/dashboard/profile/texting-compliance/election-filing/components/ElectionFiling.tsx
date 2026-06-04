@@ -88,7 +88,7 @@ export default function ElectionFiling(): React.JSX.Element {
         <div className="mt-10">
           {ready ? (
             <FormDataProvider
-              initialState={getInitialFormState(user, campaign)}
+              initialState={getInitialFormState(campaign)}
               validator={validateAgenticForm}
             >
               <TextingComplianceRegistrationForm
@@ -107,8 +107,14 @@ export default function ElectionFiling(): React.JSX.Element {
   )
 }
 
-const getInitialFormState = (
-  user: ReturnType<typeof useUser>[0],
+// Email and phone are intentionally left blank rather than seeded from the
+// candidate's GoodParty account (ENG-10290). Account contact info frequently
+// does not match what is on the official campaign filing; pre-filling it led
+// candidates to submit a mismatch without noticing, causing compliance
+// failures. They must enter the email/phone exactly as filed. EIN and
+// committee come from campaign.details, which reflect the filing, so those
+// stay pre-filled.
+export const getInitialFormState = (
   campaign: ReturnType<typeof useCampaign>[0],
 ): FormDataState => {
   const details = (campaign?.details ?? {}) as {
@@ -120,9 +126,9 @@ const getInitialFormState = (
     campaignCommitteeName: details.campaignCommittee || '',
     officeLevel: '',
     ein: details.einNumber || '',
-    phone: user?.phone || '',
+    phone: '',
     address: { formatted_address: '', place_id: '' },
     website: '',
-    email: user?.email || '',
+    email: '',
   }
 }
