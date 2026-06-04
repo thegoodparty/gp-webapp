@@ -1,8 +1,4 @@
-import {
-  CheckCircleOutlineRounded,
-  CircleOutlined,
-  TaskAltRounded,
-} from '@mui/icons-material'
+import { Circle, CircleCheck } from 'lucide-react'
 
 interface TaskCheckProps {
   checked: boolean
@@ -10,11 +6,11 @@ interface TaskCheckProps {
   trackingAttrs?: Record<string, string>
 }
 
-export default function TaskCheck({
+const TaskCheck = ({
   checked,
   onClick,
   trackingAttrs,
-}: TaskCheckProps): React.JSX.Element {
+}: TaskCheckProps): React.JSX.Element => {
   const handleClick = () => {
     if (!checked) {
       onClick()
@@ -29,12 +25,14 @@ export default function TaskCheck({
     >
       {!checked ? (
         <>
-          <CircleOutlined className="group-hover:hidden!" />
-          <CheckCircleOutlineRounded className="hidden! group-hover:inline!" />
+          <Circle className="group-hover:hidden!" />
+          <CircleCheck className="hidden! group-hover:inline!" />
         </>
       ) : (
-        <TaskAltRounded className="text-indigo-400" />
+        <CircleCheck className="text-indigo-400" />
       )}
     </span>
   )
 }
+
+export default TaskCheck

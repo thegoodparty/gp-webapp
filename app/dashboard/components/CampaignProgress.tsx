@@ -12,7 +12,7 @@ import { ContactCountsInfoModal } from 'app/dashboard/components/ContactCountsIn
 import Button from '@shared/buttons/Button'
 import { RecordVoterContactsModal } from 'app/dashboard/components/RecordVoterContactsModal'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
-import { InfoOutlined } from '@mui/icons-material'
+import { InfoIcon } from '@styleguide/components/ui/icons'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { RaceTargetMetrics } from 'helpers/types'
 
@@ -71,7 +71,7 @@ export const CampaignProgress = ({
           {...infoTrackingAttrs}
         >
           {numberFormatter(needed)} voter contacts needed
-          <InfoOutlined className="ml-2 !text-base" />
+          <InfoIcon className="ml-2 !text-base" />
           <ContactCountsInfoModal
             {...{
               raceTargetMetrics,

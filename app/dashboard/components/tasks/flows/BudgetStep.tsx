@@ -1,5 +1,4 @@
 'use client'
-import { InputAdornment } from '@mui/material'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import Checkbox from '@shared/inputs/Checkbox'
@@ -52,11 +51,7 @@ export default function BudgetStep({
           label="Budget"
           onChange={(e) => onChangeCallback('budget', e.target.value)}
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <AiFillDollarCircle />
-              </InputAdornment>
-            ),
+            startAdornment: <AiFillDollarCircle />,
           }}
         />
         {isTel && (
