@@ -58,4 +58,5 @@ export {
   XCircle as XCircleIcon,
   Lock as LockIcon,
   CircleMinus as CircleMinusIcon,
+  ChevronUp as ChevronUpIcon,
 } from 'lucide-react'

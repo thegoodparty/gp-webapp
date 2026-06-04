@@ -3,7 +3,7 @@ import { noop } from '@shared/utils/noop'
 import { useRef, useState } from 'react'
 import TextField from '@shared/inputs/TextField'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide'
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
@@ -174,7 +174,7 @@ export const CommitteeSupportingFilesUpload = ({
       >
         <span>Upload</span>
         {loadingFileUpload && (
-          <CircularProgress className="text-primary-light ml-2" size={16} />
+          <LoaderCircleIcon className="text-primary-light ml-2 size-4 animate-spin" />
         )}
       </PrimaryButton>
       <HiddenFileUploadInput
