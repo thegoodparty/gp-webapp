@@ -1102,13 +1102,6 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     0,
     Math.round(projectedTurnout * landlineMatchRate * 2),
   )
-  // Total volunteer-canvass hours over the campaign, derived from the
-  // voter contact goal. Assumes CANVASS_SHARE_OF_CONTACTS of contacts come
-  // through door knocking at DOORS_PER_HOUR. Rounded to the nearest 10.
-  const volunteerHourTarget =
-    Math.round(
-      (voterContactGoal * CANVASS_SHARE_OF_CONTACTS) / DOORS_PER_HOUR / 10,
-    ) * 10
   const averageTouchesPerVoter =
     projectedTurnout > 0
       ? Number((voterContactGoal / projectedTurnout).toFixed(1))
@@ -1130,6 +1123,13 @@ export const buildPlanData = (input: PlanInput): PlanData => {
       )
     }
   }
+
+  // Volunteer-only portion of the Section 5 time budget — matches the
+  // "Volunteer time" row of buildTimeBreakdown. Excludes the candidate's
+  // own hours so the figure on the Key Targets table reconciles with the
+  // volunteer line in the Section 5 table.
+  const volunteerHourTarget =
+    VOLUNTEERS_PER_WEEK * VOLUNTEER_HOURS_PER_SHIFT * weeksRemaining
   const totalDoors = Math.round(voterContactGoal * CANVASS_SHARE_OF_CONTACTS)
   const doorsPerWeek = totalDoors / weeksRemaining
   const candidateDoorsPerWeek = CANDIDATE_HOURS_PER_WEEK * DOORS_PER_HOUR
@@ -1257,7 +1257,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     {
       metric: 'Volunteer-Hour Target',
       target: `${volunteerHourTarget.toLocaleString('en-US')} volunteer hours`,
-      source: 'Benchmark: 1 volunteer hour per ~3 votes needed.',
+      source: `${VOLUNTEERS_PER_WEEK} volunteers × ${VOLUNTEER_HOURS_PER_SHIFT}-hour shift per week × ${weeksRemaining} weeks of campaigning.`,
     },
   ]
 
