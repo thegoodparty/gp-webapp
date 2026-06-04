@@ -1,5 +1,4 @@
 'use client'
-import { InputLabel, MenuItem, Select } from '@mui/material'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import TextField from '@shared/inputs/TextField'
@@ -11,6 +10,14 @@ import Button from '@shared/buttons/Button'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import {
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide'
 
 interface MessagePayload {
   type: string
@@ -116,31 +123,29 @@ export default function NeedHelp(): React.JSX.Element {
               <div className=" text-center">
                 <H1 className="mb-4">Voter File Help</H1>
               </div>
-              <InputLabel id="type">Voter File Type *</InputLabel>
+              <Label htmlFor="type" className="mb-1 block">
+                Voter File Type *
+              </Label>
               <Select
-                fullWidth
-                labelId="type"
                 value={state.type}
-                displayEmpty
                 required
-                onChange={(e) => {
+                onValueChange={(value) => {
                   trackEvent(EVENTS.VoterData.NeedHelp.SelectType, {
-                    type: e.target.value,
+                    type: value,
                   })
-                  handleChange('type', e.target.value)
-                }}
-                renderValue={(selected) => {
-                  if (selected.length === 0) {
-                    return <div>Select</div>
-                  }
-                  return selected
+                  handleChange('type', value)
                 }}
               >
-                {types.map((option) => (
-                  <MenuItem value={option} key={option}>
-                    {option}
-                  </MenuItem>
-                ))}
+                <SelectTrigger id="type" className="w-full">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  {types.map((option) => (
+                    <SelectItem value={option} key={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
               <div className="mt-8">
                 <TextField
