@@ -328,6 +328,17 @@ export const EVENTS = {
       ClickFinish: 'Pro Upgrade - Service Agreement Page: Click finish',
     },
     ClickGoToStripe: 'Pro Upgrade: Click Go to Stripe',
+    // Agentic Pro Upgrade → 10DLC compliance funnel (ENG-10294). Kept separate
+    // from the legacy Modal / SplashPage / CommitteeCheck events above, which
+    // belong to the older upgrade UX. The funnel's submit/checkout-start signals
+    // already exist and are reused (Profile.CandidateProfile.SubmitSuccess,
+    // Outreach.DlcCompliance.RegistrationSubmitted / PinVerificationCompleted,
+    // ProUpgrade.ClickGoToStripe); the "viewed" steps below were the gap.
+    Compliance: {
+      CandidateProfileViewed: 'Pro Upgrade - Candidate Profile Viewed',
+      FilingDetailsViewed: 'Pro Upgrade - Filing Details Viewed',
+      PinEntryViewed: 'Pro Upgrade - PIN Entry Viewed',
+    },
   },
   Contacts: {
     Download: 'Contacts - Download',
