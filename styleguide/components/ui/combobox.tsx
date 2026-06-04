@@ -27,6 +27,7 @@ interface ComboboxProps<T> {
   getOptionLabel: (option: T) => string
   getOptionKey?: (option: T) => string
   onInputChange?: (text: string) => void
+  inputValue?: string
   groupBy?: (option: T) => string
   placeholder?: string
   searchPlaceholder?: string
@@ -47,6 +48,7 @@ const Combobox = <T,>({
   getOptionLabel,
   getOptionKey,
   onInputChange,
+  inputValue,
   groupBy,
   placeholder = 'Select an option',
   searchPlaceholder = 'Search...',
@@ -167,6 +169,7 @@ const Combobox = <T,>({
           <CommandInput
             placeholder={searchPlaceholder}
             onValueChange={onInputChange}
+            {...(inputValue !== undefined ? { value: inputValue } : {})}
           />
           <CommandList>
             {loading ? (

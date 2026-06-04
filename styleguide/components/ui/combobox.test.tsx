@@ -143,6 +143,23 @@ describe('Combobox', () => {
     expect(screen.getByText('US House')).toBeInTheDocument()
   })
 
+  it('calls onInputChange with the typed text', async () => {
+    const user = userEvent.setup()
+    const onInputChange = vi.fn()
+    render(
+      <Combobox
+        {...baseProps}
+        value={null}
+        onChange={vi.fn()}
+        onInputChange={onInputChange}
+      />,
+    )
+    await user.click(screen.getByRole('combobox'))
+    await screen.findByText('Mayor')
+    await user.type(screen.getByPlaceholderText('Search...'), 'sen')
+    expect(onInputChange).toHaveBeenCalledWith('sen')
+  })
+
   it('shows the loading row and hides the empty state while loading', async () => {
     const user = userEvent.setup()
     render(

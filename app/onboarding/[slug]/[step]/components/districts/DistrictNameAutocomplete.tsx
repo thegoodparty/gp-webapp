@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Combobox } from '@styleguide'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { noop } from '@shared/utils/noop'
 
 interface DistrictName {
   id?: string
@@ -63,21 +62,26 @@ export default function DistrictNameAutocomplete({
       return
     }
 
+    let ignore = false
     setLoading(true)
 
-    async function load() {
+    const load = async () => {
       const data = await fetchDistrictNames(
         districtType,
         state,
         electionYear,
         excludeInvalidOverride,
       )
-      setOptions(data)
-      setLoading(false)
+      if (!ignore) {
+        setOptions(data)
+        setLoading(false)
+      }
     }
 
     load()
-    return noop
+    return () => {
+      ignore = true
+    }
   }, [districtType, state, electionYear, excludeInvalidOverride])
 
   const filtered = inputValue
@@ -92,6 +96,7 @@ export default function DistrictNameAutocomplete({
       value={value}
       onChange={onChange}
       onInputChange={setInputValue}
+      inputValue={inputValue}
       getOptionLabel={(o) => o.L2DistrictName}
       getOptionKey={(o) => o.id ?? o.L2DistrictName}
       disableClientFilter

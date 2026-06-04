@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Combobox } from '@styleguide'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { noop } from '@shared/utils/noop'
 
 interface DistrictType {
   id?: string
@@ -54,25 +53,31 @@ export default function DistrictTypeAutocomplete({
   useEffect(() => {
     setInputValue('')
     if (!state || !electionYear) return
+
+    let ignore = false
     setLoading(true)
 
-    async function load() {
+    const load = async () => {
       const data = await fetchDistrictTypes(
         state,
         electionYear,
         excludeInvalidOverride,
       )
-      setOptions(
-        data.map((d) => ({
-          ...d,
-          label: d.L2DistrictType.replace(/_/g, ' '),
-        })),
-      )
-      setLoading(false)
+      if (!ignore) {
+        setOptions(
+          data.map((d) => ({
+            ...d,
+            label: d.L2DistrictType.replace(/_/g, ' '),
+          })),
+        )
+        setLoading(false)
+      }
     }
 
     load()
-    return noop
+    return () => {
+      ignore = true
+    }
   }, [state, electionYear, excludeInvalidOverride])
 
   const getLabel = (o: DistrictType) => o.label || o.L2DistrictType
@@ -89,6 +94,7 @@ export default function DistrictTypeAutocomplete({
       value={value}
       onChange={onChange}
       onInputChange={setInputValue}
+      inputValue={inputValue}
       getOptionLabel={getLabel}
       getOptionKey={(o) => o.id ?? o.L2DistrictType}
       disableClientFilter
