@@ -4,6 +4,7 @@ import {
   Document,
   Font,
   Image,
+  Link,
   Page,
   Path,
   StyleSheet,
@@ -66,27 +67,28 @@ const styles = StyleSheet.create({
   coverInner: {
     flex: 1,
     paddingHorizontal: 65,
-    paddingTop: 80,
-    paddingBottom: 64,
+    paddingVertical: 47,
     borderWidth: 1,
     borderColor: COLOR.coverBorder,
     borderStyle: 'solid',
     borderRadius: 10,
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   coverBrandWrap: {
     width: '100%',
     alignItems: 'center',
     textAlign: 'center',
+    marginTop: 22,
   },
   coverLogoSvg: {
     width: 120,
     marginBottom: 6,
   },
   coverTagline: {
-    fontSize: 7,
-    letterSpacing: 1.5,
+    fontSize: 6,
+    letterSpacing: 1.1,
     color: COLOR.muted,
     marginTop: 4,
     textAlign: 'center',
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
   },
   coverTitleBlock: {
     alignItems: 'center',
-    marginTop: 96,
+    marginBottom: 24,
     width: '100%',
   },
   coverCreated: {
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
   coverLinkBlock: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 48,
+    maxWidth: 320,
   },
   coverQr: {
     width: 48,
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
   },
   coverLinkLabel: {
     fontSize: 7.5,
-    letterSpacing: 0.7,
+    letterSpacing: 0.45,
     color: COLOR.muted,
     fontFamily: FONT_OPEN_SANS,
     fontWeight: 700,
@@ -157,15 +159,13 @@ const styles = StyleSheet.create({
     textDecoration: 'underline',
   },
   coverFooterDisclaimer: {
-    position: 'absolute',
-    bottom: 56,
-    left: 80,
-    right: 80,
     fontSize: 10,
     color: COLOR.muted,
     fontStyle: 'italic',
     textAlign: 'center',
     lineHeight: 1.6,
+    maxWidth: 480,
+    marginTop: 8,
   },
 
   runningHeader: {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingBottom: 16,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderBottomColor: COLOR.divider,
     borderBottomStyle: 'solid',
   },
@@ -191,15 +191,18 @@ const styles = StyleSheet.create({
   },
   runningHeaderIcon: {
     height: 18,
-    marginRight: 8,
+    marginRight: 4,
   },
-  runningHeaderLabel: {
-    fontSize: 8.5,
-    color: COLOR.muted,
-  },
-  runningHeaderLabelBold: {
+  runningHeaderPlanTitle: {
     fontFamily: FONT_OPEN_SANS,
     fontWeight: 700,
+    fontSize: 10,
+    color: COLOR.primary,
+  },
+  runningHeaderPreparedFor: {
+    fontSize: 8.5,
+    color: COLOR.primary,
+    marginLeft: 4,
   },
   runningHeaderRight: {
     fontSize: 8.5,
@@ -207,49 +210,37 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 
-  runningFooter: {
+  runningFooterDivider: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: PAGE_PADDING_X,
-    paddingBottom: 8,
+    left: PAGE_PADDING_X,
+    right: PAGE_PADDING_X,
+    bottom: 50,
+    height: 0.5,
+    backgroundColor: COLOR.divider,
   },
-  runningFooterInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 16,
-    paddingBottom: 16,
-    borderTopWidth: 1,
-    borderTopColor: COLOR.divider,
-    borderTopStyle: 'solid',
+  runningFooterLogo: {
+    position: 'absolute',
+    left: PAGE_PADDING_X,
+    bottom: 16,
   },
-  runningFooterLeftCol: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  runningFooterCenterCol: {
-    flex: 1,
+  runningFooterCenter: {
+    position: 'absolute',
+    left: (612 - 140) / 2,
+    bottom: 22,
+    width: 140,
     textAlign: 'center',
     fontSize: 8.5,
     color: COLOR.muted,
   },
-  runningFooterRightCol: {
-    flex: 1,
+  runningFooterRight: {
+    position: 'absolute',
+    right: PAGE_PADDING_X,
+    bottom: 22,
+    width: 240,
     textAlign: 'right',
     fontSize: 8.5,
     color: COLOR.muted,
     fontStyle: 'italic',
-  },
-  runningFooterPrepared: {
-    fontSize: 8.5,
-    color: COLOR.muted,
-    marginRight: 4,
-  },
-  runningFooterLogo: {
-    height: 18,
   },
   runningFooterPageNum: {
     fontFamily: FONT_OPEN_SANS,
@@ -411,7 +402,43 @@ const styles = StyleSheet.create({
   twoColCol: {
     flex: 1,
   },
+
+  linkInline: {
+    color: COLOR.link,
+    textDecoration: 'underline',
+  },
 })
+
+const MARKDOWN_LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g
+
+const renderTextWithLinks = (text: string): React.ReactNode => {
+  if (!text || !text.includes('](')) return text
+
+  const parts: React.ReactNode[] = []
+  let lastIdx = 0
+  const re = new RegExp(MARKDOWN_LINK_RE.source, 'g')
+  let match: RegExpExecArray | null
+
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > lastIdx) {
+      parts.push(text.slice(lastIdx, match.index))
+    }
+    parts.push(
+      <Link
+        key={`${match.index}-${match[2]}`}
+        src={match[2]!}
+        style={styles.linkInline}
+      >
+        {match[1]}
+      </Link>,
+    )
+    lastIdx = re.lastIndex
+  }
+
+  if (parts.length === 0) return text
+  if (lastIdx < text.length) parts.push(text.slice(lastIdx))
+  return parts
+}
 
 type DocProps = {
   plan: PlanData
@@ -486,19 +513,9 @@ const HorizontalLogoSvg = ({ height = 18 }: { height?: number }) => (
   </Svg>
 )
 
-const headerCampaignLabel = (
-  plan: PlanData,
-): { bold: string; rest: string } => {
+const RunningHeader = ({ plan }: { plan: PlanData }) => {
   const office = plan.race || 'Your race'
   const name = plan.candidateName || 'Candidate'
-  return {
-    bold: 'Campaign Plan',
-    rest: ` for ${name} / ${office}`,
-  }
-}
-
-const RunningHeader = ({ plan }: { plan: PlanData }) => {
-  const label = headerCampaignLabel(plan)
   return (
     <View style={styles.runningHeader} fixed>
       <View style={styles.runningHeaderInner}>
@@ -506,9 +523,9 @@ const RunningHeader = ({ plan }: { plan: PlanData }) => {
           <View style={styles.runningHeaderIcon}>
             <HeartIconSvg height={18} />
           </View>
-          <Text style={styles.runningHeaderLabel}>
-            <Text style={styles.runningHeaderLabelBold}>{label.bold}</Text>
-            {label.rest}
+          <Text style={styles.runningHeaderPlanTitle}>Campaign Plan</Text>
+          <Text style={styles.runningHeaderPreparedFor}>
+            prepared for {name} / {office}
           </Text>
         </View>
         <Text style={styles.runningHeaderRight}>
@@ -520,34 +537,31 @@ const RunningHeader = ({ plan }: { plan: PlanData }) => {
 }
 
 const RunningFooter = () => (
-  <View style={styles.runningFooter} fixed>
-    <View style={styles.runningFooterInner}>
-      <View style={styles.runningFooterLeftCol}>
-        <Text style={styles.runningFooterPrepared}>Prepared by</Text>
-        <View style={styles.runningFooterLogo}>
-          <HorizontalLogoSvg height={18} />
-        </View>
-      </View>
-      <Text
-        style={styles.runningFooterCenterCol}
-        render={({
-          pageNumber,
-          totalPages,
-        }: {
-          pageNumber: number
-          totalPages: number
-        }) => (
-          <>
-            Page <Text style={styles.runningFooterPageNum}>{pageNumber}</Text>{' '}
-            of <Text style={styles.runningFooterPageNum}>{totalPages}</Text>
-          </>
-        )}
-      />
-      <Text style={styles.runningFooterRightCol}>
-        empowering people to run, win and serve!
-      </Text>
+  <>
+    <View style={styles.runningFooterDivider} fixed />
+    <View style={styles.runningFooterLogo} fixed>
+      <HorizontalLogoSvg height={19} />
     </View>
-  </View>
+    <Text
+      style={styles.runningFooterCenter}
+      fixed
+      render={({
+        pageNumber,
+        totalPages,
+      }: {
+        pageNumber: number
+        totalPages: number
+      }) => (
+        <>
+          Page <Text style={styles.runningFooterPageNum}>{pageNumber}</Text> of{' '}
+          <Text style={styles.runningFooterPageNum}>{totalPages}</Text>
+        </>
+      )}
+    />
+    <Text style={styles.runningFooterRight} fixed>
+      empowering people to run, win and serve!
+    </Text>
+  </>
 )
 
 const Bullets = ({ items }: { items: React.ReactNode[] }) => (
@@ -555,7 +569,9 @@ const Bullets = ({ items }: { items: React.ReactNode[] }) => (
     {items.map((line, i) => (
       <View key={i} style={styles.bulletRow}>
         <Text style={styles.bulletDot}>•</Text>
-        <Text style={styles.bulletText}>{line}</Text>
+        <Text style={styles.bulletText}>
+          {typeof line === 'string' ? renderTextWithLinks(line) : line}
+        </Text>
       </View>
     ))}
   </View>
@@ -571,7 +587,9 @@ const DefinitionList = ({
       <View key={item.title} style={styles.definitionRow}>
         <Text style={styles.para}>
           <Text style={styles.definitionTitle}>{item.title}</Text>{' '}
-          <Text style={styles.definitionBody}>{item.body}</Text>
+          <Text style={styles.definitionBody}>
+            {renderTextWithLinks(item.body)}
+          </Text>
         </Text>
       </View>
     ))}
@@ -623,7 +641,8 @@ const PlanTable = ({
   const colStyle = (c: ColumnDef): Record<string, number> =>
     c.width !== undefined ? { width: c.width } : { flex: c.flex ?? 1 }
 
-  const cellRender: CellRenderer = (row, key) => row[key] ?? ''
+  const cellRender: CellRenderer = (row, key) =>
+    renderTextWithLinks(row[key] ?? '')
 
   return (
     <View style={styles.table}>
@@ -726,21 +745,21 @@ const CoverPage = ({
             Election Day: {plan.electionDate}
           </Text>
         ) : null}
-
-        {liveQrDataUrl && liveUrl ? (
-          <View style={styles.coverLinkBlock}>
-            {/* react-pdf Image is a PDF primitive, not a DOM <img>. */}
-            {/* eslint-disable-next-line jsx-a11y/alt-text */}
-            <Image src={liveQrDataUrl} style={styles.coverQr} />
-            <View>
-              <Text style={styles.coverLinkLabel}>
-                VIEW YOUR LIVE CAMPAIGN PLAN
-              </Text>
-              <Text style={styles.coverLinkUrl}>{liveUrl}</Text>
-            </View>
-          </View>
-        ) : null}
       </View>
+
+      {liveQrDataUrl && liveUrl ? (
+        <View style={styles.coverLinkBlock}>
+          {/* react-pdf Image is a PDF primitive, not a DOM <img>. */}
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
+          <Image src={liveQrDataUrl} style={styles.coverQr} />
+          <View>
+            <Text style={styles.coverLinkLabel}>
+              VIEW YOUR LIVE CAMPAIGN PLAN
+            </Text>
+            <Text style={styles.coverLinkUrl}>{liveUrl}</Text>
+          </View>
+        </View>
+      ) : null}
 
       <Text style={styles.coverFooterDisclaimer}>
         Campaign plan prepared by GoodParty.org&apos;s Campaign Intelligence
@@ -842,7 +861,9 @@ export const CampaignPlanPdfDocument = ({
           items={plan.keyDates.map((d) => (
             <Text key={`${d.date}-${d.description}`}>
               <Text style={styles.paraBold}>{d.date}.</Text>{' '}
-              <Text style={styles.definitionBody}>{d.description}</Text>
+              <Text style={styles.definitionBody}>
+                {renderTextWithLinks(d.description)}
+              </Text>
             </Text>
           ))}
         />
@@ -1198,7 +1219,9 @@ export const CampaignPlanPdfDocument = ({
               ]}
             >
               <Text style={styles.keyValueLabel}>{g.term}</Text>
-              <Text style={styles.keyValueValue}>{g.definition}</Text>
+              <Text style={styles.keyValueValue}>
+                {renderTextWithLinks(g.definition)}
+              </Text>
             </View>
           ))}
         </View>
