@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: PAGE_PADDING_X,
     fontFamily: FONT_OPEN_SANS,
     fontSize: 12,
-    lineHeight: 1.6,
     color: COLOR.primary,
   },
   coverPage: {
@@ -121,12 +120,6 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     color: COLOR.secondary,
     marginBottom: 5,
-    textAlign: 'center',
-  },
-  coverLocation: {
-    fontSize: 11,
-    color: COLOR.primary,
-    marginBottom: 3,
     textAlign: 'center',
   },
   coverElection: {
@@ -407,6 +400,47 @@ const styles = StyleSheet.create({
     color: COLOR.link,
     textDecoration: 'underline',
   },
+
+  sectionMarker: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    fontSize: 1,
+    color: '#ffffff',
+  },
+
+  tocHeading: {
+    fontSize: 24,
+    fontFamily: FONT_OPEN_SANS,
+    fontWeight: 700,
+    color: COLOR.primary,
+    marginBottom: 24,
+  },
+  tocRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginBottom: 8,
+  },
+  tocTitle: {
+    fontSize: 12,
+    color: COLOR.primary,
+    textDecoration: 'none',
+  },
+  tocLeader: {
+    flex: 1,
+    marginHorizontal: 6,
+    marginBottom: 4,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR.divider,
+    borderBottomStyle: 'dotted',
+    height: 1,
+  },
+  tocPageNum: {
+    fontSize: 12,
+    color: COLOR.primary,
+    minWidth: 24,
+    textAlign: 'right',
+  },
 })
 
 const MARKDOWN_LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g
@@ -440,11 +474,31 @@ const renderTextWithLinks = (text: string): React.ReactNode => {
   return parts
 }
 
+export type SectionPageMap = Record<string, number>
+
 type DocProps = {
   plan: PlanData
   liveUrl?: string
   liveQrDataUrl?: string
+  tocPageMap?: SectionPageMap | null
+  onSectionPage?: (id: string, pageNumber: number) => void
 }
+
+export type TocSection = { id: string; title: string }
+
+export const TOC_SECTIONS: TocSection[] = [
+  { id: 'exec-summary', title: 'Executive Summary' },
+  { id: 'sec-1', title: '1. Strategic Landscape' },
+  { id: 'sec-2', title: '2. Voter Insights For Your District' },
+  { id: 'sec-3', title: '3. Electoral Goals & Key Metrics' },
+  { id: 'sec-4', title: '4. Campaign Timeline' },
+  { id: 'sec-5', title: '5. Projected Minimum Resources Needed' },
+  { id: 'sec-6', title: '6. Community Engagement & Earned Media' },
+  { id: 'sec-7', title: '7. Voter Contact Plan' },
+  { id: 'sec-8', title: '8. Measurement & Accountability' },
+  { id: 'sec-9', title: '9. Methodology & Data Sources' },
+  { id: 'sec-10', title: '10. Glossary' },
+]
 
 // Heart icon only (no wordmark). Used in the running header.
 const HeartIconSvg = ({ height = 18 }: { height?: number }) => (
@@ -528,9 +582,7 @@ const RunningHeader = ({ plan }: { plan: PlanData }) => {
             prepared for {name} / {office}
           </Text>
         </View>
-        <Text style={styles.runningHeaderRight}>
-          Created on {plan.planGenerationDate}
-        </Text>
+        <Text style={styles.runningHeaderRight}>{plan.planGenerationDate}</Text>
       </View>
     </View>
   )
@@ -681,25 +733,70 @@ const PlanTable = ({
 }
 
 const SectionPage = ({
+  id,
   title,
   plan,
   intro,
   children,
   transition,
+  onSectionPage,
 }: {
+  id: string
   title: string
   plan: PlanData
   intro?: string
   children: React.ReactNode
   transition?: string
+  onSectionPage?: (id: string, pageNumber: number) => void
 }) => (
   <Page size="LETTER" style={styles.page}>
     <RunningHeader plan={plan} />
     <View style={styles.bodyStart}>
-      <Text style={styles.sectionTitle}>{title}</Text>
+      {onSectionPage ? (
+        <Text
+          style={styles.sectionMarker}
+          render={({ pageNumber }: { pageNumber: number }) => {
+            onSectionPage(id, pageNumber)
+            return ''
+          }}
+        />
+      ) : null}
+      <Text style={styles.sectionTitle} id={id}>
+        {title}
+      </Text>
       {intro ? <Text style={styles.intro}>{intro}</Text> : null}
       {children}
       {transition ? <Text style={styles.transition}>{transition}</Text> : null}
+    </View>
+    <RunningFooter />
+  </Page>
+)
+
+const TableOfContentsPage = ({
+  plan,
+  tocPageMap,
+}: {
+  plan: PlanData
+  tocPageMap: SectionPageMap | null | undefined
+}) => (
+  <Page size="LETTER" style={styles.page}>
+    <RunningHeader plan={plan} />
+    <View style={styles.bodyStart}>
+      <Text style={styles.tocHeading}>Table of Contents</Text>
+      {TOC_SECTIONS.map((section) => {
+        const pageNumber = tocPageMap?.[section.id]
+        return (
+          <View key={section.id} style={styles.tocRow}>
+            <Link src={`#${section.id}`} style={styles.tocTitle}>
+              {section.title}
+            </Link>
+            <View style={styles.tocLeader} />
+            <Text style={styles.tocPageNum}>
+              {pageNumber !== undefined ? pageNumber : ''}
+            </Text>
+          </View>
+        )
+      })}
     </View>
     <RunningFooter />
   </Page>
@@ -733,13 +830,6 @@ const CoverPage = ({
         <Text style={styles.coverCandidate}>
           {plan.candidateName} for {plan.race || 'Your race'}
         </Text>
-        {plan.hasDistrict || plan.location ? (
-          <Text style={styles.coverLocation}>
-            {[plan.hasDistrict ? plan.districtName : '', plan.location]
-              .filter(Boolean)
-              .join(', ')}
-          </Text>
-        ) : null}
         {plan.electionDate ? (
           <Text style={styles.coverElection}>
             Election Day: {plan.electionDate}
@@ -807,6 +897,8 @@ export const CampaignPlanPdfDocument = ({
   plan,
   liveUrl,
   liveQrDataUrl,
+  tocPageMap,
+  onSectionPage,
 }: DocProps) => {
   const opposition = oppositionCopy(plan)
 
@@ -818,9 +910,13 @@ export const CampaignPlanPdfDocument = ({
     >
       <CoverPage plan={plan} liveUrl={liveUrl} liveQrDataUrl={liveQrDataUrl} />
 
+      <TableOfContentsPage plan={plan} tocPageMap={tocPageMap} />
+
       <SectionPage
+        id="exec-summary"
         title="Executive Summary"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro="This is the whole plan in one view. If you read nothing else, read this."
         transition="The race is mapped by your opponents, your projected votes needed to win, and your timeline. What shapes everything else is you. Continue to your Campaign Manager and we'll help rebuild this plan around you specifically."
       >
@@ -870,8 +966,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-1"
         title="1. Strategic Landscape"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro={`${districtLabel(
           plan,
         )} is an electorate where name recognition and turnout (not ideological persuasion) decide most races. The following opportunities and challenges are framed against that reality.`}
@@ -912,8 +1010,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-2"
         title="2. Voter Insights For Your District"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro={
           plan.voterInsightsSource === 'district'
             ? 'The issues below come from district-level survey data on what voters here care about most right now. Personalize your platform around them in Campaign Manager.'
@@ -932,8 +1032,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-3"
         title="3. Electoral Goals & Key Metrics"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro={`The numbers below are projected from historical voter data and proprietary models for ${districtLabel(
           plan,
         )}.`}
@@ -954,8 +1056,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-4"
         title="4. Campaign Timeline"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro="Dates below are the hard gates the campaign must hit. Each is followed by an internal working deadline (one week earlier wherever possible) to preserve a buffer."
         transition="The key dates you need to know about your race have been established. Share your launch event, fundraising rollout, and issue moments in Campaign Manager and we'll turn this into a working plan."
       >
@@ -974,8 +1078,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-5"
         title="5. Projected Minimum Resources Needed"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro={`We project that you need at least ${plan.winNumber.toLocaleString(
           'en-US',
         )} votes to win, with at least ${
@@ -1044,8 +1150,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-6"
         title="6. Community Engagement & Earned Media"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro="Earned media and in-person visibility are the highest-ROI channels in a race this size. A single mention in a local outlet or a strong showing at a civic association meeting can move more voters than any paid channel at this budget."
         transition="These are your highest-value rooms and your best media targets. Once you tell us why you're running and what you stand for in Campaign Manager, we can turn this list into ready-to-use talking points and press pitches."
       >
@@ -1094,8 +1202,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-7"
         title="7. Voter Contact Plan"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro="The contact cadence below is designed so that every likely voter receives at least 1 introductory contact, 1 persuasion contact, 1 early-vote reminder, and 1 Election Day push. Texts are the primary workhorse; robocalls layer on top to catch landline-only voters."
         transition="This plan puts you in front of every likely voter at the right moment. But repeated exposure only converts to votes if the message is specific and credible. Once you share your issues and your story in Campaign Manager, we'll help you build the actual message."
       >
@@ -1132,8 +1242,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-8"
         title="8. Measurement & Accountability"
         plan={plan}
+        onSectionPage={onSectionPage}
         transition="The measurement system is live in Campaign Manager. Once you personalize your plan with your goals, capacity, and timeline, the dashboard starts tracking the campaign you're actually running."
       >
         <Text style={styles.para}>
@@ -1162,8 +1274,10 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
+        id="sec-9"
         title="9. Methodology & Data Sources"
         plan={plan}
+        onSectionPage={onSectionPage}
         intro="This plan was produced by GoodParty.org using public voter data, historical election results, and our proprietary models. Every metric in this document is an estimate derived from the sources below."
         transition="This plan is a working starting point. All estimates should be revisited weekly as new data arrives."
       >
@@ -1208,7 +1322,12 @@ export const CampaignPlanPdfDocument = ({
         <Bullets items={plan.planDoesNotDo} />
       </SectionPage>
 
-      <SectionPage title="10. Glossary" plan={plan}>
+      <SectionPage
+        id="sec-10"
+        title="10. Glossary"
+        plan={plan}
+        onSectionPage={onSectionPage}
+      >
         <View style={styles.keyValueTable}>
           {plan.glossary.map((g, i) => (
             <View

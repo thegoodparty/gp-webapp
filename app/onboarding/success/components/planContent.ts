@@ -354,94 +354,115 @@ const buildTimeline = (
   const sourceNote = (isReal: boolean, baseNote: string): string =>
     isReal ? `Per BallotReady. ${baseNote}` : `Approximate. ${baseNote}`
 
-  const timeline: TimelineRow[] = [
-    {
-      date: formatDate(filing),
-      milestone: 'Nomination papers filed with Town Clerk',
-      notes: filingIsReal
-        ? 'Filing deadline per BallotReady. Bring two backup copies.'
-        : 'Bring two backup copies.',
-    },
-    {
-      date: formatDate(earlyVotingStart),
-      milestone: 'Early voting begins',
-      notes: sourceNote(
-        earlyVotingStartIsReal,
-        'Persuasion contact should be wrapping up.',
-      ),
-    },
-    {
-      date: formatDate(earlyVotingEnd),
-      milestone: 'Early voting ends',
-      notes: sourceNote(
-        earlyVotingEndIsReal,
-        'Last day for in-person early voting in most jurisdictions.',
-      ),
-    },
-    {
-      date: formatDate(requestBallotStart),
-      milestone: 'Absentee ballot request opens',
-      notes: sourceNote(
-        requestBallotStartIsReal,
-        'Plan introduction text and robocall campaigns to land before this date.',
-      ),
-    },
-    // REGISTRATION.OPEN is the only row with no good E-offset fallback —
-    // registration is year-round in most states. Show only when BR has a
-    // real date so we don't render an invented one.
-    ...(voterRegOpen
-      ? [
-          {
-            date: formatDate(voterRegOpen),
-            milestone: 'Voter registration opens',
-            notes: 'Per BallotReady.',
-          },
-        ]
-      : []),
-    {
-      date: formatDate(voterRegDeadline),
-      milestone: 'Voter registration deadline',
-      notes: sourceNote(voterRegDeadlineIsReal, 'Push via robocall campaign.'),
-    },
-    {
-      date: formatDate(requestBallotEnd),
-      milestone: 'Absentee ballot request deadline',
-      notes: sourceNote(requestBallotEndIsReal, 'Push via text campaign.'),
-    },
-    {
-      date: formatDate(electionDate),
-      milestone: 'Election Day, polls open; absentee ballots due',
-      notes: 'All hands on deck; push via GOTV text and robocall campaigns.',
-    },
-  ]
+  const timelineRows: Array<{ date: Date; milestone: string; notes: string }> =
+    [
+      {
+        date: filing,
+        milestone: 'Nomination papers filed with Town Clerk',
+        notes: filingIsReal
+          ? 'Filing deadline per BallotReady. Bring two backup copies.'
+          : 'Bring two backup copies.',
+      },
+      {
+        date: earlyVotingStart,
+        milestone: 'Early voting begins',
+        notes: sourceNote(
+          earlyVotingStartIsReal,
+          'Persuasion contact should be wrapping up.',
+        ),
+      },
+      {
+        date: earlyVotingEnd,
+        milestone: 'Early voting ends',
+        notes: sourceNote(
+          earlyVotingEndIsReal,
+          'Last day for in-person early voting in most jurisdictions.',
+        ),
+      },
+      {
+        date: requestBallotStart,
+        milestone: 'Absentee ballot request opens',
+        notes: sourceNote(
+          requestBallotStartIsReal,
+          'Plan introduction text and robocall campaigns to land before this date.',
+        ),
+      },
+      // REGISTRATION.OPEN is the only row with no good E-offset fallback —
+      // registration is year-round in most states. Show only when BR has a
+      // real date so we don't render an invented one.
+      ...(voterRegOpen
+        ? [
+            {
+              date: voterRegOpen,
+              milestone: 'Voter registration opens',
+              notes: 'Per BallotReady.',
+            },
+          ]
+        : []),
+      {
+        date: voterRegDeadline,
+        milestone: 'Voter registration deadline',
+        notes: sourceNote(
+          voterRegDeadlineIsReal,
+          'Push via robocall campaign.',
+        ),
+      },
+      {
+        date: requestBallotEnd,
+        milestone: 'Absentee ballot request deadline',
+        notes: sourceNote(requestBallotEndIsReal, 'Push via text campaign.'),
+      },
+      {
+        date: electionDate,
+        milestone: 'Election Day, polls open; absentee ballots due',
+        notes: 'All hands on deck; push via GOTV text and robocall campaigns.',
+      },
+    ]
 
-  const keyDates: KeyDate[] = [
+  const timeline: TimelineRow[] = timelineRows
+    .slice()
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .map((r) => ({
+      date: formatDate(r.date),
+      milestone: r.milestone,
+      notes: r.notes,
+    }))
+
+  const keyDateRows: Array<{ date: Date; description: string }> = [
     {
-      date: formatDate(filing),
+      date: filing,
       description: 'Nomination papers filed with Town Clerk.',
     },
     {
-      date: formatDate(requestBallotStart),
+      date: requestBallotStart,
       description:
         'Absentee / mail ballot requests open. First voter contact must land by this date.',
     },
     {
-      date: formatDate(addDays(electionDate, -20)),
+      date: addDays(electionDate, -20),
       description: `${eventCount} community events that you should personally attend.`,
     },
     {
-      date: formatDate(voterRegDeadline),
+      date: voterRegDeadline,
       description: 'Voter registration deadline.',
     },
     {
-      date: formatDate(requestBallotEnd),
+      date: requestBallotEnd,
       description: 'Absentee ballot request deadline.',
     },
     {
-      date: formatDate(electionDate),
+      date: electionDate,
       description: 'Election Day.',
     },
   ]
+
+  const keyDates: KeyDate[] = keyDateRows
+    .slice()
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .map((r) => ({
+      date: formatDate(r.date),
+      description: r.description,
+    }))
 
   return { timeline, keyDates }
 }
