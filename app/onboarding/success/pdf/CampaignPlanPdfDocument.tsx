@@ -1085,7 +1085,7 @@ export const CampaignPlanPdfDocument = ({
           plan.weeksRemaining
         } weeks left to campaign. Recommended total budget is approximately $${plan.totalBudget.toLocaleString(
           'en-US',
-        )} for outreach, compliance and fees, while ${plan.totalCampaignHours.toLocaleString(
+        )} for outreach, compliance and fees, while ${plan.volunteerHourTarget.toLocaleString(
           'en-US',
         )} volunteer hours are needed for in-person campaigning, events, and volunteers.`}
         transition={`The $${plan.totalBudget.toLocaleString(
