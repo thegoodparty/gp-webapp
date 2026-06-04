@@ -106,6 +106,8 @@ const TextField = ({
   InputProps,
   inputProps,
   inputRef,
+  InputLabelProps,
+  slotProps,
   style,
 }: TextFieldProps) => {
   const generatedId = useId()
@@ -198,7 +200,17 @@ const TextField = ({
 
   return (
     <div className="flex w-full flex-col gap-1.5">
-      {label ? <Label htmlFor={inputId}>{label}</Label> : null}
+      {label ? (
+        <Label
+          htmlFor={inputId}
+          className={cn(
+            InputLabelProps?.className,
+            slotProps?.inputLabel?.className,
+          )}
+        >
+          {label}
+        </Label>
+      ) : null}
       {adorned}
       {helperText ? (
         <div

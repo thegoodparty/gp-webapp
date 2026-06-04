@@ -17,8 +17,9 @@ interface ModalProps {
   preventBackdropClose?: boolean
   preventEscClose?: boolean
   hideClose?: boolean
-  /** Disable MUI's focus-enforcement trap. Required when the modal contains
-   *  third-party iframes (e.g. Stripe PaymentElement) that need to receive focus. */
+  /** Disable Radix's focus trap. Required when the modal contains third-party
+   *  iframes (e.g. Stripe PaymentElement) that must receive focus: makes the
+   *  dialog non-modal and prevents Radix from stealing focus back on open. */
   disableEnforceFocus?: boolean
 }
 
@@ -31,9 +32,13 @@ const Modal = ({
   preventBackdropClose = false,
   preventEscClose = false,
   hideClose = false,
-  disableEnforceFocus: _disableEnforceFocus = false,
+  disableEnforceFocus = false,
 }: ModalProps): React.JSX.Element => (
-  <Dialog open={open} onOpenChange={(next) => !next && closeCallback()}>
+  <Dialog
+    open={open}
+    onOpenChange={(next) => !next && closeCallback()}
+    modal={!disableEnforceFocus}
+  >
     <DialogContent
       className={cn(
         '!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 max-h-[90vh] overflow-y-auto',
@@ -41,6 +46,9 @@ const Modal = ({
         boxClassName,
       )}
       style={boxStyle}
+      onOpenAutoFocus={
+        disableEnforceFocus ? (e) => e.preventDefault() : undefined
+      }
       onInteractOutside={(e) => {
         if (preventBackdropClose) e.preventDefault()
       }}

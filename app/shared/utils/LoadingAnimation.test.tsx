@@ -39,9 +39,7 @@ describe('LoadingAnimation', () => {
 
   it('renders the indeterminate progress bar', () => {
     const { container } = render(<LoadingAnimation />)
-    const bar = container.querySelector(
-      '.animate-\\[indeterminate_1\\.5s_ease-in-out_infinite\\]',
-    )
+    const bar = container.querySelector('.animate-indeterminate')
     expect(bar).toBeInTheDocument()
   })
 })

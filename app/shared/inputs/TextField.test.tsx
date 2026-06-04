@@ -117,4 +117,16 @@ describe('TextField', () => {
     )
     expect(screen.getByText('Invalid email')).toHaveClass('text-destructive')
   })
+
+  it('applies InputLabelProps.className to the label', () => {
+    render(
+      <TextField
+        label="Email"
+        value=""
+        onChange={vi.fn()}
+        InputLabelProps={{ className: 'text-black' }}
+      />,
+    )
+    expect(screen.getByText('Email')).toHaveClass('text-black')
+  })
 })

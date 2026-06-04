@@ -21,7 +21,7 @@ export const LoadingAnimation = ({ title, label }: LoadingAnimationProps) => (
         </>
       )}
       <div className="relative h-2 mt-4 mb-2 w-full overflow-hidden rounded-full bg-primary/20">
-        <div className="absolute h-full w-1/2 rounded-full bg-primary animate-[indeterminate_1.5s_ease-in-out_infinite]" />
+        <div className="absolute h-full w-1/2 rounded-full bg-primary animate-indeterminate" />
       </div>
     </div>
     {label && (
