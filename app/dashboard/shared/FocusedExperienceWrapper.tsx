@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material'
+import React from 'react'
 
 interface FocusedExperienceWrapperProps {
   className?: string
@@ -14,13 +14,12 @@ export const FocusedExperienceWrapper = ({
   <div className="w-full px-4 bg-indigo-100">
     <div className="min-h-[calc(100vh-60px)] py-20 w-full">
       <div className="max-w-screen-sm mx-auto">
-        <Paper
-          className={`p-6 md:p-16 rounded-2xl border border-indigo-200 ${className}`}
-          elevation={0}
+        <div
+          className={`p-6 md:p-16 rounded-2xl border border-indigo-200 bg-white ${className}`}
           {...restProps}
         >
           {children}
-        </Paper>
+        </div>
       </div>
     </div>
   </div>
