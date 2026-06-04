@@ -1,6 +1,3 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import clsx from 'clsx'
 import H5 from '@shared/typography/H5'
 import { OutreachImpact } from 'app/dashboard/outreach/components/OutreachImpact'
@@ -8,6 +5,8 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { MdLockOutline } from 'react-icons/md'
 import { OUTREACH_TYPES } from '../constants'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
+import { Card, CardContent } from '@styleguide'
+import { ArrowRightIcon } from '@styleguide/components/ui/icons'
 
 type OutreachType =
   | 'text'
@@ -50,19 +49,18 @@ export const OutreachCreateCard = ({
     <Card
       onClick={() => onClick(type)}
       className={clsx(
-        'flex flex-col justify-between cursor-pointer transition-shadow w-full shadow-md hover:shadow-lg border border-transparent bg-white',
-        selected && 'border-blue-500 outline outline-2 outline-blue-300',
+        'flex flex-col justify-between cursor-pointer transition-shadow w-full shadow-md hover:shadow-lg border border-transparent bg-white rounded-2xl gap-0',
+        selected &&
+          'border-components-input-active outline outline-2 outline-components-input-active/50',
       )}
-      sx={{ borderRadius: 3, p: 0, boxShadow: 2 }}
-      elevation={0}
     >
-      <CardContent className="flex flex-col gap-2 p-3 !pb-3">
+      <CardContent className="flex flex-col gap-2 p-3 pb-3">
         <div className="flex items-center justify-between mb-2">
           <H5>{title}</H5>
           {requiresPro && !isPro ? (
             <MdLockOutline />
           ) : (
-            <ArrowForwardIcon className="mr-[-6px]" />
+            <ArrowRightIcon className="-mr-1.5" size={20} />
           )}
         </div>
         <div className="flex items-center justify-between">

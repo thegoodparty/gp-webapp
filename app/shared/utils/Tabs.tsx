@@ -1,7 +1,10 @@
 'use client'
-import MuiTabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import {
+  Tabs as SgTabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '@styleguide/components/ui/tabs'
 import { noop } from './noop'
 import { useState, ReactNode } from 'react'
 
@@ -21,83 +24,50 @@ const Tabs = ({
   tabLabels = [],
   tabPanels = [],
   orientation = 'horizontal',
-  variant = 'standard',
-  centered = false,
   activeTab = false,
-  color = '#000',
-  size = 'medium',
   changeCallback = noop,
 }: TabsProps) => {
-  const [value, setValue] = useState(0)
+  const [internalValue, setInternalValue] = useState(0)
 
-  const handleChange = (
-    _event: React.SyntheticEvent,
-    newValue: number,
-  ): void => {
-    if (activeTab !== false) {
-      changeCallback(newValue)
+  const controlled = activeTab !== false
+  const currentIndex = controlled ? (activeTab as number) : internalValue
+
+  const handleValueChange = (v: string) => {
+    const index = Number(v)
+    if (controlled) {
+      changeCallback(index)
     } else {
-      setValue(newValue)
+      setInternalValue(index)
+      changeCallback(index)
     }
   }
 
-  const isSelected = (index: number): boolean =>
-    activeTab !== false ? activeTab === index : value === index
-
   return (
-    <div className={`w-full ${orientation === 'vertical' ? 'flex' : ''}`}>
-      <div className={` relative  ${!centered ? 'flex items-center' : ''} `}>
-        {orientation === 'horizontal' && (
-          <div className=" bg-slate-300 absolute w-full h-[1px] bottom-0 left-0" />
-        )}
-        <MuiTabs
-          value={activeTab !== false ? activeTab : value}
-          onChange={handleChange}
-          aria-label="nav tabs example"
-          orientation={orientation}
-          variant={variant}
-          centered={centered}
-          sx={{
-            '.MuiTabs-indicator': { backgroundColor: color },
-          }}
-        >
-          {tabLabels.map((label, index) => (
-            <Tab
-              key={index}
-              sx={{
-                '&.MuiButtonBase-root': { padding: 0 },
-              }}
-              component="div"
-              label={
-                <SecondaryButton
-                  variant="text"
-                  size={size}
-                  ariaLabel={
-                    typeof label === 'string' ? label : `Tab ${index + 1}`
-                  }
-                >
-                  <span
-                    style={isSelected(index) ? { color } : { color: '#ADB6C8' }}
-                  >
-                    {label}
-                  </span>
-                </SecondaryButton>
-              }
-            />
-          ))}
-        </MuiTabs>
-      </div>
+    <SgTabs
+      value={String(currentIndex)}
+      onValueChange={handleValueChange}
+      orientation={orientation === 'vertical' ? 'vertical' : 'horizontal'}
+      className={`w-full ${orientation === 'vertical' ? 'flex-row' : ''}`}
+    >
+      <TabsList
+        className={orientation === 'vertical' ? 'flex-col h-auto' : 'w-full'}
+      >
+        {tabLabels.map((label, index) => (
+          <TabsTrigger key={index} value={String(index)}>
+            {label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
       {tabPanels.map((panel, index) => (
-        <div
-          role="tabpanel"
+        <TabsContent
           key={index}
-          hidden={!isSelected(index)}
-          className={`${orientation === 'horizontal' ? 'mt-3' : 'ml-3'} `}
+          value={String(index)}
+          className={orientation === 'horizontal' ? 'mt-3' : 'ml-3'}
         >
           {panel}
-        </div>
+        </TabsContent>
       ))}
-    </div>
+    </SgTabs>
   )
 }
 

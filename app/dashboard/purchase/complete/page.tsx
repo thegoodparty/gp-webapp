@@ -7,7 +7,7 @@ import { reportErrorToSentry } from 'app/shared/sentry'
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide'
 
 export default function PurchaseCompletePage() {
   const searchParams = useSearchParams()
@@ -60,7 +60,7 @@ export default function PurchaseCompletePage() {
     <div className="flex min-h-[60vh] flex-col items-center justify-center p-8">
       {status === 'loading' && (
         <div className="text-center">
-          <CircularProgress className="mb-4" />
+          <LoaderCircleIcon className="mb-4 size-10 animate-spin" />
           <Body1>Processing your payment...</Body1>
         </div>
       )}

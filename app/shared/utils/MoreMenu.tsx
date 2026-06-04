@@ -1,9 +1,14 @@
 import { useState } from 'react'
 import { noop } from './noop'
-import { MdMoreVert } from 'react-icons/md'
-import { Menu, MenuItem, MenuItemProps } from '@mui/material'
+import { EllipsisVerticalIcon } from '@styleguide/components/ui/icons'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@styleguide/components/ui/dropdown-menu'
 
-interface MoreMenuItem extends Omit<MenuItemProps, 'onClick'> {
+interface MoreMenuItem {
   label: string
   onClick?: () => void
 }
@@ -17,63 +22,42 @@ export const MoreMenu = ({
   onClose = noop,
   menuItems = [],
 }: MoreMenuProps): React.JSX.Element => {
-  const [menuAnchor, setMenuAnchor] = useState<Element | null>(null)
-  const showMenu = Boolean(menuAnchor)
+  const [open, setOpen] = useState(false)
 
-  const handleMenuAnchorClick = ({
-    currentTarget,
-  }: React.MouseEvent<SVGElement> | React.KeyboardEvent<SVGElement>) => {
-    setMenuAnchor(currentTarget)
-  }
-
-  const handleMenuClose = (menuItem?: MoreMenuItem) => {
-    setMenuAnchor(null)
-    onClose(menuItem)
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next)
+    if (!next) {
+      onClose()
+    }
   }
 
   return (
-    <>
-      <MdMoreVert
-        role="button"
-        tabIndex={0}
-        onClick={handleMenuAnchorClick}
-        onKeyDown={(e) =>
-          (e.key === 'Enter' || e.key === ' ') && handleMenuAnchorClick(e)
-        }
-        className="text-2xl cursor-pointer"
-      />
-      <Menu
-        {...{
-          anchorEl: menuAnchor,
-          open: showMenu,
-          autoFocus: false,
-          onClose: () => handleMenuClose(),
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'left',
-          },
-          transformOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-        }}
-      >
+    <DropdownMenu open={open} onOpenChange={handleOpenChange}>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label="More options"
+          className="cursor-pointer"
+        >
+          <EllipsisVerticalIcon className="size-6" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
         {menuItems.map((menuItem, index) => {
-          const { onClick = noop, label = '', ...rest } = menuItem
+          const { onClick = noop, label } = menuItem
           return (
-            <MenuItem
+            <DropdownMenuItem
               key={index}
               onClick={() => {
-                handleMenuClose()
+                handleOpenChange(false)
                 onClick()
               }}
-              {...rest}
             >
               {label}
-            </MenuItem>
+            </DropdownMenuItem>
           )
         })}
-      </Menu>
-    </>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

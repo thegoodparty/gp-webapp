@@ -6,7 +6,7 @@ import RenderInputField from '@shared/inputs/RenderInputField'
 import { useEffect, useState } from 'react'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
 
@@ -104,7 +104,7 @@ const FunFactSection = (props: FunFactSectionProps): React.JSX.Element => {
         {saving ? (
           <PrimaryButton disabled>
             <div className="px-3">
-              <CircularProgress size={16} />
+              <LoaderCircleIcon size={16} className="animate-spin" />
             </div>
           </PrimaryButton>
         ) : (

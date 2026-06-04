@@ -1,20 +1,76 @@
 import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen } from '@testing-library/react'
+import { screen, fireEvent } from '@testing-library/react'
 import { render } from 'helpers/test-utils/render'
 import { ModalOrDrawer } from './ModalOrDrawer'
 
+interface MockEvent {
+  defaultPrevented: boolean
+  preventDefault: () => void
+}
+
 vi.mock('@styleguide/components/ui/dialog', () => ({
-  Dialog: ({ children, open }: { children: React.ReactNode; open: boolean }) =>
-    open ? <div role="dialog">{children}</div> : null,
+  Dialog: ({
+    children,
+    open,
+    onOpenChange,
+  }: {
+    children: React.ReactNode
+    open: boolean
+    onOpenChange?: (open: boolean) => void
+  }) =>
+    open ? (
+      <div role="dialog">
+        <button
+          aria-label="trigger-open-change"
+          onClick={() => onOpenChange?.(false)}
+        />
+        {children}
+      </div>
+    ) : null,
   DialogContent: ({
     children,
     className,
+    onInteractOutside,
+    onEscapeKeyDown,
   }: {
     children: React.ReactNode
     className?: string
+    onInteractOutside?: (e: MockEvent) => void
+    onEscapeKeyDown?: (e: MockEvent) => void
   }) => (
     <div className={className} data-slot="dialog-content">
+      <button
+        aria-label="interact-outside"
+        onClick={() => {
+          const e: MockEvent = {
+            defaultPrevented: false,
+            preventDefault() {
+              this.defaultPrevented = true
+            },
+          }
+          onInteractOutside?.(e)
+          if (!e.defaultPrevented) {
+            document.body.setAttribute('data-dialog-dismissed', 'true')
+          }
+        }}
+      />
+      <button
+        aria-label="escape-key"
+        onClick={() => {
+          const e: MockEvent = {
+            defaultPrevented: false,
+            preventDefault() {
+              this.defaultPrevented = true
+            },
+          }
+          onEscapeKeyDown?.(e)
+          if (!e.defaultPrevented) {
+            document.body.setAttribute('data-dialog-dismissed', 'true')
+          }
+        }}
+      />
+      <button aria-label="Close" data-slot="dialog-close" />
       {children}
     </div>
   ),
@@ -28,17 +84,46 @@ vi.mock('@styleguide/components/ui/dialog', () => ({
 }))
 
 vi.mock('@styleguide/components/ui/drawer', () => ({
-  Drawer: ({ children, open }: { children: React.ReactNode; open: boolean }) =>
-    open ? <div role="dialog">{children}</div> : null,
+  Drawer: ({
+    children,
+    open,
+    dismissible,
+  }: {
+    children: React.ReactNode
+    open: boolean
+    dismissible?: boolean
+  }) =>
+    open ? (
+      <div role="dialog" data-dismissible={String(dismissible)}>
+        {children}
+      </div>
+    ) : null,
   DrawerContent: ({
     children,
     className,
+    onEscapeKeyDown,
   }: {
     children: React.ReactNode
     className?: string
+    onEscapeKeyDown?: (e: MockEvent) => void
   }) => (
     <div className={className} data-slot="drawer-content">
       <button aria-label="Close" data-slot="drawer-auto-close" />
+      <button
+        aria-label="escape-key"
+        onClick={() => {
+          const e: MockEvent = {
+            defaultPrevented: false,
+            preventDefault() {
+              this.defaultPrevented = true
+            },
+          }
+          onEscapeKeyDown?.(e)
+          if (!e.defaultPrevented) {
+            document.body.setAttribute('data-dialog-dismissed', 'true')
+          }
+        }}
+      />
       {children}
     </div>
   ),
@@ -67,6 +152,7 @@ const defaultProps = {
 beforeEach(() => {
   mockBreakpoint.mockReturnValue('lg')
   defaultProps.onOpenChange.mockClear()
+  document.body.removeAttribute('data-dialog-dismissed')
 })
 
 describe('ModalOrDrawer', () => {
@@ -152,5 +238,162 @@ describe('ModalOrDrawer', () => {
     )
     const closeButtons = screen.getAllByRole('button', { name: /close/i })
     expect(closeButtons).toHaveLength(1)
+  })
+
+  describe('preventOutsideClose (desktop / Dialog)', () => {
+    it('dismisses on outside interaction by default', () => {
+      render(
+        <ModalOrDrawer {...defaultProps}>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'interact-outside' }))
+      expect(document.body).toHaveAttribute('data-dialog-dismissed', 'true')
+    })
+
+    it('does not dismiss on outside interaction when preventOutsideClose is set', () => {
+      render(
+        <ModalOrDrawer {...defaultProps} preventOutsideClose>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'interact-outside' }))
+      expect(document.body).not.toHaveAttribute('data-dialog-dismissed')
+    })
+  })
+
+  describe('preventEscClose (desktop / Dialog)', () => {
+    it('dismisses on escape by default', () => {
+      render(
+        <ModalOrDrawer {...defaultProps}>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'escape-key' }))
+      expect(document.body).toHaveAttribute('data-dialog-dismissed', 'true')
+    })
+
+    it('does not dismiss on escape when preventEscClose is set', () => {
+      render(
+        <ModalOrDrawer {...defaultProps} preventEscClose>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'escape-key' }))
+      expect(document.body).not.toHaveAttribute('data-dialog-dismissed')
+    })
+  })
+
+  describe('hideClose', () => {
+    it('hides the built-in close button on desktop via last-child selector', () => {
+      render(
+        <ModalOrDrawer {...defaultProps} hideClose>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      expect(
+        screen.getByText('Content').closest('[data-slot="dialog-content"]'),
+      ).toHaveClass('[&>button:last-child]:hidden')
+    })
+
+    it('hides the built-in close button on mobile via first-child selector', () => {
+      mockBreakpoint.mockReturnValue('xs')
+      render(
+        <ModalOrDrawer {...defaultProps} hideClose>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      expect(
+        screen.getByText('Content').closest('[data-slot="drawer-content"]'),
+      ).toHaveClass('[&>button:first-child]:hidden')
+    })
+
+    it('does not hide the close button when hideClose is unset', () => {
+      render(
+        <ModalOrDrawer {...defaultProps}>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      expect(
+        screen.getByText('Content').closest('[data-slot="dialog-content"]'),
+      ).not.toHaveClass('[&>button:last-child]:hidden')
+    })
+  })
+
+  describe('preventOutsideClose (mobile / Drawer)', () => {
+    it('passes dismissible=true to the drawer by default', () => {
+      mockBreakpoint.mockReturnValue('xs')
+      render(
+        <ModalOrDrawer {...defaultProps}>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      expect(screen.getByRole('dialog')).toHaveAttribute(
+        'data-dismissible',
+        'true',
+      )
+    })
+
+    it('passes dismissible=false to the drawer when preventOutsideClose is set', () => {
+      mockBreakpoint.mockReturnValue('xs')
+      render(
+        <ModalOrDrawer {...defaultProps} preventOutsideClose>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      expect(screen.getByRole('dialog')).toHaveAttribute(
+        'data-dismissible',
+        'false',
+      )
+    })
+  })
+
+  describe('preventEscClose (mobile / Drawer)', () => {
+    it('dismisses on escape by default', () => {
+      mockBreakpoint.mockReturnValue('xs')
+      render(
+        <ModalOrDrawer {...defaultProps}>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'escape-key' }))
+      expect(document.body).toHaveAttribute('data-dialog-dismissed', 'true')
+    })
+
+    it('does not dismiss on escape when preventEscClose is set', () => {
+      mockBreakpoint.mockReturnValue('xs')
+      render(
+        <ModalOrDrawer {...defaultProps} preventEscClose>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'escape-key' }))
+      expect(document.body).not.toHaveAttribute('data-dialog-dismissed')
+    })
+  })
+
+  describe('fullSize', () => {
+    it('applies full-size sizing classes on desktop', () => {
+      render(
+        <ModalOrDrawer {...defaultProps} fullSize>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      expect(
+        screen.getByText('Content').closest('[data-slot="dialog-content"]'),
+      ).toHaveClass('h-[90vh]')
+    })
+
+    it('applies full-size sizing classes on mobile', () => {
+      mockBreakpoint.mockReturnValue('xs')
+      render(
+        <ModalOrDrawer {...defaultProps} fullSize>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      expect(
+        screen.getByText('Content').closest('[data-slot="drawer-content"]'),
+      ).toHaveClass('h-[90vh]')
+    })
   })
 })

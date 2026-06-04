@@ -30,7 +30,7 @@ test('authenticate with onboarded user', async ({ page }) => {
 
   await completeOnboardingFlow(page)
 
-  if (!page.url().includes('/dashboard')) {
+  if (!/\/(dashboard|onboarding\/success)/.test(page.url())) {
     throw new Error(`Onboarding failed - ended at: ${page.url()}`)
   }
 
@@ -45,6 +45,7 @@ async function completeOnboardingFlow(page: Page): Promise<void> {
   await completeOfficeSelectionStep(page)
   await completePathToVictoryStep(page)
   await completeVoterDemographicsStep(page)
+  await completeOutreachPlanStep(page)
   await completePledgeStep(page)
 }
 
@@ -130,6 +131,17 @@ async function completeVoterDemographicsStep(page: Page): Promise<void> {
   await clickContinue(page)
 }
 
+async function completeOutreachPlanStep(page: Page): Promise<void> {
+  console.log('Step: Outreach plan')
+  await expect(
+    page.getByRole('heading', {
+      level: 1,
+      name: /minimum resources needed/i,
+    }),
+  ).toBeVisible({ timeout: 30000 })
+  await clickContinue(page)
+}
+
 async function completePledgeStep(page: Page): Promise<void> {
   console.log('Step: Pledge')
   await expect(
@@ -141,5 +153,5 @@ async function completePledgeStep(page: Page): Promise<void> {
   await expect(submit).toBeVisible({ timeout: 15000 })
   await expect(submit).toBeEnabled()
   await submit.click()
-  await page.waitForURL(/\/dashboard/, { timeout: 15000 })
+  await page.waitForURL(/\/(dashboard|onboarding\/success)/, { timeout: 30000 })
 }

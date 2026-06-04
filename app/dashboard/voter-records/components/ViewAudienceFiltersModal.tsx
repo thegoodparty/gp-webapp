@@ -32,7 +32,7 @@ const isAudienceFilterKey = (key: string): key is AudienceFilterKey => {
 }
 import H2 from '@shared/typography/H2'
 import Body1 from '@shared/typography/Body1'
-import { InfoRounded } from '@mui/icons-material'
+import { InfoIcon } from '@styleguide/components/ui/icons'
 import { CustomVoterFile } from 'helpers/types'
 
 interface ViewAudienceFiltersModalProps {
@@ -77,7 +77,7 @@ const ViewAudienceFiltersModal = ({
           className={`flex items-center ${className}`}
           onClick={onOpen}
         >
-          <InfoRounded />
+          <InfoIcon />
         </IconButton>
       ) : (
         <Button
@@ -87,7 +87,7 @@ const ViewAudienceFiltersModal = ({
           className={`flex gap-2 items-center ${className}`}
           onClick={onOpen}
         >
-          <InfoRounded /> View Audience Filters
+          <InfoIcon /> View Audience Filters
         </Button>
       )}
       <ActualViewAudienceFiltersModal

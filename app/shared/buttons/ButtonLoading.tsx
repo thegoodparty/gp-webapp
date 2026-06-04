@@ -1,5 +1,5 @@
 'use client'
-import CircularProgress from '@mui/material/CircularProgress'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 
 const SIZES = {
   small: 14,
@@ -18,10 +18,9 @@ const ButtonLoading = ({
   size = 'medium',
   className = '',
 }: ButtonLoadingProps) => (
-  <CircularProgress
-    size={SIZES[size] || SIZES.medium}
-    className={`mr-2 ${className}`}
-    color="inherit"
+  <LoaderCircleIcon
+    size={SIZES[size]}
+    className={`animate-spin mr-2 ${className}`}
   />
 )
 

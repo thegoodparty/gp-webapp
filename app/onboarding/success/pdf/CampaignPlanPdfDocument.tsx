@@ -999,9 +999,6 @@ export const CampaignPlanPdfDocument = ({
                     ? [`Party: ${opp.partyAffiliation}`]
                     : []),
                   ...(opp.incumbent === true ? ['Incumbent'] : []),
-                  ...(opp.politicalSummary ? [opp.politicalSummary] : []),
-                  ...opp.keyFacts,
-                  ...opp.websites,
                 ]}
               />
             </View>

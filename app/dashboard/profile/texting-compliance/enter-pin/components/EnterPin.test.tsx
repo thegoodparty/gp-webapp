@@ -5,6 +5,7 @@ import { render } from 'helpers/test-utils/render'
 import { router } from 'helpers/test-utils/router-mocking'
 import { api } from 'helpers/test-utils/api-mocking'
 import type { TcrCompliance, TcrComplianceStatus } from 'helpers/types'
+import { EVENTS } from 'helpers/analyticsHelper'
 import EnterPin from './EnterPin'
 
 const mockGetTcrCompliance = vi.fn<() => Promise<TcrCompliance | null>>()
@@ -139,6 +140,33 @@ describe('EnterPin — gating', () => {
   })
 })
 
+describe('EnterPin — funnel view event (ENG-10294)', () => {
+  it('fires PIN Entry Viewed once the PIN form is shown (status submitted)', async () => {
+    mockGetTcrCompliance.mockResolvedValue(tcrWith('submitted'))
+    render(<EnterPin />)
+    await waitFor(() => {
+      expect(mockTrackEvent).toHaveBeenCalledWith(
+        EVENTS.ProUpgrade.Compliance.PinEntryViewed,
+      )
+    })
+  })
+
+  it.each<[TcrComplianceStatus | null]>([['pending'], ['approved'], [null]])(
+    'does not fire PIN Entry Viewed when the form is never shown (status %s)',
+    async (status) => {
+      mockGetTcrCompliance.mockResolvedValue(tcrWith(status))
+      render(<EnterPin />)
+      // Let the gating/redirect effects settle before asserting non-emission.
+      await waitFor(() => {
+        expect(mockGetTcrCompliance).toHaveBeenCalled()
+      })
+      expect(mockTrackEvent).not.toHaveBeenCalledWith(
+        EVENTS.ProUpgrade.Compliance.PinEntryViewed,
+      )
+    },
+  )
+})
+
 describe('EnterPin — submit flow', () => {
   it('happy path: submits PIN, fires analytics, invalidates cache, redirects', async () => {
     const user = userEvent.setup()
@@ -165,7 +193,13 @@ describe('EnterPin — submit flow', () => {
     })
 
     expect(receivedBody).toEqual({ pin: '123456' })
-    expect(mockTrackEvent).toHaveBeenCalledTimes(1)
+    // Submit fires the PIN-verification event. (The mount-time PinEntryViewed
+    // funnel event also fires for `submitted` status — assert the specific
+    // submit event rather than a raw call count.)
+    expect(mockTrackEvent).toHaveBeenCalledWith(
+      EVENTS.Outreach.DlcCompliance.PinVerificationCompleted,
+      expect.objectContaining({ dlcComplianceStatus: 'Yes' }),
+    )
     expect(mockSuccessSnackbar).toHaveBeenCalledWith(
       expect.stringMatching(/PIN submitted/i),
     )

@@ -5,7 +5,7 @@ import ReactCrop from 'react-image-crop'
 import type { Crop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import Button from '@shared/buttons/Button'
-import { DeleteRounded, CropRounded } from '@mui/icons-material'
+import { Trash2Icon, CropIcon } from '@styleguide/components/ui/icons'
 
 interface ImageCropPreviewProps {
   file: File
@@ -122,7 +122,7 @@ const ImageCropPreview = ({
                 color="white"
                 className="flex items-center gap-2 justify-center w-[150px]"
               >
-                <CropRounded />
+                <CropIcon />
                 Crop
               </Button>
               <Button
@@ -130,7 +130,7 @@ const ImageCropPreview = ({
                 color="white"
                 className="flex items-center gap-2 justify-center w-[150px]"
               >
-                <DeleteRounded />
+                <Trash2Icon />
                 Remove
               </Button>
             </div>

@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { FaChevronDown } from 'react-icons/fa'
-import { OpenInNewRounded } from '@mui/icons-material'
+import { ExternalLinkIcon } from '@styleguide/components/ui/icons'
 import { memo } from 'react'
 
 interface NavLink {
@@ -76,7 +76,7 @@ const NavDropdown = ({
                 {link.icon}
                 <div className="ml-3">{link.label}</div>
               </div>
-              {link.external && <OpenInNewRounded />}
+              {link.external && <ExternalLinkIcon />}
             </Link>
           ))}
         </div>

@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import { numberFormatter } from 'helpers/numberHelper'
 
 interface DomainResultProps {
@@ -42,7 +42,11 @@ const DomainResult = memo(function DomainResult({
         <span
           className={`text-sm ${selected ? 'text-white' : 'text-gray-600'}`}
         >
-          {loading ? <CircularProgress size={16} /> : displayText}
+          {loading ? (
+            <LoaderCircleIcon size={16} className="animate-spin" />
+          ) : (
+            displayText
+          )}
         </span>
       </div>
     </div>

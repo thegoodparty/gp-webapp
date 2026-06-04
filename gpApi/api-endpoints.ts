@@ -55,15 +55,12 @@ export interface MeetingBriefingAwaitingDto {
 }
 
 // Mirrors `OpponentSchema` in gp-api
-// (`src/campaignStrategy/schemas/strategicLandscape.schema.ts`). `incumbent`
-// is nullable because the LLM may legitimately not know.
+// (`src/campaignStrategy/schemas/strategicLandscape.schema.ts`). Who is
+// running: name, party, incumbency. No narrative profiling.
 export interface StrategicLandscapeOpponent {
   fullName: string
   partyAffiliation: string
   incumbent: boolean | null
-  politicalSummary: string
-  keyFacts: string[]
-  websites: string[]
 }
 
 export interface StrategicLandscapeData {
