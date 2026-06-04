@@ -2,7 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { waitFor } from '@testing-library/react'
 import { render } from 'helpers/test-utils/render'
 import { EVENTS } from 'helpers/analyticsHelper'
-import ElectionFiling from './ElectionFiling'
+import ElectionFiling, { getInitialFormState } from './ElectionFiling'
+
+type Campaign = Parameters<typeof getInitialFormState>[0]
 
 const mockTrackEvent = vi.fn()
 vi.mock('helpers/analyticsHelper', async (importOriginal) => {
@@ -78,5 +80,31 @@ describe('ElectionFiling — funnel view event (ENG-10294)', () => {
     expect(mockTrackEvent).not.toHaveBeenCalledWith(
       EVENTS.ProUpgrade.Compliance.FilingDetailsViewed,
     )
+  })
+})
+
+describe('getInitialFormState — filing contact info not auto-filled (ENG-10290)', () => {
+  const campaign = {
+    details: { einNumber: '12-3456789', campaignCommittee: 'Friends of Jane' },
+  } as Campaign
+
+  it('leaves email and phone blank so the candidate must enter filing values', () => {
+    const state = getInitialFormState(campaign)
+    expect(state.email).toBe('')
+    expect(state.phone).toBe('')
+  })
+
+  it('still pre-fills EIN and committee from the campaign filing details', () => {
+    const state = getInitialFormState(campaign)
+    expect(state.ein).toBe('12-3456789')
+    expect(state.campaignCommitteeName).toBe('Friends of Jane')
+  })
+
+  it('defaults committee and EIN to empty when campaign details are missing', () => {
+    const state = getInitialFormState({} as Campaign)
+    expect(state.ein).toBe('')
+    expect(state.campaignCommitteeName).toBe('')
+    expect(state.email).toBe('')
+    expect(state.phone).toBe('')
   })
 })
