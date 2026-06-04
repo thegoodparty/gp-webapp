@@ -12,7 +12,13 @@ import {
   CommandList,
 } from './command'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
-import { CheckIcon, ChevronsUpDownIcon, SearchIcon, XMarkIcon } from './icons'
+import {
+  CheckIcon,
+  ChevronsUpDownIcon,
+  LoaderCircleIcon,
+  SearchIcon,
+  XMarkIcon,
+} from './icons'
 
 interface ComboboxProps<T> {
   options: T[]
@@ -21,10 +27,14 @@ interface ComboboxProps<T> {
   getOptionLabel: (option: T) => string
   getOptionKey?: (option: T) => string
   onInputChange?: (text: string) => void
+  inputValue?: string
   groupBy?: (option: T) => string
   placeholder?: string
   searchPlaceholder?: string
   emptyText?: string
+  disableClientFilter?: boolean
+  loading?: boolean
+  loadingText?: string
   disabled?: boolean
   clearable?: boolean
   className?: string
@@ -38,10 +48,14 @@ const Combobox = <T,>({
   getOptionLabel,
   getOptionKey,
   onInputChange,
+  inputValue,
   groupBy,
   placeholder = 'Select an option',
   searchPlaceholder = 'Search...',
   emptyText = 'No results',
+  disableClientFilter = false,
+  loading = false,
+  loadingText = 'Loading...',
   disabled = false,
   clearable = true,
   className,
@@ -147,20 +161,34 @@ const Combobox = <T,>({
         className="w-(--radix-popover-trigger-width) p-0"
         aria-label={placeholder}
       >
-        <Command value={commandValue} onValueChange={setCommandValue}>
+        <Command
+          shouldFilter={!disableClientFilter}
+          value={commandValue}
+          onValueChange={setCommandValue}
+        >
           <CommandInput
             placeholder={searchPlaceholder}
             onValueChange={onInputChange}
+            {...(inputValue !== undefined ? { value: inputValue } : {})}
           />
           <CommandList>
-            <CommandEmpty>{emptyText}</CommandEmpty>
-            {grouped
-              ? grouped.map(([group, groupOptions]) => (
-                  <CommandGroup key={group} heading={group}>
-                    {groupOptions.map(renderItem)}
-                  </CommandGroup>
-                ))
-              : options.map(renderItem)}
+            {loading ? (
+              <div className="text-muted-foreground flex items-center gap-2 px-3 py-6 text-sm justify-center">
+                <LoaderCircleIcon className="size-4 animate-spin" />
+                {loadingText}
+              </div>
+            ) : (
+              <>
+                <CommandEmpty>{emptyText}</CommandEmpty>
+                {grouped
+                  ? grouped.map(([group, groupOptions]) => (
+                      <CommandGroup key={group} heading={group}>
+                        {groupOptions.map(renderItem)}
+                      </CommandGroup>
+                    ))
+                  : options.map(renderItem)}
+              </>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

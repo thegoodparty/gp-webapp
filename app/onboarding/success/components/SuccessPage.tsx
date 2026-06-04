@@ -4,7 +4,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
-import { Button, IconButton } from '@styleguide'
+import {
+  Button,
+  IconButton,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@styleguide'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
@@ -15,6 +21,7 @@ import ConfettiCanvas from './ConfettiCanvas'
 import HeroCard from './HeroCard'
 import PlanSections from './PlanSections'
 import SharePlanModal from './SharePlanModal'
+import DownloadReminderModal from './DownloadReminderModal'
 import {
   buildPlanData,
   type ApiPressOutlet,
@@ -36,6 +43,8 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const [campaign] = useCampaign()
   const [shareOpen, setShareOpen] = useState(false)
   const [downloading, setDownloading] = useState(false)
+  const [hasDownloaded, setHasDownloaded] = useState(false)
+  const [reminderOpen, setReminderOpen] = useState(false)
 
   // Onboarding flips campaign state server-side right before this page mounts;
   // the client cache from earlier in the session is stale.
@@ -249,20 +258,53 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     voterIssuesFromApi,
   ])
 
+  // Gate the download until every async source the PDF depends on has
+  // settled. "Settled" means finished — data arrived OR the request errored.
+  // An errored source still counts as ready: its `isGenerating`/`isPending`
+  // flag flips to false, and the PDF carries the same empty-state copy the
+  // page shows. The polling sources expose both flags; voter issues is a
+  // one-shot fetch, so `isPending` alone covers it.
+  const planReady =
+    !(strategy.isPending || strategy.isGenerating) &&
+    !(events.isPending || events.isGenerating) &&
+    !isLocalNewsGenerating &&
+    !voterIssuesQuery.isPending
+
   const handleShare = () => setShareOpen(true)
-  const handleContinue = () => router.push('/dashboard')
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
 
   const handleDownload = async () => {
-    if (downloading) return
+    if (downloading || !planReady) return
     setDownloading(true)
     try {
       await downloadCampaignPlanPdf(plan, { liveUrl: shareUrl || undefined })
+      setHasDownloaded(true)
     } finally {
       setDownloading(false)
     }
   }
+
+  const goToCampaignManager = () => router.push('/dashboard')
+
+  // Remind the user to grab a copy before leaving, but only if they
+  // haven't already downloaded. The reminder reappears on every attempt
+  // until a download succeeds.
+  const handleContinue = () => {
+    if (hasDownloaded) {
+      goToCampaignManager()
+      return
+    }
+    setReminderOpen(true)
+  }
+
+  const handleReminderDownload = async () => {
+    await handleDownload()
+    setReminderOpen(false)
+  }
+
+  const downloadNotReadyTooltip =
+    'Your plan is still being generated. It will be ready in a moment.'
 
   return (
     <div className="relative min-h-screen w-full bg-base-surface pb-28 text-foreground">
@@ -306,28 +348,76 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-base-border bg-base-surface">
         <div className="mx-auto flex h-20 w-full max-w-4xl items-center justify-between gap-3 px-4 sm:px-8">
-          <IconButton
-            type="button"
-            variant="outline"
-            size="large"
-            onClick={handleDownload}
-            loading={downloading}
-            aria-label="Download campaign plan"
-            className="sm:hidden"
-          >
-            <Download className="size-5" />
-          </IconButton>
-          <Button
-            type="button"
-            variant="outline"
-            size="large"
-            icon={<Download className="size-5" />}
-            onClick={handleDownload}
-            loading={downloading}
-            className="hidden sm:inline-flex"
-          >
-            Download
-          </Button>
+          {/* Mobile download. While the plan is still generating the button
+              is disabled; a disabled button suppresses its own pointer
+              events, so the tooltip trigger wraps it (the span gets the
+              hover instead). */}
+          {planReady ? (
+            <IconButton
+              type="button"
+              variant="outline"
+              size="large"
+              onClick={handleDownload}
+              loading={downloading}
+              aria-label="Download campaign plan"
+              className="sm:hidden"
+            >
+              <Download className="size-5" />
+            </IconButton>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="inline-flex sm:hidden">
+                  <IconButton
+                    type="button"
+                    variant="outline"
+                    size="large"
+                    loading
+                    aria-label="Preparing campaign plan"
+                  >
+                    <Download className="size-5" />
+                  </IconButton>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>{downloadNotReadyTooltip}</TooltipContent>
+            </Tooltip>
+          )}
+
+          {/* Desktop download. Label reads "Preparing plan…" while the plan
+              is still generating, and the tooltip explains the disabled
+              state on hover. */}
+          {planReady ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="large"
+              icon={<Download className="size-5" />}
+              onClick={handleDownload}
+              loading={downloading}
+              className="hidden sm:inline-flex"
+            >
+              Download
+            </Button>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="hidden sm:inline-flex">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="large"
+                    icon={<Download className="size-5" />}
+                    loading
+                    loadingText="Preparing plan…"
+                  >
+                    Download
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>{downloadNotReadyTooltip}</TooltipContent>
+            </Tooltip>
+          )}
+
           <Button
             type="button"
             variant="default"
@@ -344,6 +434,15 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
         onClose={() => setShareOpen(false)}
         url={shareUrl}
         candidateName={plan.candidateName}
+      />
+
+      <DownloadReminderModal
+        open={reminderOpen}
+        onClose={() => setReminderOpen(false)}
+        planReady={planReady}
+        downloading={downloading}
+        onDownloadNow={handleReminderDownload}
+        onContinue={goToCampaignManager}
       />
     </div>
   )

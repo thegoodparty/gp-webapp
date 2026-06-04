@@ -2,7 +2,10 @@
 
 import { pdf } from '@react-pdf/renderer'
 import QRCode from 'qrcode'
-import { CampaignPlanPdfDocument } from './CampaignPlanPdfDocument'
+import {
+  CampaignPlanPdfDocument,
+  type SectionPageMap,
+} from './CampaignPlanPdfDocument'
 import type { PlanData } from '../components/planContent'
 
 const slugify = (s: string): string =>
@@ -32,11 +35,34 @@ export const downloadCampaignPlanPdf = async (
     ? await buildQrDataUrl(options.liveUrl)
     : undefined
 
+  // Pass 1: render with an empty TOC and a recorder that captures which
+  // page each section landed on. The render-callback side effect fires
+  // when react-pdf lays out each Page; by the time .toBlob() resolves,
+  // pageMap is populated.
+  const pageMap: SectionPageMap = {}
+  const recordSectionPage = (id: string, pageNumber: number) => {
+    if (pageMap[id] === undefined) pageMap[id] = pageNumber
+  }
+
+  await pdf(
+    <CampaignPlanPdfDocument
+      plan={plan}
+      liveUrl={options.liveUrl}
+      liveQrDataUrl={liveQrDataUrl}
+      tocPageMap={null}
+      onSectionPage={recordSectionPage}
+    />,
+  ).toBlob()
+
+  // Pass 2: render again with the populated map so the TOC shows real
+  // page numbers. Footer page-number column width is fixed, so the TOC
+  // height is identical between passes — section pages don't shift.
   const blob = await pdf(
     <CampaignPlanPdfDocument
       plan={plan}
       liveUrl={options.liveUrl}
       liveQrDataUrl={liveQrDataUrl}
+      tocPageMap={pageMap}
     />,
   ).toBlob()
 

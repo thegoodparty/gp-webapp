@@ -680,7 +680,7 @@ const PlanSections = ({
             </span>{' '}
             for voter outreach, compliance and fees, while{' '}
             <span className="font-semibold text-foreground">
-              {plan.totalCampaignHours.toLocaleString('en-US')}
+              {plan.volunteerHourTarget.toLocaleString('en-US')}
             </span>{' '}
             volunteer hours are needed for in-person campaigning, events, and
             volunteers.
