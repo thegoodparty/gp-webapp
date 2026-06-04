@@ -33,8 +33,10 @@ export const setSize = (
   }
 }
 
-interface PrimaryButtonProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
+interface PrimaryButtonProps extends Omit<
+  HTMLAttributes<HTMLButtonElement>,
+  'onClick' | 'className'
+> {
   children?: ReactNode
   className?: Record<string, boolean> | string
   variant?: 'contained' | 'outlined' | 'text'

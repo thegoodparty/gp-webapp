@@ -289,8 +289,8 @@ const FilingFeeRow = ({
   const hintLabel = hasFee
     ? 'Estimated. Filing fees come from BallotReady.'
     : hasRawText
-    ? 'Filing fee varies. See BallotReady for the full text.'
-    : 'No filing fee data for this race yet.'
+      ? 'Filing fee varies. See BallotReady for the full text.'
+      : 'No filing fee data for this race yet.'
 
   const hint = (
     <span className="inline-flex items-center gap-1">

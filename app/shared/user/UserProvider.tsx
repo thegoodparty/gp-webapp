@@ -51,7 +51,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isUserLoading = !isLoaded || (!!isSignedIn && isQueryLoading)
 
-  const value: User | null = isLoaded && !isSignedIn ? null : appUser ?? null
+  const value: User | null = isLoaded && !isSignedIn ? null : (appUser ?? null)
 
   return (
     <UserContext.Provider value={[value, updateUser, isUserLoading]}>

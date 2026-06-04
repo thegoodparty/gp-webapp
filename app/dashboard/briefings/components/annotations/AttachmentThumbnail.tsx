@@ -108,7 +108,7 @@ export default function AttachmentThumbnail({
   )
 
   const url =
-    item.kind === 'staged' ? objectUrl : downloadUrlQuery.data?.url ?? null
+    item.kind === 'staged' ? objectUrl : (downloadUrlQuery.data?.url ?? null)
   const isImage = isImageMime(item.mimeType)
 
   const cardClass =

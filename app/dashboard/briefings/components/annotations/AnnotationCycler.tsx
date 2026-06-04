@@ -39,7 +39,7 @@ export function AnnotationCycler<T>({
   const isMobile = useIsMobile()
   const isEmpty = items.length === 0
   const safeIndex = Math.max(0, Math.min(items.length - 1, currentIndex))
-  const current: T | null = isEmpty ? null : items[safeIndex] ?? null
+  const current: T | null = isEmpty ? null : (items[safeIndex] ?? null)
   const prevDisabled = isEmpty || safeIndex === 0
   const nextDisabled = isEmpty || safeIndex >= items.length - 1
 
@@ -123,7 +123,7 @@ export function AnnotationCycler<T>({
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden px-6 pt-4">
         {isEmpty ? (
-          emptyState ?? null
+          (emptyState ?? null)
         ) : current !== null ? (
           <div
             key={getKey(current, safeIndex)}

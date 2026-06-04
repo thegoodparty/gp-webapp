@@ -67,20 +67,20 @@ const getSteps = (
     websiteComplete && !domainComplete
       ? STEP_STATUS.ACTIVE
       : websiteComplete && domainComplete
-      ? STEP_STATUS.COMPLETED
-      : STEP_STATUS.DISABLED
+        ? STEP_STATUS.COMPLETED
+        : STEP_STATUS.DISABLED
   const activateRegisterStep =
     websiteComplete && domainComplete && !registrationComplete
   const registerStepStatus = registrationComplete
     ? STEP_STATUS.COMPLETED
     : activateRegisterStep
-    ? STEP_STATUS.ACTIVE
-    : STEP_STATUS.DISABLED
+      ? STEP_STATUS.ACTIVE
+      : STEP_STATUS.DISABLED
   const enterPinStepStatus = registrationComplete
     ? STEP_STATUS.ACTIVE
     : pinComplete
-    ? STEP_STATUS.COMPLETED
-    : STEP_STATUS.DISABLED
+      ? STEP_STATUS.COMPLETED
+      : STEP_STATUS.DISABLED
 
   return [
     {

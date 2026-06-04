@@ -7,8 +7,10 @@ import Image from 'next/image'
 import { useState, ReactNode, HTMLAttributes } from 'react'
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi'
 
-interface TogglePanelProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+interface TogglePanelProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   icon?: string | ReactNode
   label?: string
   forceExpand?: boolean

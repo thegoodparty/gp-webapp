@@ -54,8 +54,8 @@ export default function ReadAloudButton({
     status === 'error' && error
       ? `Read aloud failed: ${error}. Try again.`
       : isBusy
-      ? 'Stop reading'
-      : 'Read aloud'
+        ? 'Stop reading'
+        : 'Read aloud'
 
   const onClick = () => {
     if (isBusy) {

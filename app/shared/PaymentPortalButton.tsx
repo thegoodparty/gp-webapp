@@ -6,8 +6,10 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
-interface PaymentPortalStyledButtonProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, 'children'> {
+interface PaymentPortalStyledButtonProps extends Omit<
+  HTMLAttributes<HTMLButtonElement>,
+  'children'
+> {
   children: ReactNode
   disabled?: boolean
 }
@@ -21,8 +23,10 @@ const PaymentPortalStyledButton = ({
   </PrimaryButton>
 )
 
-interface PaymentPortalButtonProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, 'children'> {
+interface PaymentPortalButtonProps extends Omit<
+  HTMLAttributes<HTMLButtonElement>,
+  'children'
+> {
   redirectUrl?: string | null
   children: ReactNode
 }

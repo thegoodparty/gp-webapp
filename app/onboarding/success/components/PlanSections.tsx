@@ -187,8 +187,8 @@ const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
     plan.electionType === 'partisan'
       ? 'partisan'
       : plan.electionType === 'nonpartisan'
-      ? 'nonpartisan'
-      : null
+        ? 'nonpartisan'
+        : null
 
   const electionTypeFragment = electionTypeLabel ? (
     <>

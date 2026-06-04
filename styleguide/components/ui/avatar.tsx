@@ -57,11 +57,13 @@ const avatarBadgeVariants = cva(
 )
 
 interface AvatarProps
-  extends React.ComponentProps<typeof AvatarPrimitive.Root>,
+  extends
+    React.ComponentProps<typeof AvatarPrimitive.Root>,
     VariantProps<typeof avatarVariants> {}
 
 interface AvatarBadgeProps
-  extends React.ComponentProps<'div'>,
+  extends
+    React.ComponentProps<'div'>,
     VariantProps<typeof avatarBadgeVariants> {}
 
 function Avatar({ className, size, variant, ...props }: AvatarProps) {

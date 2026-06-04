@@ -4,8 +4,10 @@ import H4 from '@shared/typography/H4'
 import { useState, ReactNode, HTMLAttributes } from 'react'
 import { FaChevronRight } from 'react-icons/fa'
 
-interface ListItemProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+interface ListItemProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   variant?: 'list' | string
   title: string
   number?: number

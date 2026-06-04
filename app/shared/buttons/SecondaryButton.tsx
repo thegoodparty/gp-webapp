@@ -10,11 +10,10 @@ import { setSize } from './PrimaryButton'
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler'
 import { compileButtonClassName } from '@shared/buttons/compileButtonClassName'
 
-interface SecondaryButtonProps
-  extends Omit<
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    'onClick' | 'className'
-  > {
+interface SecondaryButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'onClick' | 'className'
+> {
   children?: ReactNode
   className?: Record<string, boolean> | string
   variant?: 'contained' | 'outlined' | 'text'
