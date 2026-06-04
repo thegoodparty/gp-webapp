@@ -703,7 +703,6 @@ const FUNDRAISING_MIX: FundraisingRow[] = [
 const KEY_ASSUMPTIONS: string[] = [
   'Turnout behaves like recent comparable off-year municipal elections in your area, roughly 18 to 24 percent of registered voters.',
   'Voter preferences distribute across the field without one opponent dominating. A plurality near 40 percent is often sufficient to win, but we plan to the more conservative 50% + 1 threshold.',
-  'Phone match and deliverability rates are consistent with recent cycles. We assume roughly 60% cell deliverability and 35% landline answer rate.',
   'You will execute the contact cadence on schedule. Any slippage materially reduces the probability of hitting the contact goal.',
 ]
 
@@ -987,18 +986,6 @@ const buildConfidenceEstimates = (
       'en-US',
     )}–${winNumberHigh.toLocaleString('en-US')}`,
     notes: 'Moves with the targeted voters.',
-  },
-  {
-    estimate: 'Projected text deliverability',
-    pointValue: '~85%',
-    range: '80–90%',
-    notes: 'Industry benchmark.',
-  },
-  {
-    estimate: 'Projected robocall listen rate',
-    pointValue: '~30%',
-    range: '25–35%',
-    notes: 'Industry benchmark.',
   },
 ]
 
