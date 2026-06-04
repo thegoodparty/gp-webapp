@@ -31,7 +31,11 @@ export function WebsiteSunsetModal({
 }: WebsiteSunsetModalProps): React.JSX.Element {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent
+        className="sm:max-w-md"
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader className="gap-1.5">
           <DialogTitle>Website is being discontinued</DialogTitle>
           <DialogDescription>
@@ -43,13 +47,14 @@ export function WebsiteSunsetModal({
         </DialogHeader>
         <DialogFooter>
           <Button
-            onClick={() =>
+            onClick={() => {
               window.open(
                 HUBSPOT_DOMAIN_TRANSFER_FORM_URL,
                 '_blank',
                 'noopener,noreferrer',
               )
-            }
+              onOpenChange(false)
+            }}
           >
             Transfer website
           </Button>
