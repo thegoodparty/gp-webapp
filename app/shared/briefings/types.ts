@@ -8,8 +8,10 @@
  * the artifact through untouched).
  *
  * Internal QA fields from the artifact (claims, required_data_points,
- * disclosure, run_metadata, per-item research) are present on the type but
- * not currently rendered.
+ * run_metadata, per-item research) are present on the type but not currently
+ * rendered. `disclosure` is rendered on the full-briefing detail page via
+ * BriefingDisclosureFooter, but is not yet shown on the placeholder /
+ * awaiting-agenda pages or the shared view.
  */
 
 import type {
