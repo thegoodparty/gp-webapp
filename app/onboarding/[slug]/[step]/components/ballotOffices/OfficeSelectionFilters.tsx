@@ -1,6 +1,12 @@
 import { useState, ChangeEvent } from 'react'
 import TextField from '@shared/inputs/TextField'
-import { Select, SelectChangeEvent } from '@mui/material'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide'
 
 interface FilterValues {
   inputValue: string
@@ -41,39 +47,33 @@ export const OfficeSelectionFilters = ({
         </div>
         <div className="col-span-12 lg:col-span-4">
           <Select
-            className="py-[2px]"
-            native
-            required
-            variant="outlined"
-            fullWidth
             value={level}
-            onChange={(e: SelectChangeEvent<string>) => {
-              setLevel(e.target.value)
+            onValueChange={(value) => {
+              setLevel(value)
               onChange({
                 inputValue,
-                level: e.target.value,
+                level: value,
                 yearFilter,
               })
             }}
           >
-            <option value="">Election Level</option>
-            {['local', 'county', 'state', 'federal'].map((value) => (
-              <option value={value} key={value}>
-                {value} office
-              </option>
-            ))}
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Election Level" />
+            </SelectTrigger>
+            <SelectContent>
+              {['local', 'county', 'state', 'federal'].map((value) => (
+                <SelectItem value={value} key={value}>
+                  {value} office
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
         <div className="col-span-12 lg:col-span-2">
           <Select
-            className="py-[2px]"
-            native
-            required
-            variant="outlined"
-            fullWidth
             value={yearFilter || ''}
-            onChange={(e: SelectChangeEvent<string>) => {
-              const newValue = e.target.value || null
+            onValueChange={(value) => {
+              const newValue = value || null
               setYearFilter(newValue)
               onChange({
                 inputValue,
@@ -82,12 +82,16 @@ export const OfficeSelectionFilters = ({
               })
             }}
           >
-            <option value="">Year</option>
-            {electionYears.map((value) => (
-              <option value={value} key={value}>
-                {value}
-              </option>
-            ))}
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Year" />
+            </SelectTrigger>
+            <SelectContent>
+              {electionYears.map((value) => (
+                <SelectItem value={String(value)} key={value}>
+                  {value}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
       </div>
