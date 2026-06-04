@@ -434,7 +434,12 @@ const buildTimeline = (
     },
     {
       date: addDays(electionDate, -20),
-      description: `${eventCount} community events that you should personally attend.`,
+      description:
+        eventCount > 0
+          ? `${eventCount} community event${
+              eventCount === 1 ? '' : 's'
+            } that you should personally attend.`
+          : 'Identify community events in your area to attend in person.',
     },
     {
       date: voterRegDeadline,
@@ -790,7 +795,12 @@ const buildPlanAtAGlance = (
   },
   {
     title: 'Show up in person.',
-    body: `${eventCount} high-density community events during your campaign carry more weight per hour than any paid channel.`,
+    body:
+      eventCount > 0
+        ? `${eventCount} high-density community event${
+            eventCount === 1 ? '' : 's'
+          } during your campaign carry more weight per hour than any paid channel.`
+        : 'Attending community events in person carries more weight per hour than any paid channel.',
   },
   {
     title: 'Message discipline.',
