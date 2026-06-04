@@ -622,7 +622,7 @@ const buildBudgetBreakdown = (
   const filing = filingFee ?? DEFAULT_FILING_FEE
   // Spread the voter contact goal evenly across every text and robocall
   // campaign, then price each channel at its per-contact rate.
-  const contactsPerCampaign = Math.floor(
+  const contactsPerCampaign = Math.ceil(
     voterContactGoal / (TEXT_CAMPAIGN_COUNT + ROBOCALL_CAMPAIGN_COUNT),
   )
   const textContacts = TEXT_CAMPAIGN_COUNT * contactsPerCampaign
