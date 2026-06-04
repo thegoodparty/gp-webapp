@@ -4,8 +4,20 @@ import userEvent from '@testing-library/user-event'
 import { render } from 'helpers/test-utils/render'
 import { router } from 'helpers/test-utils/router-mocking'
 import type { Website } from 'helpers/types'
+import { EVENTS } from 'helpers/analyticsHelper'
 import { MIN_BIO_LENGTH } from '../candidateProfile.utils'
 import CandidateProfile from './CandidateProfile'
+
+const mockTrackEvent = vi.fn()
+vi.mock('helpers/analyticsHelper', async (importOriginal) => {
+  const actual = await importOriginal<
+    typeof import('helpers/analyticsHelper')
+  >()
+  return {
+    ...actual,
+    trackEvent: (...args: unknown[]) => mockTrackEvent(...args),
+  }
+})
 
 vi.mock('app/shared/utils/RichEditor', async () => ({
   default: (await import('helpers/test-utils/RichEditorMock')).RichEditorMock,
@@ -171,5 +183,17 @@ describe('CandidateProfile — deleting a policy priority persists (ENG-10270)',
     await waitFor(() =>
       expect(router.push).toHaveBeenCalledWith('/dashboard/profile'),
     )
+  })
+})
+
+describe('CandidateProfile — funnel view event (ENG-10294)', () => {
+  it('fires Candidate Profile Viewed when the step renders', async () => {
+    getUserWebsite.mockResolvedValue(websiteWith('', 0))
+    render(<CandidateProfile />)
+    await waitFor(() => {
+      expect(mockTrackEvent).toHaveBeenCalledWith(
+        EVENTS.ProUpgrade.Compliance.CandidateProfileViewed,
+      )
+    })
   })
 })

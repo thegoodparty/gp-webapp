@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Button from '@shared/buttons/Button'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
-import { CheckRounded, ContentCopyRounded } from '@mui/icons-material'
+import { CheckIcon, CopyIcon } from '@styleguide/components/ui/icons'
 import React from 'react'
 
 interface CopyToClipboardButtonProps {
@@ -56,9 +56,9 @@ const CopyToClipboardButton = ({
           children: (
             <>
               {copied ? (
-                <CheckRounded className="mr-2" />
+                <CheckIcon className="mr-2" />
               ) : (
-                <ContentCopyRounded className="mr-2" />
+                <CopyIcon className="mr-2" />
               )}
               {children}
             </>

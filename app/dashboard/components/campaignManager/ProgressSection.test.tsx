@@ -128,7 +128,9 @@ describe('ProgressSection', () => {
     await user.click(screen.getByText('1,000 voter contacts needed to win'))
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('Voter contacts needed')).toBeInTheDocument()
+    expect(
+      screen.getAllByText('Projected votes needed to win').length,
+    ).toBeGreaterThan(0)
   })
 
   it('closes info modal when clicking the needed-to-win text again', async () => {

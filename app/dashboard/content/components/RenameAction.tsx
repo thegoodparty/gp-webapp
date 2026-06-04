@@ -1,7 +1,7 @@
 'use client'
 import { useState, ChangeEvent } from 'react'
 import Modal from '@shared/utils/Modal'
-import { TextField } from '@mui/material'
+import TextField from '@shared/inputs/TextField'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import H2 from '@shared/typography/H2'
@@ -73,7 +73,6 @@ const RenameAction = ({
           <H6 className="mt-14 mb-2">Document name</H6>
           <TextField
             required
-            variant="outlined"
             placeholder="Enter document name"
             inputProps={{ maxLength: 50 }}
             defaultValue={documentName ? documentName : ''}

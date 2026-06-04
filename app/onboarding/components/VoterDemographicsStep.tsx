@@ -31,6 +31,8 @@ interface VoterDemographicsStepProps {
   city?: string
   state?: string
   office?: string
+  showLocalNewsSources?: boolean
+  headingsAsSubsections?: boolean
 }
 
 export const VoterDemographicsStep = ({
@@ -39,6 +41,8 @@ export const VoterDemographicsStep = ({
   city,
   state,
   office,
+  showLocalNewsSources = true,
+  headingsAsSubsections = false,
 }: VoterDemographicsStepProps): React.JSX.Element => {
   const query = useQuery(
     onboardingDistrictStatsQueryOptions({ ballotReadyPositionId, districtId }),
@@ -71,6 +75,11 @@ export const VoterDemographicsStep = ({
     locationLabel = state
   }
 
+  const HeadingTag = headingsAsSubsections ? 'h3' : 'h2'
+  const headingClass = headingsAsSubsections
+    ? 'text-lg font-semibold text-foreground'
+    : 'text-2xl font-semibold text-foreground'
+
   return (
     <div className="flex w-full flex-col items-stretch gap-6 text-left">
       <TopVoterIssuesSection
@@ -78,12 +87,11 @@ export const VoterDemographicsStep = ({
         city={city}
         state={state}
         office={office}
+        headingsAsSubsections={headingsAsSubsections}
       />
 
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold text-foreground">
-          Voter Demographics
-        </h2>
+        <HeadingTag className={headingClass}>Voter Demographics</HeadingTag>
         {locationLabel ? (
           <p className="text-sm leading-6 text-muted-foreground">
             A snapshot of who lives, votes, and pays attention in{' '}
@@ -154,7 +162,9 @@ export const VoterDemographicsStep = ({
         error={error}
       />
 
-      <LocalNewsSourcesSection city={city} state={state} office={office} />
+      {showLocalNewsSources ? (
+        <LocalNewsSourcesSection city={city} state={state} office={office} />
+      ) : null}
     </div>
   )
 }

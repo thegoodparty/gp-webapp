@@ -3,6 +3,7 @@ import DashboardContent from './components/DashboardContent'
 import candidateAccess from './shared/candidateAccess'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
 import { redirect } from 'next/navigation'
 import type { Task } from './components/tasks/TaskItem'
 import type { TcrCompliance } from 'helpers/types'
@@ -39,9 +40,10 @@ export default async function Page(): Promise<React.JSX.Element> {
     return redirect('/dashboard/briefings')
   }
 
-  const [tasks, tcrComplianceResponse] = await Promise.all([
+  const [tasks, tcrComplianceResponse, website] = await Promise.all([
     fetchTasks(),
     serverFetch<TcrCompliance>(apiRoutes.campaign.tcrCompliance.fetch),
+    fetchUserWebsite(),
   ])
 
   const tcrCompliance = tcrComplianceResponse.ok
@@ -53,6 +55,7 @@ export default async function Page(): Promise<React.JSX.Element> {
       pathname="/dashboard"
       tasks={tasks}
       tcrCompliance={tcrCompliance}
+      hasWebsite={!!website}
     />
   )
 }

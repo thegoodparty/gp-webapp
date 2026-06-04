@@ -1,5 +1,5 @@
 'use client'
-import { IconButton } from '@styleguide'
+import { DownloadIcon, IconButton, LockIcon } from '@styleguide'
 import { useContactsTable } from '../hooks/ContactsTableProvider'
 import { type SegmentResponse } from './shared/contacts-types'
 import { dateUsHelper } from 'helpers/dateHelper'
@@ -10,8 +10,6 @@ import {
   filterOnlyTrueValues,
 } from './shared/segments.util'
 import { useShowContactProModal } from '../hooks/ContactProModal'
-import { Lock } from '@mui/icons-material'
-import { LuDownload } from 'react-icons/lu'
 import { useEffect, useRef, useState } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { deleteCookie, getCookie } from 'helpers/cookieHelper'
@@ -199,7 +197,7 @@ export default function Download() {
         loading={isPreparing}
         className="hidden md:flex"
       >
-        {!canUseProFeatures ? <Lock /> : <LuDownload />}
+        {!canUseProFeatures ? <LockIcon /> : <DownloadIcon />}
       </IconButton>
     </>
   )

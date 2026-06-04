@@ -79,7 +79,7 @@ const fields: FormField[] = [
     label: 'Term Length',
     type: 'select',
     required: true,
-    options: ['Select', '2 years', '3 years', '4 years', '6 years'],
+    options: ['2 years', '3 years', '4 years', '6 years'],
     dataAttributes: {
       'data-amplitude-unmask': 'true',
     },

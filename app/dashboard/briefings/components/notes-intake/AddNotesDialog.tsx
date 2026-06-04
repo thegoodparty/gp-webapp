@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useMediaQuery } from '@mui/material'
+import { useTailwindBreakpoints } from '@shared/hooks/useTailwindBreakpoints'
 import { Camera, FileText, Pencil, Plus } from 'lucide-react'
 import {
   Button,
@@ -106,7 +106,8 @@ export default function AddNotesDialog({
   onDeleteExisting,
   deletingIds,
 }: Props): React.JSX.Element {
-  const isDesktop = useMediaQuery('(min-width: 768px)')
+  const breakpoint = useTailwindBreakpoints()
+  const isDesktop = breakpoint !== 'xs' && breakpoint !== 'sm'
   const [typedDraft, setTypedDraft] = useState('')
   const [staged, setStaged] = useState<StagedDraft[]>([])
   const [submitting, setSubmitting] = useState(false)

@@ -54,6 +54,47 @@ export interface MeetingBriefingAwaitingDto {
   durationMinutes: number
 }
 
+// Mirrors `OpponentSchema` in gp-api
+// (`src/campaignStrategy/schemas/strategicLandscape.schema.ts`). Who is
+// running: name, party, incumbency. No narrative profiling.
+export interface StrategicLandscapeOpponent {
+  fullName: string
+  partyAffiliation: string
+  incumbent: boolean | null
+}
+
+export interface StrategicLandscapeData {
+  opportunities: string[]
+  challenges: string[]
+  opponents: StrategicLandscapeOpponent[]
+}
+
+// Discriminated union matching the polling response on gp-api.
+export type StrategicLandscapeResponse =
+  | { status: 'ready'; data: StrategicLandscapeData }
+  | { status: 'generating' }
+
+// Mirrors `CommunityEventSchema` in
+// `gp-api/src/campaignStrategy/schemas/communityEvents.schema.ts`.
+// `address` is the venue's physical street address and `url` is the
+// direct event-page URL. Either can be null when the search data
+// didn't surface it.
+export interface CommunityEvent {
+  title: string
+  description: string
+  date: string
+  address: string | null
+  url: string | null
+}
+
+export interface CommunityEventsData {
+  events: CommunityEvent[]
+}
+
+export type CommunityEventsResponse =
+  | { status: 'ready'; data: CommunityEventsData }
+  | { status: 'generating' }
+
 export type APIEndpoints = {
   'GET /v1/users/me': {
     Request: {}
@@ -104,6 +145,24 @@ export type APIEndpoints = {
       pin: string
     }
     Response: void
+  }
+
+  // Polling endpoint. 200 → ready, 202 → still generating (poll again ~3s).
+  // First-time generation runs three Gemini pipelines in parallel; on cache
+  // hit subsequent calls return 200 immediately. Mirrors
+  // `StrategicLandscapeResponseSchema` on gp-api.
+  'POST /v1/campaignStrategy/mine/strategic-landscape': {
+    Request: {}
+    Response: StrategicLandscapeResponse
+  }
+
+  // Section 7 community events. Polling endpoint — same shape as
+  // strategic-landscape. 200 → ready (events array up to length 3), 202 →
+  // generating (poll again ~3s). Mirrors `CommunityEventsResponseSchema`
+  // in `gp-api/src/campaignStrategy/schemas/communityEvents.schema.ts`.
+  'POST /v1/campaignStrategy/mine/community-events': {
+    Request: {}
+    Response: CommunityEventsResponse
   }
 
   'GET /v1/elected-office/current': {
