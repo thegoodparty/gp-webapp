@@ -1,7 +1,13 @@
 'use client'
 import { useState } from 'react'
 import Modal from '@shared/utils/Modal'
-import { Select, MenuItem, SelectChangeEvent } from '@mui/material'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import H2 from '@shared/typography/H2'
@@ -20,7 +26,7 @@ const TranslateAction = ({
   setShowTranslate,
   handleTranslateCallback,
 }: TranslateActionProps): React.JSX.Element => {
-  const [newLanguage, setNewLanguage] = useState('spanish')
+  const [newLanguage, setNewLanguage] = useState('Spanish')
 
   return (
     <>
@@ -40,19 +46,22 @@ const TranslateAction = ({
           <H6 className="mt-14 mb-2">Language</H6>
           <Select
             required
-            variant="outlined"
-            defaultValue={'Spanish'}
-            fullWidth
-            onChange={(e: SelectChangeEvent) => {
-              setNewLanguage(e.target.value)
+            defaultValue="Spanish"
+            onValueChange={(value: string) => {
+              setNewLanguage(value)
             }}
           >
-            <MenuItem value="Spanish">Spanish</MenuItem>
-            <MenuItem value="French">French</MenuItem>
-            <MenuItem value="German">German</MenuItem>
-            <MenuItem value="Chinese">Chinese</MenuItem>
-            <MenuItem value="Japanese">Japanese</MenuItem>
-            <MenuItem value="Korean">Korean</MenuItem>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Spanish">Spanish</SelectItem>
+              <SelectItem value="French">French</SelectItem>
+              <SelectItem value="German">German</SelectItem>
+              <SelectItem value="Chinese">Chinese</SelectItem>
+              <SelectItem value="Japanese">Japanese</SelectItem>
+              <SelectItem value="Korean">Korean</SelectItem>
+            </SelectContent>
           </Select>
           <div className="mt-16 flex w-full justify-end">
             <div
