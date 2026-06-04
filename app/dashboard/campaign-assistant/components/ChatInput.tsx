@@ -1,9 +1,8 @@
 'use client'
 import TextField from '@shared/inputs/TextField'
-import { MdSend, MdStop, MdKeyboardArrowUp } from 'react-icons/md'
+import { SendIcon, SquareIcon, ChevronUpIcon, IconButton } from '@styleguide'
 import { FormEvent, KeyboardEvent, useState } from 'react'
 import useChat from 'app/dashboard/campaign-assistant/components/useChat'
-import { Fab, IconButton } from '@mui/material'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const ChatInput = (): React.JSX.Element => {
@@ -36,14 +35,14 @@ const ChatInput = (): React.JSX.Element => {
   return (
     <div className="w-full max-w-[960px] px-4 pb-6 self-center relative">
       <div className="absolute bottom-[10px] pb-6 left-6 min-[1400px]:left-[-40px]">
-        <Fab
+        <IconButton
           onClick={scrollUp}
           size="small"
-          color="primary"
+          variant="default"
           aria-label="Scroll to top"
         >
-          <MdKeyboardArrowUp className="text-primary" />
-        </Fab>
+          <ChevronUpIcon className="text-primary" />
+        </IconButton>
       </div>
       <form noValidate onSubmit={onSubmit}>
         <TextField
@@ -52,7 +51,7 @@ const ChatInput = (): React.JSX.Element => {
           multiline
           maxRows={6}
           autoFocus
-          className="bg-white pl-6 min-[1400px]:pl-0"
+          className="bg-white pl-6 min-[1400px]:pl-0 rounded-3xl border-transparent"
           value={text}
           onKeyDown={onKeyDown}
           onChange={(e) => {
@@ -65,8 +64,9 @@ const ChatInput = (): React.JSX.Element => {
                 onClick={stopStream}
                 aria-label="Stop generating"
                 size="small"
+                variant="ghost"
               >
-                <MdStop size={22} />
+                <SquareIcon className="size-5" />
               </IconButton>
             ) : (
               <IconButton
@@ -74,44 +74,18 @@ const ChatInput = (): React.JSX.Element => {
                 disabled={!canSend}
                 aria-label="Send message"
                 size="small"
+                variant="ghost"
               >
-                <MdSend
-                  size={20}
-                  className={canSend ? 'text-primary' : 'text-gray-400'}
+                <SendIcon
+                  className={`size-5 ${
+                    canSend ? 'text-primary' : 'text-gray-400'
+                  }`}
                 />
               </IconButton>
             ),
-            style: {
-              outline: 'none',
-            },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              backgroundColor: 'white',
-              borderRadius: '24px',
-              paddingLeft: '16px',
-              paddingRight: '8px',
-              borderColor: 'transparent',
-              '& fieldset': {
-                borderColor: 'transparent',
-                border: 'none',
-              },
-              '&:hover fieldset': {
-                borderColor: 'transparent',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'transparent',
-              },
-              '&.Mui-focused': {
-                outline: 'none',
-              },
-            },
           }}
           inputProps={{
             'aria-label': 'Message',
-            style: {
-              outline: 'none',
-            },
           }}
         />
       </form>

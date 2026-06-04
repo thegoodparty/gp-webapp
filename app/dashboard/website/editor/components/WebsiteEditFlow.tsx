@@ -7,7 +7,6 @@ import H4 from '@shared/typography/H4'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import EditSection from './EditSection'
 import WebsitePreview from './WebsitePreview'
-import { useMediaQuery } from '@mui/material'
 import EditSectionButton, {
   SECTIONS,
   SECTION_KEYS,
@@ -38,7 +37,11 @@ export default function WebsiteEditFlow(): React.JSX.Element {
   const [editSection, setEditSection] = useState<SectionType>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
-  const isLgUp = useMediaQuery('(min-width:1024px)')
+  const [isLgUp, setIsLgUp] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(min-width:1024px)').matches,
+  )
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [updatedPlace, setUpdatedPlace] = useState<GooglePlace | null>(null)
   const [bioCharCount, setBioCharCount] = useState(() =>
@@ -48,6 +51,13 @@ export default function WebsiteEditFlow(): React.JSX.Element {
   )
   const [aboutErrors, setAboutErrors] = useState<AboutStepErrors>({})
   const [aboutErrorsShown, setAboutErrorsShown] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width:1024px)')
+    const onChange = (e: MediaQueryListEvent) => setIsLgUp(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   useEffect(() => {
     if (isLgUp && editSection === null) {

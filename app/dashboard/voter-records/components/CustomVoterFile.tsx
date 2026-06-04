@@ -1,4 +1,3 @@
-import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import Body2 from '@shared/typography/Body2'
@@ -10,6 +9,14 @@ import Button from '@shared/buttons/Button'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { TRACKING_KEYS } from './CustomVoterAudienceFilters'
 import { Campaign } from 'helpers/types'
+import {
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide'
 
 interface PrevStepValues {
   channel: string
@@ -120,25 +127,27 @@ const CustomVoterFile = ({
               <div className="mt-8 grid grid-cols-12 gap-4">
                 {fields.map((field) => (
                   <div key={field.id} className="col-span-12">
-                    <InputLabel id={field.id}>{field.label}</InputLabel>
+                    <Label htmlFor={field.id} className="mb-1 block">
+                      {field.label}
+                    </Label>
                     <Select
-                      fullWidth
-                      labelId={field.id}
                       value={state[field.id]}
-                      label={field.label}
-                      displayEmpty
                       required
-                      onChange={(e: SelectChangeEvent<string>) => {
-                        field.onSelect(e.target.value)
-                        handleChange(field.id, e.target.value)
+                      onValueChange={(value) => {
+                        field.onSelect(value)
+                        handleChange(field.id, value)
                       }}
                     >
-                      <MenuItem value="">Select</MenuItem>
-                      {field.options.map((option) => (
-                        <MenuItem value={option} key={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
+                      <SelectTrigger id={field.id} className="w-full">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {field.options.map((option) => (
+                          <SelectItem value={option} key={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </div>
                 ))}

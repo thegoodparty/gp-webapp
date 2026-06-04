@@ -17,7 +17,7 @@ import {
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 import SimpleTable from '@shared/utils/SimpleTable'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import {
   Campaign,
   CampaignAiContent,
@@ -162,7 +162,7 @@ export default function MyContent(props: MyContentProps): React.JSX.Element {
         if (!updatedAt) {
           return (
             <div className="text-gray-500">
-              <CircularProgress size={16} />
+              <LoaderCircleIcon size={16} className="animate-spin" />
             </div>
           )
         }

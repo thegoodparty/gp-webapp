@@ -1,10 +1,10 @@
-import { LockOutlined } from '@mui/icons-material'
 import { LuCloudUpload } from 'react-icons/lu'
 import Button from '@shared/buttons/Button'
 import { DisplaySwatch } from './ThemeSwatch'
 import { getWebsiteUrl } from '../../util/website.util'
 import H5 from '@shared/typography/H5'
 import { Website } from 'helpers/types'
+import { LockIcon } from '@styleguide/components/ui/icons'
 
 export const SECTIONS = {
   link: 'link',
@@ -95,7 +95,7 @@ const EditSectionButton = ({
             <H5>{SECTION_BTN_CONTENT[section]?.title}</H5>
             <p className="text-gray-500 text-xs">{url}</p>
           </div>
-          <LockOutlined className="text-gray-500" />
+          <LockIcon size={20} className="text-gray-500" />
         </>
       ) : section === SECTIONS.logo ? (
         <>

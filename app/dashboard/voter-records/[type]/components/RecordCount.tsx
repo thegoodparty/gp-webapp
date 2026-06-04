@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import MarketingH2 from '@shared/typography/MarketingH2'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import { numberFormatter } from 'helpers/numberHelper'
 import H2 from '@shared/typography/H2'
 import Body2 from '@shared/typography/Body2'
@@ -126,7 +126,7 @@ export default function RecordCount(
   if (loading) {
     return (
       <div className="mt-4">
-        <CircularProgress />
+        <LoaderCircleIcon className="size-6 animate-spin" />
       </div>
     )
   }

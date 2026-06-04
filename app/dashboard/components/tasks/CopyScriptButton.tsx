@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Button from '@shared/buttons/Button'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
-import { CheckRounded, ContentCopyRounded } from '@mui/icons-material'
+import { CheckIcon, CopyIcon } from '@styleguide/components/ui/icons'
 import { noop } from '@shared/utils/noop'
 
 interface CopyScriptButtonProps {
@@ -18,7 +18,7 @@ export default function CopyScriptButton({
 }: CopyScriptButtonProps): React.JSX.Element {
   const [copied, setCopied] = useState(false)
 
-  async function handleOnCopy(text: string, result: boolean) {
+  const handleOnCopy = async (text: string, result: boolean) => {
     if (result) {
       setCopied(true)
     }
@@ -36,9 +36,9 @@ export default function CopyScriptButton({
         {...trackingAttrs}
       >
         {copied ? (
-          <CheckRounded className="mr-2" />
+          <CheckIcon className="mr-2" />
         ) : (
-          <ContentCopyRounded className="mr-2" />
+          <CopyIcon className="mr-2" />
         )}
         Copy Script
       </Button>

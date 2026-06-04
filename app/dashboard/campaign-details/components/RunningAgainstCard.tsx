@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import IconButton from '@shared/buttons/IconButton'
-import { DeleteRounded, EditRounded } from '@mui/icons-material'
+import { Trash2Icon, PencilIcon } from '@styleguide'
 import RunningAgainstForm from './RunningAgainstForm'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { RunningAgainst } from 'helpers/types'
@@ -56,14 +56,14 @@ export default function RunningAgainstCard({
               color="error"
               onClick={handleDelete}
             >
-              <DeleteRounded />
+              <Trash2Icon />
             </IconButton>
             <IconButton
               title="Edit"
               className="flex items-center"
               onClick={handleEdit}
             >
-              <EditRounded />
+              <PencilIcon />
             </IconButton>
           </div>
         </>

@@ -2,14 +2,13 @@
 import { OUTREACH_TYPE_MAPPING } from 'app/dashboard/outreach/constants'
 import { dateUsHelper } from 'helpers/dateHelper'
 import SimpleTable from '@shared/utils/SimpleTable'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import H4 from '@shared/typography/H4'
 import { GradientOverlay } from '@shared/GradientOverlay'
 import { StackedChips } from '@shared/utils/StackedChips'
 import { formatAudienceLabels } from 'app/dashboard/outreach/util/formatAudienceLabels.util'
 import { ActualViewAudienceFiltersModal } from 'app/dashboard/voter-records/components/ViewAudienceFiltersModal'
 import { convertAudienceFiltersForModal } from 'app/dashboard/outreach/util/convertAudienceFiltersForModal.util'
-import Popover from '@mui/material/Popover'
 import { OutreachActions } from 'app/dashboard/outreach/components/OutreachActions'
 import {
   useOutreach,
@@ -99,6 +98,7 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
     top: 0,
     left: 0,
   })
+  const popoverRef = useRef<HTMLDivElement>(null)
   const title = useMockData ? 'How your outreach could look' : 'Your campaigns'
 
   const getChannelLabel = (outreachType?: string): string => {
@@ -213,6 +213,29 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
     setActOnOutreach(null)
   }
 
+  useEffect(() => {
+    if (!actOnOutreach) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node)
+      ) {
+        handlePopoverClose()
+      }
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handlePopoverClose()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [actOnOutreach])
+
   // Sort table data by date, placing entries without a date at the end
   const sortedTableData = useMemo(() => {
     return [...tableData].sort((a, b) => {
@@ -246,19 +269,10 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
         <>
           {table}
           {actOnOutreach && (
-            <Popover
-              open
-              onClose={handlePopoverClose}
-              anchorReference="anchorPosition"
-              anchorPosition={popoverPosition}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
+            <div
+              ref={popoverRef}
+              className="fixed z-50 bg-white rounded-md border border-gray-200 shadow-md p-2"
+              style={{ top: popoverPosition.top, left: popoverPosition.left }}
             >
               <OutreachActions
                 {...{
@@ -266,7 +280,7 @@ export const OutreachTable = ({ mockOutreaches = [] }: OutreachTableProps) => {
                   onClick: handleActionClick,
                 }}
               />
-            </Popover>
+            </div>
           )}
         </>
       )}

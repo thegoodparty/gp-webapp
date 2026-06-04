@@ -1,5 +1,8 @@
-import { CircularProgress } from '@mui/material'
-import { MdCancel, MdCheckCircle } from 'react-icons/md'
+import {
+  LoaderCircleIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from '@styleguide/components/ui/icons'
 import { InputHelpIcon } from 'app/dashboard/shared/InputHelpIcon'
 import React from 'react'
 
@@ -17,11 +20,11 @@ export const AsyncValidationIcon = ({
   onTooltipOpen,
 }: AsyncValidationIconProps): React.JSX.Element =>
   loading ? (
-    <CircularProgress size={24} />
+    <LoaderCircleIcon className="animate-spin" size={24} />
   ) : validated === true ? (
-    <MdCheckCircle className="text-success" size={24} />
+    <CheckCircleIcon className="text-success" size={24} />
   ) : validated === false ? (
-    <MdCancel className="text-error" size={24} />
+    <XCircleIcon className="text-error" size={24} />
   ) : (
     <InputHelpIcon showOnFocus message={message} onOpen={onTooltipOpen} />
   )

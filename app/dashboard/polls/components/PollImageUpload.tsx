@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { LuCloudUpload } from 'react-icons/lu'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
 import { uploadFileToS3 } from '@shared/utils/s3Upload'
 import { apiRoutes } from 'gpApi/routes'
@@ -80,7 +80,7 @@ export const PollImageUpload: React.FC<{
       >
         {mutation.isPending ? (
           <div className="flex flex-col items-center">
-            <CircularProgress size={24} />
+            <LoaderCircleIcon className="animate-spin" size={24} />
             <p className="leading-normal text-sm font-normal mt-2">
               Uploading...
             </p>

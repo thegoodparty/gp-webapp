@@ -56,4 +56,9 @@ export {
   Volume2 as Volume2Icon,
   X as XMarkIcon,
   XCircle as XCircleIcon,
+  Lock as LockIcon,
+  CircleMinus as CircleMinusIcon,
+  ChevronUp as ChevronUpIcon,
+  Circle as CircleIcon,
+  CircleCheck as CircleCheckIcon,
 } from 'lucide-react'
