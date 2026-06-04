@@ -39,6 +39,9 @@ const Modal = ({
     onOpenChange={(next) => !next && closeCallback()}
     modal={!disableEnforceFocus}
   >
+    {disableEnforceFocus && open ? (
+      <div className="fixed inset-0 z-50 bg-black/50" aria-hidden="true" />
+    ) : null}
     <DialogContent
       className={cn(
         '!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 max-h-[90vh] overflow-y-auto',
