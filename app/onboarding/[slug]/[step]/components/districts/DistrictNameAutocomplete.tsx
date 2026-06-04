@@ -57,6 +57,7 @@ export default function DistrictNameAutocomplete({
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
+    setInputValue('')
     if (!districtType) {
       setOptions([])
       return

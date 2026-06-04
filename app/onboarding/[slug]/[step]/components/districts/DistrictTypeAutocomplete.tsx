@@ -52,6 +52,7 @@ export default function DistrictTypeAutocomplete({
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
+    setInputValue('')
     if (!state || !electionYear) return
     setLoading(true)
 
