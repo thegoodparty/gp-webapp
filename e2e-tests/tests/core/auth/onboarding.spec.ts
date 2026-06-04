@@ -45,6 +45,7 @@ async function completeOnboardingFlow(page: Page): Promise<void> {
   await completeOfficeSelectionStep(page)
   await completePathToVictoryStep(page)
   await completeVoterDemographicsStep(page)
+  await completeOutreachPlanStep(page)
   await completePledgeStep(page)
 }
 
@@ -127,6 +128,17 @@ async function completeVoterDemographicsStep(page: Page): Promise<void> {
   await expect(
     page.getByRole('heading', { level: 1, name: /voter insights/i }),
   ).toBeVisible({ timeout: 15000 })
+  await clickContinue(page)
+}
+
+async function completeOutreachPlanStep(page: Page): Promise<void> {
+  console.log('Step: Outreach plan')
+  await expect(
+    page.getByRole('heading', {
+      level: 1,
+      name: /minimum resources needed/i,
+    }),
+  ).toBeVisible({ timeout: 30000 })
   await clickContinue(page)
 }
 
