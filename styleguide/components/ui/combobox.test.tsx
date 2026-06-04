@@ -124,4 +124,40 @@ describe('Combobox', () => {
     expect(screen.getByText('State')).toBeInTheDocument()
     expect(screen.getByText('Federal')).toBeInTheDocument()
   })
+
+  it('keeps all options visible regardless of typed text when disableClientFilter is set', async () => {
+    const user = userEvent.setup()
+    render(
+      <Combobox
+        {...baseProps}
+        value={null}
+        onChange={vi.fn()}
+        disableClientFilter
+      />,
+    )
+    await user.click(screen.getByRole('combobox'))
+    await screen.findByText('Mayor')
+    await user.type(screen.getByPlaceholderText('Search...'), 'zzzzz')
+    expect(screen.getByText('Mayor')).toBeInTheDocument()
+    expect(screen.getByText('City Council')).toBeInTheDocument()
+    expect(screen.getByText('US House')).toBeInTheDocument()
+  })
+
+  it('shows the loading row and hides the empty state while loading', async () => {
+    const user = userEvent.setup()
+    render(
+      <Combobox
+        {...baseProps}
+        options={[]}
+        value={null}
+        onChange={vi.fn()}
+        loading
+        loadingText="Fetching districts..."
+        emptyText="No results"
+      />,
+    )
+    await user.click(screen.getByRole('combobox'))
+    expect(await screen.findByText('Fetching districts...')).toBeInTheDocument()
+    expect(screen.queryByText('No results')).not.toBeInTheDocument()
+  })
 })
