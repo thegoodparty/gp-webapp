@@ -1,4 +1,4 @@
-import { Circle, CircleCheck } from 'lucide-react'
+import { CircleIcon, CircleCheckIcon } from '@styleguide/components/ui/icons'
 
 interface TaskCheckProps {
   checked: boolean
@@ -25,11 +25,11 @@ const TaskCheck = ({
     >
       {!checked ? (
         <>
-          <Circle className="group-hover:hidden!" />
-          <CircleCheck className="hidden! group-hover:inline!" />
+          <CircleIcon className="group-hover:hidden!" />
+          <CircleCheckIcon className="hidden! group-hover:inline!" />
         </>
       ) : (
-        <CircleCheck className="text-indigo-400" />
+        <CircleCheckIcon className="text-indigo-400" />
       )}
     </span>
   )

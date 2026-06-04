@@ -59,4 +59,6 @@ export {
   Lock as LockIcon,
   CircleMinus as CircleMinusIcon,
   ChevronUp as ChevronUpIcon,
+  Circle as CircleIcon,
+  CircleCheck as CircleCheckIcon,
 } from 'lucide-react'

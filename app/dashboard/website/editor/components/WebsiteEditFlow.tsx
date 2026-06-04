@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { LuArrowLeft } from 'react-icons/lu'
 import Button from '@shared/buttons/Button'
+import { useTailwindBreakpoints } from '@shared/hooks/useTailwindBreakpoints'
 import { useWebsite } from '../../components/WebsiteProvider'
 import H4 from '@shared/typography/H4'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
@@ -37,17 +38,9 @@ export default function WebsiteEditFlow(): React.JSX.Element {
   const [editSection, setEditSection] = useState<SectionType>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
-  const [isLgUp, setIsLgUp] = useState(
-    () =>
-      typeof window !== 'undefined' &&
-      window.matchMedia('(min-width:1024px)').matches,
-  )
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width:1024px)')
-    const onChange = (e: MediaQueryListEvent) => setIsLgUp(e.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
+  const breakpoint = useTailwindBreakpoints()
+  const isLgUp =
+    breakpoint === 'lg' || breakpoint === 'xl' || breakpoint === '2xl'
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [updatedPlace, setUpdatedPlace] = useState<GooglePlace | null>(null)
   const [bioCharCount, setBioCharCount] = useState(() =>
