@@ -662,20 +662,20 @@ const buildBudgetBreakdown = (
     {
       category: 'Text campaigns',
       amount: formatDollars(textCampaignsCost),
-      rationale: `${TEXT_CAMPAIGN_COUNT} text campaigns, ${contactsPerCampaign.toLocaleString(
+      rationale: `${TEXT_CAMPAIGN_COUNT} text campaigns covering ${textContacts.toLocaleString(
         'en-US',
-      )} contacts each (${textContacts.toLocaleString(
+      )} of your ${voterContactGoal.toLocaleString(
         'en-US',
-      )} texts) at $${TEXT_COST.toFixed(3)} per text.`,
+      )} voter contacts at $${TEXT_COST.toFixed(3)} per text.`,
     },
     {
       category: 'Robocall campaigns',
       amount: formatDollars(robocallCampaignsCost),
-      rationale: `${ROBOCALL_CAMPAIGN_COUNT} robocall campaigns, ${contactsPerCampaign.toLocaleString(
+      rationale: `${ROBOCALL_CAMPAIGN_COUNT} robocall campaigns covering ${robocallContacts.toLocaleString(
         'en-US',
-      )} contacts each (${robocallContacts.toLocaleString(
+      )} of your ${voterContactGoal.toLocaleString(
         'en-US',
-      )} calls) at $${ROBOCALL_COST.toFixed(3)} per call.`,
+      )} voter contacts at $${ROBOCALL_COST.toFixed(3)} per call.`,
     },
     {
       category: 'Contingency (5%)',
