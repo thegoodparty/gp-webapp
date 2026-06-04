@@ -478,6 +478,9 @@
    * Use: animate-caret-blink on the synthetic caret element.
    * ========================================================================== */
   --animate-caret-blink: caret-blink 1s ease-out infinite;
+
+  /* Indeterminate progress bar (LoadingAnimation). */
+  --animate-indeterminate: indeterminate 1.5s ease-in-out infinite;
 }
 
 @keyframes collapsible-down {
@@ -525,5 +528,14 @@
   20%,
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
   }
 }

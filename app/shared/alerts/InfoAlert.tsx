@@ -1,10 +1,11 @@
 import React, { ReactNode } from 'react'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
-import { AlertProps } from '@mui/material'
 
-interface InfoAlertProps extends Omit<AlertProps, 'severity'> {
+interface InfoAlertProps {
   children: ReactNode
   className?: string
+  variant?: string
+  [key: string]: unknown
 }
 
 export const InfoAlert = ({

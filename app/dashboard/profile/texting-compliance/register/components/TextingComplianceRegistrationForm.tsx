@@ -345,7 +345,7 @@ const TextingComplianceRegistrationForm = ({
           fullWidth
           required
           error={showError('campaignCommitteeName')}
-          value={campaignCommitteeName}
+          value={getStringValue(campaignCommitteeName)}
           onChange={(e) =>
             handleChange({ campaignCommitteeName: e.target.value })
           }
@@ -403,7 +403,7 @@ const TextingComplianceRegistrationForm = ({
           required
           error={showError('electionFilingLink')}
           endAdornments={[<FilingLinkInfoIcon key="filing-info-icon" />]}
-          value={electionFilingLink}
+          value={getStringValue(electionFilingLink)}
           onChange={(e) => handleChange({ electionFilingLink: e.target.value })}
         />
         <AddressAutocomplete
@@ -427,7 +427,7 @@ const TextingComplianceRegistrationForm = ({
           fullWidth
           required
           error={showError('email')}
-          value={email}
+          value={getStringValue(email)}
           onChange={(e) => handleChange({ email: e.target.value })}
         />
         <TextField
@@ -436,7 +436,7 @@ const TextingComplianceRegistrationForm = ({
           required
           fullWidth
           error={showError('phone')}
-          value={phone}
+          value={getStringValue(phone)}
           onChange={(e) => handleChange({ phone: e.target.value })}
         />
         <div className="h-32"></div>

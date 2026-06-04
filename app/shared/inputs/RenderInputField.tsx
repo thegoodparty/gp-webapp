@@ -2,12 +2,17 @@
 import TextField from '@shared/inputs/TextField'
 import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
-import Select from '@mui/material/Select'
-import Radio from '@mui/material/Radio'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import RadioGroup from '@shared/inputs/RadioGroup'
+import RadioGroup, { RadioGroupItem } from '@shared/inputs/RadioGroup'
 import Checkbox from '@shared/inputs/Checkbox'
-import { ClearRounded } from '@mui/icons-material'
+import { Label } from '@styleguide/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide/components/ui/select'
+import { XMarkIcon } from '@styleguide/components/ui/icons'
 
 interface RadioOption {
   key: string
@@ -57,9 +62,9 @@ const RenderInputField = ({
   const endAdornments: (React.ReactElement | 'error')[] = []
   if (field.showResetButton && value) {
     endAdornments.push(
-      <ClearRounded
+      <XMarkIcon
         key="clear"
-        titleAccess="Clear input"
+        aria-label="Clear input"
         className="cursor-pointer hover:text-black"
         onClick={() => onChangeCallback(field.key, '')}
       />,
@@ -144,20 +149,16 @@ const RenderInputField = ({
             className="flex flex-col justify-start"
             name={field.label}
             defaultValue={field.defaultValue}
-            onChange={(e) => {
-              onChangeCallback(field.key, e.target.value)
+            onValueChange={(val) => {
+              onChangeCallback(field.key, val)
             }}
           >
             {field.options &&
               (field.options as RadioOption[]).map(({ key, label, value }) => (
-                <FormControlLabel
-                  key={key}
-                  {...{
-                    value: value,
-                    label,
-                    control: <Radio className="flex-block" />,
-                  }}
-                />
+                <Label key={key} className="cursor-pointer">
+                  <RadioGroupItem value={value} />
+                  {label}
+                </Label>
               ))}
           </RadioGroup>
         </div>
@@ -169,26 +170,26 @@ const RenderInputField = ({
             {field.required && <sup> *</sup>}
           </div>
           <Select
-            native
-            value={value}
-            fullWidth
-            variant="outlined"
-            onChange={(e) =>
-              onChangeCallback(field.key, e.target.value, field.invalidOptions)
+            value={value as string}
+            onValueChange={(val) =>
+              onChangeCallback(field.key, val, field.invalidOptions)
             }
-            label={field.label}
-            error={error}
             disabled={field.disabled}
-            inputProps={{
-              ...(field.dataAttributes || {}),
-            }}
           >
-            <option value="">Select</option>
-            {(field.options as string[]).map((op) => (
-              <option value={op} key={op}>
-                {op}
-              </option>
-            ))}
+            <SelectTrigger
+              className="w-full"
+              aria-invalid={error}
+              {...(field.dataAttributes || {})}
+            >
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent>
+              {(field.options as string[]).map((op) => (
+                <SelectItem value={op} key={op}>
+                  {op}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </>
       )}
@@ -199,7 +200,7 @@ const RenderInputField = ({
           )}
           <div className="flex items-center">
             <Checkbox
-              value={value as boolean}
+              checked={value as boolean}
               onChange={(e) => onChangeCallback(field.key, e.target.checked)}
               disabled={field.disabled}
             />
