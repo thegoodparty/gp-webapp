@@ -6,10 +6,8 @@ import DashboardPage from './DashboardPage'
 import type { Task } from './tasks/TaskItem'
 import type { TcrCompliance } from 'helpers/types'
 import CampaignManager from './campaignManager/CampaignManager'
-import {
-  WebsiteSunsetModal,
-  WEBSITE_SUNSET_NOTICE_ENABLED,
-} from '../shared/WebsiteSunsetModal'
+import { WebsiteSunsetModal } from '../shared/WebsiteSunsetModal'
+import { WEBSITE_SUNSET_NOTICE_ENABLED } from '../shared/websiteSunset'
 
 const AI_CAMPAIGN_MANAGER_FLAG_KEY = 'ai-campaign-manager'
 const WEBSITE_SUNSET_MODAL_DISMISSED_KEY = 'websiteSunsetModalDismissed'
