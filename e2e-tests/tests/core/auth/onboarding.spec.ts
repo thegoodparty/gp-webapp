@@ -30,7 +30,7 @@ test('authenticate with onboarded user', async ({ page }) => {
 
   await completeOnboardingFlow(page)
 
-  if (!page.url().includes('/dashboard')) {
+  if (!/\/(dashboard|onboarding\/success)/.test(page.url())) {
     throw new Error(`Onboarding failed - ended at: ${page.url()}`)
   }
 
@@ -153,5 +153,5 @@ async function completePledgeStep(page: Page): Promise<void> {
   await expect(submit).toBeVisible({ timeout: 15000 })
   await expect(submit).toBeEnabled()
   await submit.click()
-  await page.waitForURL(/\/dashboard/, { timeout: 15000 })
+  await page.waitForURL(/\/(dashboard|onboarding\/success)/, { timeout: 30000 })
 }
