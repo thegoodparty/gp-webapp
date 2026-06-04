@@ -32,4 +32,26 @@ describe('Modal', () => {
     fireEvent.click(screen.getByRole('button', { name: /close/i }))
     expect(closeCallback).toHaveBeenCalledTimes(1)
   })
+
+  describe('disableEnforceFocus backdrop', () => {
+    it('renders an inline backdrop when open and disableEnforceFocus', () => {
+      const { container } = render(
+        <Modal open disableEnforceFocus closeCallback={vi.fn()}>
+          <span>body</span>
+        </Modal>,
+      )
+      expect(
+        container.querySelector('div[aria-hidden="true"]'),
+      ).toBeInTheDocument()
+    })
+
+    it('does not render an inline backdrop when open without disableEnforceFocus', () => {
+      const { container } = render(
+        <Modal open closeCallback={vi.fn()}>
+          <span>body</span>
+        </Modal>,
+      )
+      expect(container.querySelector('div[aria-hidden="true"]')).toBeNull()
+    })
+  })
 })

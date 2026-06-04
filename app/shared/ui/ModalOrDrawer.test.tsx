@@ -101,12 +101,29 @@ vi.mock('@styleguide/components/ui/drawer', () => ({
   DrawerContent: ({
     children,
     className,
+    onEscapeKeyDown,
   }: {
     children: React.ReactNode
     className?: string
+    onEscapeKeyDown?: (e: MockEvent) => void
   }) => (
     <div className={className} data-slot="drawer-content">
       <button aria-label="Close" data-slot="drawer-auto-close" />
+      <button
+        aria-label="escape-key"
+        onClick={() => {
+          const e: MockEvent = {
+            defaultPrevented: false,
+            preventDefault() {
+              this.defaultPrevented = true
+            },
+          }
+          onEscapeKeyDown?.(e)
+          if (!e.defaultPrevented) {
+            document.body.setAttribute('data-dialog-dismissed', 'true')
+          }
+        }}
+      />
       {children}
     </div>
   ),
@@ -328,6 +345,30 @@ describe('ModalOrDrawer', () => {
         'data-dismissible',
         'false',
       )
+    })
+  })
+
+  describe('preventEscClose (mobile / Drawer)', () => {
+    it('dismisses on escape by default', () => {
+      mockBreakpoint.mockReturnValue('xs')
+      render(
+        <ModalOrDrawer {...defaultProps}>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'escape-key' }))
+      expect(document.body).toHaveAttribute('data-dialog-dismissed', 'true')
+    })
+
+    it('does not dismiss on escape when preventEscClose is set', () => {
+      mockBreakpoint.mockReturnValue('xs')
+      render(
+        <ModalOrDrawer {...defaultProps} preventEscClose>
+          <p>Content</p>
+        </ModalOrDrawer>,
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'escape-key' }))
+      expect(document.body).not.toHaveAttribute('data-dialog-dismissed')
     })
   })
 

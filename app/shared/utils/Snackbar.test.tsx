@@ -9,6 +9,15 @@ const HarnessComponent = () => {
   return <button onClick={() => successSnackbar('Saved!')}>Show Toast</button>
 }
 
+const ErrorHarnessComponent = () => {
+  const { errorSnackbar } = useSnackbar()
+  return (
+    <button onClick={() => errorSnackbar('Something went wrong!')}>
+      Show Error Toast
+    </button>
+  )
+}
+
 describe('SnackbarProvider + useSnackbar', () => {
   it('renders a success toast when successSnackbar is called', async () => {
     render(
@@ -20,6 +29,19 @@ describe('SnackbarProvider + useSnackbar', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Show Toast' }))
 
     const toast = await screen.findByText('Saved!')
+    expect(toast).toBeInTheDocument()
+  })
+
+  it('renders an error toast when errorSnackbar is called', async () => {
+    render(
+      <SnackbarProvider>
+        <ErrorHarnessComponent />
+      </SnackbarProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show Error Toast' }))
+
+    const toast = await screen.findByText('Something went wrong!')
     expect(toast).toBeInTheDocument()
   })
 
