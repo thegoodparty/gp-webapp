@@ -291,8 +291,6 @@ export interface PlanData {
 const PLACEHOLDER_MATCH_RATE_CELL = 0.65
 const PLACEHOLDER_MATCH_RATE_LANDLINE = 0.35
 
-const placeholderCity = (city: string): string => city || 'your district'
-
 const buildTimeline = (
   electionDate: Date | null,
   filingDateStart: Date | null,
@@ -526,49 +524,20 @@ const buildContactSchedule = (electionDate: Date | null): ContactSend[] => {
 }
 
 const buildCivicEvents = (
-  electionDate: Date | null,
-  city: string,
   communityEvents: CommunityEventsData | undefined,
 ): CivicEvent[] => {
-  // Real LLM-sourced events win when present. An empty array is still a
-  // meaningful "ready, found nothing" — pass it through so the renderer
-  // shows the empty state instead of falling back to templated rows.
+  // Only renders real LLM-sourced events. If the endpoint hasn't resolved
+  // or errored, returns []; the renderer shows an empty/skeleton state
+  // rather than templated rows with invented event names and dates.
   // `address` is the venue's physical street address from BR/search,
-  // null when the search data had no address (per ClickUp Section 7
-  // spec — the column expects an address, not a URL).
-  if (communityEvents) {
-    return communityEvents.events.map((e) => ({
-      event: e.title,
-      address: e.address ?? '',
-      date: dateUsHelper(e.date),
-      why: e.description,
-    }))
-  }
-  if (!electionDate) return []
-  const cityLabel = placeholderCity(city)
-  const event1 = addDays(electionDate, -23)
-  const event2 = addDays(electionDate, -15)
-  const event3 = addDays(electionDate, -13)
-  return [
-    {
-      event: `${cityLabel} Community Fall Festival`,
-      address: '{event_address}',
-      date: formatDate(event1),
-      why: 'High family turnout; literature handoffs and name recognition.',
-    },
-    {
-      event: `${cityLabel} Town Council Public Meeting`,
-      address: '{event_address}',
-      date: formatDate(event2),
-      why: "Demonstrate fluency with the council's actual agenda.",
-    },
-    {
-      event: `${cityLabel} Civic Association Meeting`,
-      address: '{event_address}',
-      date: formatDate(event3),
-      why: 'The single highest-density event in the actual target precinct.',
-    },
-  ]
+  // null when the search data had no address.
+  if (!communityEvents) return []
+  return communityEvents.events.map((e) => ({
+    event: e.title,
+    address: e.address ?? '',
+    date: dateUsHelper(e.date),
+    why: e.description,
+  }))
 }
 
 const OUTLET_TYPE_LABEL: Record<ApiPressOutlet['type'], string> = {
@@ -1148,11 +1117,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   // keyDates entry can substitute the actual event count instead of a
   // raw `{N}` placeholder. pressOutlets has no such dependency but is
   // grouped here with civicEvents for clarity.
-  const civicEvents = buildCivicEvents(
-    electionDateValid,
-    input.city,
-    input.communityEvents,
-  )
+  const civicEvents = buildCivicEvents(input.communityEvents)
   const pressOutlets = buildPressOutlets(input.pressOutletsFromApi)
   const eventCount = civicEvents.length
   const mediaCount = pressOutlets.length
