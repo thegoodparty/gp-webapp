@@ -7,8 +7,6 @@ import {
   serverFetchIssues,
   serverLoadCandidatePosition,
 } from 'app/dashboard/campaign-details/components/issues/serverIssuesUtils'
-import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
-
 const meta = pageMetaData({
   title: 'campaign Details | GoodParty.org',
   description: 'Campaign Details',
@@ -39,10 +37,5 @@ export default async function Page(): Promise<React.JSX.Element> {
     user,
   }
 
-  return (
-    <>
-      <HubSpotChatWidgetScript />
-      <DetailsPage {...childProps} />
-    </>
-  )
+  return <DetailsPage {...childProps} />
 }

@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useMemo, useState } from 'react'
 import { noop } from '@shared/utils/noop'
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
 import { useCampaign } from '@shared/hooks/useCampaign'
@@ -47,8 +47,13 @@ export const CampaignStatusProvider = ({
     }
   }, [campaign, user])
 
+  const contextValue = useMemo<CampaignStatusContextValue>(
+    () => [campaignStatus, setCampaignStatus],
+    [campaignStatus],
+  )
+
   return (
-    <CampaignStatusContext.Provider value={[campaignStatus, setCampaignStatus]}>
+    <CampaignStatusContext.Provider value={contextValue}>
       {children}
     </CampaignStatusContext.Provider>
   )

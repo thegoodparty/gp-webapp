@@ -2,8 +2,6 @@ import { fetchUserCampaign } from 'app/onboarding/shared/getCampaign'
 import pageMetaData from 'helpers/metadataHelper'
 import CampaignAssistantPage from './components/CampaignAssistantPage'
 import candidateAccess from '../shared/candidateAccess'
-import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
-
 const meta = pageMetaData({
   title: 'AI Assistant | GoodParty.org',
   description: 'AI Assistant',
@@ -26,10 +24,5 @@ export default async function Page(): Promise<React.JSX.Element> {
     pathname: '/dashboard/campaign-assistant',
     campaign,
   }
-  return (
-    <>
-      <HubSpotChatWidgetScript />
-      <CampaignAssistantPage {...childProps} />
-    </>
-  )
+  return <CampaignAssistantPage {...childProps} />
 }
