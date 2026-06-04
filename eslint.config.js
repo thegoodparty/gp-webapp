@@ -75,6 +75,18 @@ module.exports = [
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
       'unused-imports/no-unused-imports': 'error',
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@mui/*', '@emotion/*'],
+              message:
+                'MUI and Emotion have been removed. Use @styleguide components instead.',
+            },
+          ],
+        },
+      ],
     },
   },
 

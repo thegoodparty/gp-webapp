@@ -1,7 +1,7 @@
 'use client'
 import RaceCard from './RaceCard'
 import { useState, ReactNode } from 'react'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import {
   createCampaignWithOffice,
   onboardingStep,
@@ -310,7 +310,7 @@ export default function BallotRaces({
     <section className="mb-2">
       {query.isPending ? (
         <div className="mt-6 text-center">
-          <CircularProgress />
+          <LoaderCircleIcon className="inline size-8 animate-spin" />
           <br />
           <br />
           <H3>Loading Races</H3>
