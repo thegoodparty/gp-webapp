@@ -79,7 +79,7 @@ export default function ExecutiveSummaryCard({
       // Make the card root addressable in the cycler's DOM-order index.
       // Card-level notes carry this path; without it, the enricher
       // couldn't slot them into document order.
-      data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH}
+      data-anchor-json-path={BRIEFING_EXECUTIVE_SUMMARY_CARD_PATH}
       aria-current={isActive ? 'true' : undefined}
       className={`flex scroll-mt-[104px] cursor-pointer flex-col gap-3 rounded-2xl border bg-card p-6 transition-colors lg:scroll-mt-3 ${
         isActive
@@ -87,13 +87,13 @@ export default function ExecutiveSummaryCard({
           : 'border-border hover:border-foreground/20'
       }`}
     >
-      {/* `data-briefing-json-path` makes the title resolvable as an anchor
+      {/* `data-anchor-json-path` makes the title resolvable as an anchor
           target — card-level chats hang off this element. With no chat yet,
           clicking selects its full text so the HighlightToolbar surfaces
           anchored to the title; with a chat, it opens that thread. */}
       <h2
         className="min-w-0 cursor-pointer text-2xl font-semibold text-foreground"
-        data-briefing-json-path={BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH}
+        data-anchor-json-path={BRIEFING_EXECUTIVE_SUMMARY_TITLE_PATH}
         onClick={(e) => {
           if (titleChat) {
             e.stopPropagation()
@@ -107,7 +107,7 @@ export default function ExecutiveSummaryCard({
       </h2>
       <p
         className="text-sm text-muted-foreground"
-        data-briefing-json-path="/executive_summary/lead_in"
+        data-anchor-json-path="/executive_summary/lead_in"
       >
         {summary.lead_in}
       </p>
@@ -119,7 +119,7 @@ export default function ExecutiveSummaryCard({
               <li
                 key={item.item_id}
                 className="list-item!"
-                data-briefing-json-path={`/executive_summary/items/${originalIndex}`}
+                data-anchor-json-path={`/executive_summary/items/${originalIndex}`}
               >
                 <a
                   href={`#${itemDomId}`}

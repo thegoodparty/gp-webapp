@@ -18,7 +18,7 @@ export default function TalkingPointsList({
         <li
           key={`${pathPrefix}/${i}`}
           className="list-item!"
-          data-briefing-json-path={`${pathPrefix}/${i}`}
+          data-anchor-json-path={`${pathPrefix}/${i}`}
         >
           {p}
         </li>

@@ -10,11 +10,12 @@
  * interface so components do not need to change when toggling.
  */
 
-import type { Annotation, CreateAnnotationInput } from './types'
+import type { Annotation, AnnotationKind, CreateAnnotationInput } from './types'
 
 export interface AnnotationsClient {
-  list(meetingDate: string): Promise<Annotation[]>
+  list(meetingDate: string, kinds?: AnnotationKind[]): Promise<Annotation[]>
   create(meetingDate: string, input: CreateAnnotationInput): Promise<Annotation>
   updateNote(annotationId: string, body: string): Promise<Annotation>
+  updateReview(annotationId: string, body: string): Promise<Annotation>
   delete(annotationId: string): Promise<void>
 }

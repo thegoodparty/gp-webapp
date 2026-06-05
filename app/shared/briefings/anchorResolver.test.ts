@@ -9,7 +9,7 @@ import {
 describe('selectElementContents', () => {
   it('makes the element’s full text the document selection', () => {
     document.body.innerHTML =
-      '<h3 data-briefing-json-path="/items/0/title">My Title</h3>'
+      '<h3 data-anchor-json-path="/items/0/title">My Title</h3>'
     const h3 = document.querySelector('h3') as HTMLElement
     const removeAllRanges = vi.fn()
     const addRange = vi.fn()
@@ -64,7 +64,7 @@ describe('resolveSelection', () => {
 
   it('resolves a text-node selection (drag / double-click word)', () => {
     document.body.innerHTML =
-      '<ul><li data-briefing-json-path="/items/0/talking_points/0">hello world</li></ul>'
+      '<ul><li data-anchor-json-path="/items/0/talking_points/0">hello world</li></ul>'
     const text = document.querySelector('li')?.firstChild as Node
     const anchor = resolveSelection(
       asSelection(rangeBetween([text, 0], [text, 11])),
@@ -79,7 +79,7 @@ describe('resolveSelection', () => {
 
   it('resolves a block selection whose boundary is the element node (triple-click / full-highlight)', () => {
     document.body.innerHTML =
-      '<ul><li data-briefing-json-path="/items/0/talking_points/0">hello world</li></ul>'
+      '<ul><li data-anchor-json-path="/items/0/talking_points/0">hello world</li></ul>'
     const li = document.querySelector('li') as HTMLElement
     // Block selections set the boundary on the element itself (child index),
     // not a text node: start before child 0, end after child 0.
@@ -97,8 +97,8 @@ describe('resolveSelection', () => {
     // boundary on that sibling, whose nearest anchor is the card — not the
     // passage. We must still resolve against the passage.
     document.body.innerHTML =
-      '<article data-briefing-json-path="/items/1">' +
-      '<p data-briefing-json-path="/items/1/display/summary">hello world</p>' +
+      '<article data-anchor-json-path="/items/1">' +
+      '<p data-anchor-json-path="/items/1/display/summary">hello world</p>' +
       '<span>source</span>' +
       '</article>'
     const summaryText = document.querySelector('p')?.firstChild as Node
@@ -121,7 +121,7 @@ describe('resolveSelection', () => {
     document.body.innerHTML =
       '<div>' +
       '<span>preamble </span>' +
-      '<p data-briefing-json-path="/items/2/body">hello world</p>' +
+      '<p data-anchor-json-path="/items/2/body">hello world</p>' +
       '</div>'
     const preamble = document.querySelector('span')?.firstChild as Node
     const bodyText = document.querySelector('p')?.firstChild as Node
@@ -145,7 +145,7 @@ describe('resolveSelection', () => {
   })
 
   it('returns null for a collapsed selection', () => {
-    document.body.innerHTML = '<li data-briefing-json-path="/x">hello</li>'
+    document.body.innerHTML = '<li data-anchor-json-path="/x">hello</li>'
     const text = document.querySelector('li')?.firstChild as Node
     expect(
       resolveSelection(asSelection(rangeBetween([text, 2], [text, 2]))),
@@ -179,7 +179,7 @@ describe('scrollAnchorIntoView', () => {
 
   function makeAnchorEl(jsonPath: string, rect: Partial<DOMRect>): HTMLElement {
     const el = document.createElement('div')
-    el.setAttribute('data-briefing-json-path', jsonPath)
+    el.setAttribute('data-anchor-json-path', jsonPath)
     document.body.appendChild(el)
     el.getBoundingClientRect = () =>
       ({

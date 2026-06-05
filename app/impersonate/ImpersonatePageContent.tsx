@@ -4,12 +4,21 @@ import { useEffect, useState } from 'react'
 import { useClerk } from '@clerk/nextjs'
 import { useSearchParams } from 'next/navigation'
 
+const isSafeReturnTo = (s: string | null): boolean => {
+  if (typeof s !== 'string') return false
+  if (!s.startsWith('/')) return false
+  if (s.startsWith('//') || s.startsWith('/\\')) return false
+  return s.startsWith('/dashboard/')
+}
+
 export default function ImpersonatePageContent() {
   const { client, setActive, signOut, loaded } = useClerk()
   const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
 
   const ticket = searchParams?.get('__clerk_ticket') ?? null
+  const returnTo = searchParams?.get('returnTo') ?? null
+  const adminReturnTo = searchParams?.get('adminReturnTo') ?? null
 
   useEffect(() => {
     if (!loaded) return
@@ -41,7 +50,12 @@ export default function ImpersonatePageContent() {
         }
 
         await setActive({ session: result.createdSessionId })
-        window.location.href = '/dashboard'
+        if (isSafeReturnTo(adminReturnTo)) {
+          sessionStorage.setItem('gp_admin_return_to', adminReturnTo!)
+        }
+        window.location.href = isSafeReturnTo(returnTo)
+          ? returnTo!
+          : '/dashboard'
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err)
         console.error('[impersonate] Failed:', err)
@@ -50,7 +64,7 @@ export default function ImpersonatePageContent() {
     }
 
     run()
-  }, [loaded, ticket])
+  }, [loaded, ticket, returnTo, adminReturnTo])
 
   if (error) {
     return (

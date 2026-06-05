@@ -340,7 +340,7 @@ export type APIEndpoints = {
   // Annotation shape consumed by components. Briefings are addressed
   // by meeting date (YYYY-MM-DD), matching `GET /v1/meetings/:date/briefing`.
   'GET /v1/meetings/:date/briefing/annotations': {
-    Request: { date: string }
+    Request: { date: string; kinds?: string }
     Response: { annotations: ApiAnnotation[] }
   }
   'POST /v1/meetings/:date/briefing/annotations': {
@@ -348,6 +348,10 @@ export type APIEndpoints = {
     Response: ApiAnnotation
   }
   'PUT /v1/annotations/:annotationId/note': {
+    Request: { body: string }
+    Response: ApiAnnotation
+  }
+  'PUT /v1/annotations/:annotationId/review': {
     Request: { body: string }
     Response: ApiAnnotation
   }
@@ -433,7 +437,7 @@ export type APIEndpoints = {
 // Backend (snake_case) annotation types. Mirrors @goodparty_org/contracts
 // in gp-api. The AnnotationsApi client maps to/from the camelCase shape
 // the rest of the frontend uses.
-export type ApiAnnotationKind = 'note' | 'chat' | 'bug_report'
+export type ApiAnnotationKind = 'note' | 'chat' | 'bug_report' | 'review'
 export type ApiAnnotationResourceType = 'briefing'
 
 export interface ApiAnnotationAnchorInput {
@@ -498,6 +502,14 @@ export interface ApiAnnotationChat {
   created_at: string
 }
 
+export interface ApiAnnotationReview {
+  id: string
+  body: string
+  reviewer_email: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface ApiAnnotation {
   id: string
   kind: ApiAnnotationKind
@@ -512,6 +524,7 @@ export interface ApiAnnotation {
   note?: ApiAnnotationNote
   bug_report?: ApiAnnotationBugReport
   chat?: ApiAnnotationChat
+  review?: ApiAnnotationReview
 }
 
 export type ApiCreateAnnotationInput =
@@ -525,6 +538,11 @@ export type ApiCreateAnnotationInput =
       kind: 'bug_report'
       anchor: ApiAnnotationAnchorInput
       payload: { description: string }
+    }
+  | {
+      kind: 'review'
+      anchor: ApiAnnotationAnchorInput
+      payload: { body: string }
     }
 
 export type ApiArtifactResourceType = 'agenda_item'
