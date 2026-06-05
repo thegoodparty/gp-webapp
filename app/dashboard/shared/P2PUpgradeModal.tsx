@@ -3,7 +3,8 @@
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { trackEvent, buildTrackingAttrs } from 'helpers/analyticsHelper'
@@ -156,14 +157,14 @@ export function P2PUpgradeModal({
 
           <div className="flex justify-center pt-2">
             <Button
-              href={content.href}
+              asChild
               size="large"
               className="text-white rounded-[32px]"
               style={{ backgroundColor: '#14234D' }}
               onClick={handleButtonClick}
               {...trackingAttrs}
             >
-              {content.cta}
+              <Link href={content.href}>{content.cta}</Link>
             </Button>
           </div>
         </div>

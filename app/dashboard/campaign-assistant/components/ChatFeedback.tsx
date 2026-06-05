@@ -1,5 +1,5 @@
 'use client'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import TextField from '@shared/inputs/TextField'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
@@ -68,14 +68,10 @@ const ChatFeedback = (): React.JSX.Element => {
             }
           />
           <div className="flex justify-between mt-8">
-            <Button color="neutral" onClick={() => setShowModal(false)}>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
               Cancel
             </Button>
-            <Button
-              color="primary"
-              disabled={feedback === ''}
-              onClick={handleSubmitNegative}
-            >
+            <Button disabled={feedback === ''} onClick={handleSubmitNegative}>
               Submit
             </Button>
           </div>

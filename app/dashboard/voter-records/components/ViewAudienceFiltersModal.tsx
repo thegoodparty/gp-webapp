@@ -1,7 +1,6 @@
 import { noop } from '@shared/utils/noop'
 import { useMemo } from 'react'
-import Button from '@shared/buttons/Button'
-import IconButton from '@shared/buttons/IconButton'
+import { Button, IconButton } from '@styleguide'
 import Modal from '@shared/utils/Modal'
 import CustomVoterAudienceFilters, {
   AudienceFiltersState,
@@ -72,7 +71,7 @@ const ViewAudienceFiltersModal = ({
       {buttonType === 'icon' ? (
         <IconButton
           size={size}
-          color="info"
+          variant="ghost"
           title="View Audience Filters"
           className={`flex items-center ${className}`}
           onClick={onOpen}
@@ -82,7 +81,7 @@ const ViewAudienceFiltersModal = ({
       ) : (
         <Button
           size={size}
-          color="neutral"
+          variant="secondary"
           title="View Audience Filters"
           className={`flex gap-2 items-center ${className}`}
           onClick={onOpen}

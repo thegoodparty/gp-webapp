@@ -6,7 +6,7 @@ import {
   TwitterLogo,
   NextdoorLogo,
 } from '@shared/brand-logos'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 interface ShareLink {
   label: string
@@ -68,14 +68,14 @@ export default function ShareButtons({
       {shareLinks.map((item) => (
         <Button
           key={item.label}
-          variant="outlined"
+          asChild
+          variant="outline"
           className="flex items-center gap-2 w-full !border-[1px] !border-black/[0.12]"
-          href={item.href}
-          target="_blank"
-          rel="noopener noreferrer"
         >
-          {item.icon}
-          {item.label}
+          <a href={item.href} target="_blank" rel="noopener noreferrer">
+            {item.icon}
+            {item.label}
+          </a>
         </Button>
       ))}
     </div>

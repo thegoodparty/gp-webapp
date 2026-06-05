@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 interface WebsiteEditorPageStepperProps {
   totalSteps: number
@@ -66,7 +66,7 @@ const WebsiteEditorPageStepper = ({
         <Button
           className="md:order-1"
           size="large"
-          variant="text"
+          variant="ghost"
           disabled={!hasPrev}
           onClick={handlePrevStep}
         >

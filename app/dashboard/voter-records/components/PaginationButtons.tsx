@@ -1,4 +1,4 @@
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 
 interface PaginationButtonsProps {
@@ -22,7 +22,7 @@ export default function PaginationButtons({
       <Button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        color="neutral"
+        variant="secondary"
         size="small"
       >
         Previous
@@ -33,7 +33,7 @@ export default function PaginationButtons({
       <Button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        color="neutral"
+        variant="secondary"
         size="small"
       >
         Next

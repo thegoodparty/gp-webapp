@@ -11,7 +11,7 @@ import { AsyncValidationIcon } from 'app/dashboard/shared/AsyncValidationIcon'
 import { EinCheckInput } from 'app/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { AlreadyProUserPrompt } from 'app/dashboard/shared/AlreadyProUserPrompt'
 import { CommitteeSupportingFilesUpload } from 'app/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
 
@@ -189,15 +189,19 @@ const CommitteeCheckPage = ({
 
           <section className="flex flex-col justify-between mt-4 md:mt-8 md:flex-row">
             <Button
-              href="/dashboard/pro-sign-up"
-              onClick={() => {
-                trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickBack)
-              }}
+              asChild
+              variant="secondary"
               size="large"
-              color="neutral"
-              className=" mb-4 md:mb-0"
+              className="mb-4 md:mb-0"
             >
-              Back
+              <Link
+                href="/dashboard/pro-sign-up"
+                onClick={() => {
+                  trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickBack)
+                }}
+              >
+                Back
+              </Link>
             </Button>
             <Button
               onClick={handleNextClick}

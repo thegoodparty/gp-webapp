@@ -3,7 +3,7 @@ import { getCookie, setCookie } from 'helpers/cookieHelper'
 import { useEffect, useState } from 'react'
 import { isbot } from 'isbot'
 import { MdClose } from 'react-icons/md'
-import Button from '../buttons/Button'
+import { Button } from '@styleguide'
 import Body2 from '@shared/typography/Body2'
 
 const CookiesSnackbar = (): React.JSX.Element | null => {
@@ -32,10 +32,10 @@ const CookiesSnackbar = (): React.JSX.Element | null => {
           By continuing to browse this site, you consent to the use of cookies.
         </Body2>
         <Button
-          className="ml-6 inline-flex items-center self-center"
-          color="white"
-          onClick={handleAccept}
+          className="ml-6 self-center"
+          variant="whiteOutline"
           size="medium"
+          onClick={handleAccept}
           data-testid="cookie-accept-btn"
         >
           Close

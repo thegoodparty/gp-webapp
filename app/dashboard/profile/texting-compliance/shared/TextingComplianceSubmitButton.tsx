@@ -1,5 +1,5 @@
 import { noop } from '@shared/utils/noop'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { MouseEvent } from 'react'
 
 interface TextingComplianceSubmitButtonProps {
@@ -14,14 +14,11 @@ export const TextingComplianceSubmitButton = ({
   isValid = true,
 }: TextingComplianceSubmitButtonProps): React.JSX.Element => (
   <Button
-    {...{
-      color: 'primary',
-      size: 'large',
-      className: 'flex-1 md:flex-initial',
-      disabled: !isValid || loading,
-      onClick,
-      loading,
-    }}
+    size="large"
+    className="flex-1 md:flex-initial"
+    disabled={!isValid || loading}
+    onClick={onClick}
+    loading={loading}
   >
     Submit
   </Button>

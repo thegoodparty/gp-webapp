@@ -3,8 +3,7 @@
 import { isValidEmail } from '@shared/inputs/EmailInput'
 import { useState } from 'react'
 import { FaCheck } from 'react-icons/fa'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
@@ -125,14 +124,15 @@ const EmailFormV2 = ({
               id="submit-email"
             >
               {primaryButton ? (
-                <PrimaryButton onClick={submitForm}>{label}</PrimaryButton>
+                <Button onClick={submitForm}>{label}</Button>
               ) : (
-                <SecondaryButton
+                <Button
+                  variant="secondary"
                   className="bg-secondary-main border-none"
                   onClick={submitForm}
                 >
                   {label}
-                </SecondaryButton>
+                </Button>
               )}
             </div>
 

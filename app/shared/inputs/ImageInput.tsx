@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import FileDropZone from './FileDropZone'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 interface ImageInputProps {
   imageUrl?: string | null
@@ -31,7 +31,7 @@ const ImageInput = ({
             className="w-full rounded-t-none "
             size="large"
             onClick={() => onChange(null)}
-            variant="text"
+            variant="ghost"
           >
             Remove {imageLabel}
           </Button>

@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { voterFileDownload } from 'helpers/voterFileDownload'
 import { Campaign } from 'helpers/types'
 

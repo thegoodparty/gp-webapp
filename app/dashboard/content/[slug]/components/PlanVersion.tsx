@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { dateWithTime } from 'helpers/dateHelper'
 import { IoIosArrowDown } from 'react-icons/io'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
 import { Button } from '@styleguide'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
@@ -41,19 +40,19 @@ export default function PlanVersion({
 
   return (
     <div className="flex justify-center relative">
-      <div
+      <Button
+        variant="secondary"
+        size="medium"
         onClick={() => {
           trackEvent(EVENTS.ContentBuilder.Editor.OpenVersionPicker)
           setShowMenu(!showMenu)
         }}
       >
-        <SecondaryButton size="medium">
-          <div className="flex items-center whitespace-nowrap">
-            Version &nbsp;
-            <IoIosArrowDown className="text-sm" />
-          </div>
-        </SecondaryButton>
-      </div>
+        <div className="flex items-center whitespace-nowrap">
+          Version &nbsp;
+          <IoIosArrowDown className="text-sm" />
+        </div>
+      </Button>
 
       {showMenu && (
         <>

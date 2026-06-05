@@ -8,7 +8,7 @@ import DashboardOrContinue from './DashboardOrContinue'
 import { useUser } from '@shared/hooks/useUser'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
 import NavButton from './NavButton'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { User } from 'helpers/types'
 import { getMarketingUrl } from 'helpers/linkhelper'
@@ -83,16 +83,20 @@ const RightSide = (): React.JSX.Element => {
             <span className="font-medium text-base leading-6!">Sign up</span>
           </NavButton>
           <Button
-            href={getMarketingUrl('/run-for-office')}
+            asChild
             id="nav-get-tools"
             className="inline-flex items-center justify-center py-2! leading-6! border-none"
             data-testid="nav-get-tools"
-            target="_blank"
-            rel="noopener noreferrer nofollow"
           >
-            <span className="font-medium text-base leading-6!">
-              Get Campaign Tools
-            </span>
+            <a
+              href={getMarketingUrl('/run-for-office')}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <span className="font-medium text-base leading-6!">
+                Get Campaign Tools
+              </span>
+            </a>
           </Button>
         </>
       )}

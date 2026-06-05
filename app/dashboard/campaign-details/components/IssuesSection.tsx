@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import TextField from '@shared/inputs/TextField'
 import { MdCheckBox } from 'react-icons/md'
 import H4 from '@shared/typography/H4'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { getCampaign } from 'app/onboarding/shared/ajaxActions'
 import { useCandidatePositions } from 'app/dashboard/campaign-details/components/issues/useCandidatePositions'
 import {
@@ -13,11 +13,10 @@ import {
   handleDeleteCustomIssue,
   loadCandidatePosition,
 } from 'app/dashboard/campaign-details/components/issues/issuesUtils'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
 import AlertDialog from '@shared/utils/AlertDialog'
 import { IoAddSharp } from 'react-icons/io5'
 import { useSnackbar } from 'helpers/useSnackbar'
-import Button from '@shared/buttons/Button'
+import Link from 'next/link'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign, CustomIssue, CandidatePosition } from 'helpers/types'
 import { EditIssuePosition } from 'app/dashboard/questions/components/issues/IssuesList'
@@ -121,15 +120,19 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
         <span>Your Top Issues</span>
         {(!combinedIssues?.length || combinedIssues?.length < 3) && (
           <Button
+            asChild
             size="large"
-            href="/dashboard/questions?generate=all"
             className="inline-flex align-center !py-2"
-            onClick={() => {
-              trackEvent(EVENTS.Profile.TopIssues.ClickFinish)
-            }}
           >
-            Finish Entering Issues
-            <IoAddSharp className="ml-1 inline text-2xl" />
+            <Link
+              href="/dashboard/questions?generate=all"
+              onClick={() => {
+                trackEvent(EVENTS.Profile.TopIssues.ClickFinish)
+              }}
+            >
+              Finish Entering Issues
+              <IoAddSharp className="ml-1 inline text-2xl" />
+            </Link>
           </Button>
         )}
       </H3>
@@ -190,7 +193,7 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
                   </div>
                 )}
                 <div className="flex justify-end mt-8">
-                  <PrimaryButton
+                  <Button
                     className="mr-3"
                     size="medium"
                     onClick={() => {
@@ -199,8 +202,9 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
                     }}
                   >
                     Edit
-                  </PrimaryButton>
-                  <SecondaryButton
+                  </Button>
+                  <Button
+                    variant="secondary"
                     size="medium"
                     onClick={() => {
                       trackEvent(EVENTS.Profile.TopIssues.ClickDelete)
@@ -208,7 +212,7 @@ const IssuesSection = (props: IssuesSectionProps): React.JSX.Element => {
                     }}
                   >
                     Delete
-                  </SecondaryButton>
+                  </Button>
                   <AlertDialog
                     open={Boolean(showDeleteConfirmation)}
                     handleClose={() => {

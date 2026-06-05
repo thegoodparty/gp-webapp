@@ -4,7 +4,7 @@ import { useSnackbar } from '@shared/utils/Snackbar'
 import { downloadVoterList } from 'app/dashboard/outreach/util/downloadVoterList.util'
 import { OutreachActionWrapper } from 'app/dashboard/outreach/components/OutreachActionWrapper'
 import { MdDownload } from 'react-icons/md'
-import ButtonLoading from '@shared/buttons/ButtonLoading'
+import { LoaderCircleIcon } from '@styleguide'
 import { Outreach } from 'app/dashboard/outreach/hooks/OutreachContext'
 
 interface DownloadAudienceActionOptionProps {
@@ -36,7 +36,9 @@ export const DownloadAudienceActionOption = ({
     >
       <MdDownload className="mr-2 inline-block" />
       <span>Download list</span>
-      {loading && <ButtonLoading className="mr-0 ml-2" />}
+      {loading && (
+        <LoaderCircleIcon className="mr-0 ml-2 size-4 animate-spin" />
+      )}
     </OutreachActionWrapper>
   )
 }

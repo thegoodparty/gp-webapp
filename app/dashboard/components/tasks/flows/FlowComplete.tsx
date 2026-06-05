@@ -1,6 +1,6 @@
 'use client'
 import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { useUser } from '@shared/hooks/useUser'
@@ -33,38 +33,36 @@ const FlowComplete = ({
 
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-6 text-left mt-3">
-            <Link
-              href="/dashboard"
-              onClick={() => {
-                trackEvent(
-                  EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign
-                    .Complete.ReturnToDashboard,
-                )
-              }}
-            >
-              <PrimaryButton
-                variant="outlined"
-                fullWidth
-                onClick={resetCallback}
+            <Button asChild variant="outline" className="w-full">
+              <Link
+                href="/dashboard"
+                onClick={() => {
+                  trackEvent(
+                    EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign
+                      .Complete.ReturnToDashboard,
+                  )
+                  resetCallback()
+                }}
               >
                 Return to Dashboard
-              </PrimaryButton>
-            </Link>
+              </Link>
+            </Button>
           </div>
           <div className="col-span-6 text-right mt-3">
-            <Link
-              href="/dashboard/voter-records"
-              onClick={() => {
-                trackEvent(
-                  EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign
-                    .Complete.ReturnToVoterFile,
-                )
-              }}
-            >
-              <PrimaryButton fullWidth onClick={resetCallback}>
+            <Button asChild className="w-full">
+              <Link
+                href="/dashboard/voter-records"
+                onClick={() => {
+                  trackEvent(
+                    EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign
+                      .Complete.ReturnToVoterFile,
+                  )
+                  resetCallback()
+                }}
+              >
                 Return to Voter File
-              </PrimaryButton>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

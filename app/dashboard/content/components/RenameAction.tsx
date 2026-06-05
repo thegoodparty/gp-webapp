@@ -2,8 +2,7 @@
 import { useState, ChangeEvent } from 'react'
 import Modal from '@shared/utils/Modal'
 import TextField from '@shared/inputs/TextField'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 import H2 from '@shared/typography/H2'
 import H6 from '@shared/typography/H6'
 import { useSnackbar } from 'helpers/useSnackbar'
@@ -82,25 +81,23 @@ const RenameAction = ({
             }}
           />
           <div className="mt-16 flex w-full justify-end">
-            <div
+            <Button
+              variant="secondary"
               onClick={() => {
                 setShowRename(false)
               }}
             >
-              <SecondaryButton>Cancel</SecondaryButton>
-            </div>
-            <div
+              Cancel
+            </Button>
+            <Button
               className="ml-3"
+              disabled={newName.length === 0 || newName.length >= 50}
               onClick={() => {
                 handleRename(documentKey!, newName)
               }}
             >
-              <PrimaryButton
-                disabled={newName.length === 0 || newName.length >= 50}
-              >
-                Save
-              </PrimaryButton>
-            </div>
+              Save
+            </Button>
           </div>
         </div>
       </Modal>

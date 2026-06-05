@@ -1,5 +1,5 @@
 'use client'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import ScheduleModal from 'app/onboarding/shared/ScheduleModal'
@@ -28,7 +28,7 @@ const ElectionOver = (): React.JSX.Element => {
       {isPro && (
         <ScheduleModal
           calendar="https://join.goodparty.org/meetings/campaign-success/election-debrief"
-          btn={<PrimaryButton>Contact us for a debrief</PrimaryButton>}
+          btn={<Button>Contact us for a debrief</Button>}
         />
       )}
     </section>

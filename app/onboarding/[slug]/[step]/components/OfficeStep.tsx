@@ -8,7 +8,7 @@ import {
 import { useRouter } from 'next/navigation'
 import BallotRaces from './ballotOffices/BallotRaces'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { setCookie } from 'helpers/cookieHelper'
 import { ORG_SLUG_COOKIE } from '@shared/organizations/constants'
 import { clientRequest } from 'gpApi/typed-request'

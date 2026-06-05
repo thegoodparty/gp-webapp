@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { FaTrash } from 'react-icons/fa'
 import { useEffect, useState, FormEvent } from 'react'
 import Modal from '@shared/utils/Modal'
@@ -175,7 +175,7 @@ export default function EditQuestion(
                   />
                   <div className="ml-2 min-w-[112px]">
                     <Button
-                      color="secondary"
+                      variant="secondary"
                       onClick={handleNewAnswer}
                       className="w-full"
                     >
@@ -203,11 +203,10 @@ export default function EditQuestion(
               withOptions ? 'border-t border-gray-200' : ''
             }`}
           >
-            <Button color="neutral" onClick={() => setIsOpen(false)}>
+            <Button variant="secondary" onClick={() => setIsOpen(false)}>
               Cancel
             </Button>
             <Button
-              color="primary"
               onClick={handleSubmit}
               className="ml-4"
               disabled={!canSubmit}

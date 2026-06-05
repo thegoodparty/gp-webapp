@@ -1,4 +1,4 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import H2 from '@shared/typography/H2'
 import Subtitle1 from '@shared/typography/Subtitle1'
 import Link from 'next/link'
@@ -86,14 +86,16 @@ const QuestionProgress = ({
       </div>
       <div className=" col-span-12 md:col-span-4 lg:col-span-3 ">
         <div className="flex justify-center md:justify-end mt-4 md:mt-0">
-          <Link
-            href={`/dashboard/questions?generate=all`}
+          <Button
+            asChild
             onClick={() => {
               trackEvent(EVENTS.ContentBuilder.ClickContinueQuestions)
             }}
           >
-            <PrimaryButton>Continue to questions</PrimaryButton>
-          </Link>
+            <Link href={`/dashboard/questions?generate=all`}>
+              Continue to questions
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

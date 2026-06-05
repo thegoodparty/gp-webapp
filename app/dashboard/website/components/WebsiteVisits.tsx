@@ -7,7 +7,7 @@ import H5 from '@shared/typography/H5'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import Body2 from '@shared/typography/Body2'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import StepList from './StepList'
 import H1 from '@shared/typography/H1'
@@ -98,7 +98,7 @@ export default function WebsiteVisits({
           </H5>
           <Body2 className="mt-1 text-gray-500 text-xs">Last 7 days</Body2>
         </div>
-        <Button color="neutral" onClick={() => setModalOpen(true)}>
+        <Button variant="secondary" onClick={() => setModalOpen(true)}>
           Increase visitors
         </Button>
       </div>

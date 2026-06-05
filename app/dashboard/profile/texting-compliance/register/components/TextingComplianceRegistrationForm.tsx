@@ -26,7 +26,7 @@ import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceFooter'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
@@ -452,13 +452,10 @@ const TextingComplianceRegistrationForm = ({
       </TextingComplianceForm>
       <TextingComplianceFooter>
         <Button
-          {...{
-            color: 'primary',
-            size: 'large',
-            disabled: loading,
-            loading,
-            onClick: handleOnSubmit,
-          }}
+          size="large"
+          disabled={loading}
+          loading={loading}
+          onClick={handleOnSubmit}
         >
           Submit
         </Button>

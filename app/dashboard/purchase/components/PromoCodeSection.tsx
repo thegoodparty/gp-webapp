@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { StripeCheckoutValue } from '@stripe/react-stripe-js/checkout'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { useSnackbar } from '@shared/utils/Snackbar'
 
 export function usePromoCode(checkout: StripeCheckoutValue) {
@@ -124,7 +124,7 @@ export default function PromoCodeSection({
             disabled={!promoCode.trim() || isApplyingPromo}
             loading={isApplyingPromo}
             size="large"
-            color="secondary"
+            variant="secondary"
           >
             Apply
           </Button>

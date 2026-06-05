@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import IconButton from '@shared/buttons/IconButton'
+import { IconButton } from '@styleguide'
 import { Trash2Icon, PencilIcon } from '@styleguide'
 import RunningAgainstForm from './RunningAgainstForm'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
@@ -53,7 +53,7 @@ export default function RunningAgainstCard({
             <IconButton
               title="Delete"
               className="flex items-center"
-              color="error"
+              variant="destructive"
               onClick={handleDelete}
             >
               <Trash2Icon />

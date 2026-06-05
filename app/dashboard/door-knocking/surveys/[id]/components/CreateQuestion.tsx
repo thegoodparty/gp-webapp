@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { FaPlus, FaTrash } from 'react-icons/fa'
 import { useState, FormEvent } from 'react'
 import Modal from '@shared/utils/Modal'
@@ -129,7 +129,7 @@ export default function CreateQuestion(): React.JSX.Element {
 
   return (
     <>
-      <Button color="primary" onClick={() => setIsOpen(true)}>
+      <Button onClick={() => setIsOpen(true)}>
         <div className="flex items-center">
           <FaPlus className="mr-2" />
           <div>Add a Question</div>
@@ -164,7 +164,7 @@ export default function CreateQuestion(): React.JSX.Element {
                   />
                   <div className="ml-2 min-w-[112px]">
                     <Button
-                      color="secondary"
+                      variant="secondary"
                       onClick={handleNewOption}
                       className="w-full"
                     >
@@ -198,11 +198,10 @@ export default function CreateQuestion(): React.JSX.Element {
             }
           />
           <div className="flex justify-end mt-6 items-center pt-4 border-t border-gray-200">
-            <Button color="neutral" onClick={() => setIsOpen(false)}>
+            <Button variant="secondary" onClick={() => setIsOpen(false)}>
               Cancel
             </Button>
             <Button
-              color="primary"
               onClick={handleSubmit}
               className="ml-4"
               disabled={!canSubmit}

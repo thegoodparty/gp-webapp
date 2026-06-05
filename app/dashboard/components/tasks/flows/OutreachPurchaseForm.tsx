@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import H1 from '@shared/typography/H1'
 import CheckoutPayment from 'app/dashboard/purchase/components/CheckoutPayment'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { FREE_TEXTS_OFFER } from '../../../outreach/constants'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'

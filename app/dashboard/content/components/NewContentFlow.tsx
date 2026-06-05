@@ -1,7 +1,6 @@
 'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 import H2 from '@shared/typography/H2'
 import Modal from '@shared/utils/Modal'
 import { type ComponentProps, useEffect, useState } from 'react'
@@ -126,20 +125,17 @@ const NewContentFlow = (props: NewContentFlowProps): React.JSX.Element => {
 
   return (
     <div>
-      <div
-        className="mb-7 inline-block new-content-btn"
+      <Button
+        className="mb-7 new-content-btn"
+        id="new-content-btn"
         onClick={() => {
           trackEvent(EVENTS.ContentBuilder.ClickGenerate)
           setShowModal(true)
         }}
-        id="new-content-btn"
       >
-        <PrimaryButton>
-          <div className="flex items-center">
-            <MdAutoAwesome className="mr-2" /> Generate
-          </div>
-        </PrimaryButton>
-      </div>
+        <MdAutoAwesome />
+        Generate
+      </Button>
 
       <Modal closeCallback={closeModal} open={showModal}>
         <div className="w-[calc(90vw-64px)]">
@@ -176,11 +172,14 @@ const NewContentFlow = (props: NewContentFlowProps): React.JSX.Element => {
               justify-end
             "
           >
-            <div onClick={closeModal}>
-              <SecondaryButton disabled={isProcessing} size="medium">
-                Cancel
-              </SecondaryButton>
-            </div>
+            <Button
+              variant="secondary"
+              size="medium"
+              disabled={isProcessing}
+              onClick={closeModal}
+            >
+              Cancel
+            </Button>
           </div>
         </div>
       </Modal>

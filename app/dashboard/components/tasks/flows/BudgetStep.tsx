@@ -1,6 +1,5 @@
 'use client'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 import Checkbox from '@shared/inputs/Checkbox'
 import TextField from '@shared/inputs/TextField'
 import Body1 from '@shared/typography/Body1'
@@ -89,17 +88,17 @@ export default function BudgetStep({
             </div>
           </div>
           <div className="col-span-6 text-left mt-6">
-            <SecondaryButton onClick={isTel ? closeCallback : backCallback}>
+            <Button
+              variant="secondary"
+              onClick={isTel ? closeCallback : backCallback}
+            >
               {isTel ? 'Cancel' : 'Back'}
-            </SecondaryButton>
+            </Button>
           </div>
           <div className="col-span-6 text-right mt-6">
-            <PrimaryButton
-              onClick={nextCallback}
-              disabled={!value || value === 0}
-            >
+            <Button onClick={nextCallback} disabled={!value || value === 0}>
               Next
-            </PrimaryButton>
+            </Button>
           </div>
         </div>
       </div>

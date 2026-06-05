@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import H3 from '@shared/typography/H3'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import RunningAgainstForm from './RunningAgainstForm'
 import RunningAgainstCard from './RunningAgainstCard'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
@@ -91,7 +91,7 @@ export default function RunningAgainstSection({
             }}
           />
         ) : (
-          <PrimaryButton
+          <Button
             size="medium"
             onClick={() => {
               trackEvent(EVENTS.Profile.RunningAgainst.ClickAddNew)
@@ -99,18 +99,14 @@ export default function RunningAgainstSection({
             }}
           >
             Add New Opponent
-          </PrimaryButton>
+          </Button>
         )}
       </div>
 
       <div className="flex justify-end mb-6">
-        <PrimaryButton
-          loading={isSaving}
-          disabled={isSaving}
-          onClick={handleSave}
-        >
+        <Button loading={isSaving} disabled={isSaving} onClick={handleSave}>
           Save
-        </PrimaryButton>
+        </Button>
       </div>
     </section>
   )

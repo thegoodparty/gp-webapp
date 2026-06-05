@@ -1,5 +1,5 @@
 'use client'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import Body2 from '@shared/typography/Body2'
 import useChat from 'app/dashboard/campaign-assistant/components/useChat'
 import { MdAutoAwesome } from 'react-icons/md'
@@ -48,7 +48,7 @@ const EmptyChat = (): React.JSX.Element => {
           {prompts.map((prompt) => (
             <Button
               key={prompt.label}
-              color="neutral"
+              variant="secondary"
               size="small"
               onClick={() => handleClick(prompt)}
             >

@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { LuSettings } from 'react-icons/lu'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { updateWebsite } from '../../util/website.util'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { useRouter } from 'next/navigation'
@@ -55,7 +55,7 @@ const EditSettingsMenu = (): React.JSX.Element => {
   return (
     <div className="relative settings-menu">
       <Button
-        variant="text"
+        variant="ghost"
         onClick={() => setSettingsMenuOpen(!settingsMenuOpen)}
       >
         <LuSettings size={24} />
@@ -64,7 +64,7 @@ const EditSettingsMenu = (): React.JSX.Element => {
       {settingsMenuOpen && (
         <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[160px]">
           <Button
-            variant="text"
+            variant="ghost"
             onClick={() => setConfirmOpen(true)}
             disabled={loading}
             loading={loading}

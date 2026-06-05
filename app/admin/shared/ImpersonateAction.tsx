@@ -1,5 +1,5 @@
 'use client'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { useSnackbar } from 'helpers/useSnackbar'
 

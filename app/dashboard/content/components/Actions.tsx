@@ -7,7 +7,7 @@ import DeleteAction from './DeleteAction'
 import RenameAction from './RenameAction'
 import TranslateAction from './TranslateAction'
 import { kebabToCamel } from 'helpers/stringHelper'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+
 import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import { Button } from '@styleguide'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
@@ -88,33 +88,33 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
         ) : (
           // otherwise if tableVersion === false, then it's a documentMode
           <>
-            <div
+            <Button
+              variant="secondary"
+              size="medium"
               className="ml-3 md:hidden"
               onClick={() => {
                 setShowMenu(!showMenu)
               }}
             >
-              <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap">
-                  <BsThreeDots className="text-sm" />
-                  &nbsp;
-                </div>
-              </SecondaryButton>
-            </div>
+              <div className="flex items-center whitespace-nowrap">
+                <BsThreeDots className="text-sm" />
+                &nbsp;
+              </div>
+            </Button>
 
-            <div
+            <Button
+              variant="secondary"
+              size="medium"
               onClick={() => {
                 setShowMenu(!showMenu)
               }}
               className="ml-5 hidden md:block"
             >
-              <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap">
-                  <BsThreeDots className="text-sm" />
-                  &nbsp;
-                </div>
-              </SecondaryButton>
-            </div>
+              <div className="flex items-center whitespace-nowrap">
+                <BsThreeDots className="text-sm" />
+                &nbsp;
+              </div>
+            </Button>
           </>
         )}
         {showMenu && (
