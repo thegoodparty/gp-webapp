@@ -1044,21 +1044,21 @@ export const buildPlanData = (input: PlanInput): PlanData => {
       : 0
 
   // Mirror the onboarding step's guard: without a contact goal and projected
-  // turnout the budget is degenerate (direct mail keys off turnout), so emit
-  // an empty budget rather than a silently understated one.
-  const { totalBudget, lineItems: budgetLineItems } =
-    voterContactGoal > 0 && projectedTurnout > 0
-      ? buildBudgetBreakdown(
-          voterContactGoal,
-          projectedTurnout,
-          input.filingFee,
-        )
-      : { totalBudget: 0, lineItems: [] as BudgetRow[] }
+  // turnout the plan's resourcing is degenerate (direct mail keys off
+  // turnout), so emit empty budget and time tables together rather than
+  // silently wrong ones.
+  const metricsReady = voterContactGoal > 0 && projectedTurnout > 0
+  const emptyBudget: BudgetBreakdown = { totalBudget: 0, lineItems: [] }
+  const { totalBudget, lineItems: budgetLineItems } = metricsReady
+    ? buildBudgetBreakdown(voterContactGoal, projectedTurnout, input.filingFee)
+    : emptyBudget
 
   const weeksRemaining = resolveWeeksRemaining(electionDateValid)
   const campaignHours = computeCampaignHours(voterContactGoal, weeksRemaining)
   const volunteerHourTarget = campaignHours.volunteerHours
-  const timeBreakdown = buildTimeBreakdown(campaignHours, voterContactGoal)
+  const timeBreakdown: TimeRow[] = metricsReady
+    ? buildTimeBreakdown(campaignHours, voterContactGoal)
+    : []
   const totalCampaignHours = campaignHours.totalHours
 
   // civicEvents must be computed before buildTimeline so the Section 6
