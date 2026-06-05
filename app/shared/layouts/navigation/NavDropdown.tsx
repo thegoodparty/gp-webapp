@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { FaChevronDown } from 'react-icons/fa'
 import { ExternalLinkIcon } from '@styleguide/components/ui/icons'
 import { memo } from 'react'
@@ -32,10 +32,10 @@ const NavDropdown = ({
   id,
 }: NavDropdownProps): React.JSX.Element => (
   <div className="lg:ml-2 xl:ml-4 relative cursor-pointer ">
-    <PrimaryButton
+    <Button
       id={id}
       onClick={toggleCallback}
-      variant="text"
+      variant="ghost"
       size="medium"
       className="leading-6!"
     >
@@ -50,7 +50,7 @@ const NavDropdown = ({
           className={`ml-2 mt-[2px] transition-all ${open && 'rotate-180'}`}
         />
       </div>
-    </PrimaryButton>
+    </Button>
 
     {open ? (
       <>

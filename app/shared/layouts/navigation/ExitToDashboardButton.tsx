@@ -1,6 +1,7 @@
 'use client'
 import { usePathname } from 'next/navigation'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export const ExitToDashboardButton = (): React.JSX.Element | null => {
@@ -8,13 +9,13 @@ export const ExitToDashboardButton = (): React.JSX.Element | null => {
   const isProSignupPath = pathname?.startsWith('/dashboard/pro-sign-up')
   return isProSignupPath ? (
     <Button
-      href="/dashboard"
-      variant="outlined"
+      asChild
+      variant="outline"
       size="small"
       className="!py-1 !text-sm"
       onClick={() => trackEvent(EVENTS.ProUpgrade.ClickExit, { pathname })}
     >
-      Exit
+      <Link href="/dashboard">Exit</Link>
     </Button>
   ) : null
 }

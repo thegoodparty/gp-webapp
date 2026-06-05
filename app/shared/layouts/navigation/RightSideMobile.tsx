@@ -16,7 +16,7 @@ import {
 import { useUser } from '@shared/hooks/useUser'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { User } from 'helpers/types'
 
 interface NavLink {
@@ -138,26 +138,28 @@ const RightSideMobile = (): React.JSX.Element => {
                       <>
                         {status === 'candidate' && !isDashboardPath && (
                           <Button
-                            href={`${dashboardLink}`}
+                            asChild
+                            variant="secondary"
+                            size="large"
                             id="mobile-nav-dashboard"
                             onClick={closeMenu}
-                            color="tertiary"
-                            size="large"
                             className="w-full font-medium focus-visible:outline-white/40"
                           >
-                            Dashboard
+                            <Link href={dashboardLink}>Dashboard</Link>
                           </Button>
                         )}
                         {status === 'onboarding' && (
                           <Button
-                            href={`/onboarding/${slug}/${step || 1}`}
+                            asChild
+                            variant="secondary"
+                            size="large"
                             id="mobile-nav-continue-onboarding"
                             onClick={closeMenu}
-                            color="tertiary"
-                            size="large"
                             className="w-full font-medium focus-visible:outline-white/40"
                           >
-                            Continue Onboarding
+                            <Link href={`/onboarding/${slug}/${step || 1}`}>
+                              Continue Onboarding
+                            </Link>
                           </Button>
                         )}
                       </>
@@ -171,13 +173,13 @@ const RightSideMobile = (): React.JSX.Element => {
                           Login
                         </Link>
                         <Button
-                          href="/sign-up"
-                          onClick={closeMenu}
+                          asChild
                           size="large"
-                          color="success"
+                          id="mobile-nav-sign-up"
+                          onClick={closeMenu}
                           className="w-full text-white text-center font-medium focus-visible:outline-white/40"
                         >
-                          Sign Up
+                          <Link href="/sign-up">Sign Up</Link>
                         </Button>
                       </>
                     )}

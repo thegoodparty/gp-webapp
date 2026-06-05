@@ -1,25 +1,10 @@
 'use client'
 import React, { ReactNode, MouseEvent, useState, HTMLAttributes } from 'react'
 import Link from 'next/link'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
-
-interface PaymentPortalStyledButtonProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, 'children'> {
-  children: ReactNode
-  disabled?: boolean
-}
-
-const PaymentPortalStyledButton = ({
-  children,
-  ...restProps
-}: PaymentPortalStyledButtonProps): React.JSX.Element => (
-  <PrimaryButton className="flex items-center" {...restProps}>
-    {children}
-  </PrimaryButton>
-)
 
 interface PaymentPortalButtonProps
   extends Omit<HTMLAttributes<HTMLButtonElement>, 'children'> {
@@ -48,19 +33,22 @@ export const PaymentPortalButton = ({
     window.location.href = portalRedirectUrl
   }
 
-  return redirectUrl ? (
-    <Link href={redirectUrl}>
-      <PaymentPortalStyledButton {...restProps}>
-        {children}
-      </PaymentPortalStyledButton>
-    </Link>
-  ) : (
-    <PaymentPortalStyledButton
+  if (redirectUrl) {
+    return (
+      <Button asChild className="flex items-center" {...restProps}>
+        <Link href={redirectUrl}>{children}</Link>
+      </Button>
+    )
+  }
+
+  return (
+    <Button
+      className="flex items-center"
       disabled={loading}
       onClick={onClick}
       {...restProps}
     >
       {children}
-    </PaymentPortalStyledButton>
+    </Button>
   )
 }
