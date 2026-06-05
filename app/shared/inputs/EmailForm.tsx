@@ -3,7 +3,7 @@
 import { isValidEmail } from '@shared/inputs/EmailInput'
 import { useState } from 'react'
 import { FaCheck } from 'react-icons/fa'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 
@@ -107,12 +107,12 @@ const EmailForm = ({
             />
 
             <div className="flex flex-col flex-auto whitespace-nowrap md:pl-3 pt-2 pb-2 md:pb-0 md:pt-0">
-              <PrimaryButton
+              <Button
                 id={submitButtonId || 'submit-email'}
                 onClick={submitForm}
               >
                 {label}
-              </PrimaryButton>
+              </Button>
             </div>
 
             {!!showError && (

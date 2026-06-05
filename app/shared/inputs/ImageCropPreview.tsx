@@ -4,8 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import ReactCrop from 'react-image-crop'
 import type { Crop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
-import Button from '@shared/buttons/Button'
-import { Trash2Icon, CropIcon } from '@styleguide/components/ui/icons'
+import { Button, Trash2Icon, CropIcon } from '@styleguide'
 
 interface ImageCropPreviewProps {
   file: File
@@ -119,7 +118,7 @@ const ImageCropPreview = ({
             <div className="absolute inset-0 hidden group-hover:flex flex-col gap-2 items-center justify-center bg-black/40">
               <Button
                 onClick={() => setShowCrop(true)}
-                color="white"
+                variant="whiteOutline"
                 className="flex items-center gap-2 justify-center w-[150px]"
               >
                 <CropIcon />
@@ -127,7 +126,7 @@ const ImageCropPreview = ({
               </Button>
               <Button
                 onClick={() => onClear()}
-                color="white"
+                variant="whiteOutline"
                 className="flex items-center gap-2 justify-center w-[150px]"
               >
                 <Trash2Icon />
