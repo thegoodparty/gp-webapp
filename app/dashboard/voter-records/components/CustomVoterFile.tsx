@@ -1,15 +1,5 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
-import Body2 from '@shared/typography/Body2'
-import H1 from '@shared/typography/H1'
-import Modal from '@shared/utils/Modal'
-import { useState } from 'react'
-import CustomVoterAudience from './CustomVoterAudience'
-import Button from '@shared/buttons/Button'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { TRACKING_KEYS } from './CustomVoterAudienceFilters'
-import { Campaign } from 'helpers/types'
 import {
+  Button,
   Label,
   Select,
   SelectContent,
@@ -17,6 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@styleguide'
+import Body2 from '@shared/typography/Body2'
+import H1 from '@shared/typography/H1'
+import Modal from '@shared/utils/Modal'
+import { useState } from 'react'
+import CustomVoterAudience from './CustomVoterAudience'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { TRACKING_KEYS } from './CustomVoterAudienceFilters'
+import { Campaign } from 'helpers/types'
 
 interface PrevStepValues {
   channel: string
@@ -157,8 +155,10 @@ const CustomVoterFile = ({
                 you.
               </div>
               <div className="flex justify-between mt-12">
-                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                <PrimaryButton
+                <Button variant="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button
                   disabled={!canSave()}
                   onClick={() => {
                     trackEvent(EVENTS.VoterData.CustomFile.ClickNext)
@@ -166,7 +166,7 @@ const CustomVoterFile = ({
                   }}
                 >
                   Next
-                </PrimaryButton>
+                </Button>
               </div>
             </div>
           </div>

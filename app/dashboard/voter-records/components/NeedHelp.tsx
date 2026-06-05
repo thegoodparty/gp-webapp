@@ -1,16 +1,6 @@
 'use client'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
-import TextField from '@shared/inputs/TextField'
-import H1 from '@shared/typography/H1'
-import Modal from '@shared/utils/Modal'
-import { useState } from 'react'
-import NeedHelpSuccess from './NeedHelpSuccess'
-import Button from '@shared/buttons/Button'
-import { apiRoutes } from 'gpApi/routes'
-import { clientFetch } from 'gpApi/clientFetch'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import {
+  Button,
   Label,
   Select,
   SelectContent,
@@ -18,6 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@styleguide'
+import TextField from '@shared/inputs/TextField'
+import H1 from '@shared/typography/H1'
+import Modal from '@shared/utils/Modal'
+import { useState } from 'react'
+import NeedHelpSuccess from './NeedHelpSuccess'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 interface MessagePayload {
   type: string
@@ -105,7 +103,7 @@ export default function NeedHelp(): React.JSX.Element {
     <>
       <Button
         size="large"
-        color="neutral"
+        variant="secondary"
         onClick={() => {
           trackEvent(EVENTS.VoterData.ClickNeedHelp)
           setOpen(true)
@@ -163,14 +161,16 @@ export default function NeedHelp(): React.JSX.Element {
                 />
               </div>
               <div className="flex justify-between mt-12">
-                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                <PrimaryButton
+                <Button variant="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button
                   type="submit"
                   disabled={!canSave()}
                   onClick={handleSubmit}
                 >
                   Submit
-                </PrimaryButton>
+                </Button>
               </div>
             </form>
           )}
