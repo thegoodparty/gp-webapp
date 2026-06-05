@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { Link as LinkIcon, Upload } from 'lucide-react'
+import { LinkIcon, UploadIcon } from '@styleguide'
 import {
   Button,
   Dialog,
