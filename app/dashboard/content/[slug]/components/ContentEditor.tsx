@@ -2,9 +2,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import PlanVersion from './PlanVersion'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
 import LoadingContent from './LoadingContent'
-import BlackButton from '@shared/buttons/BlackButton'
 import { MdAutoAwesome, MdOutlineArrowBackIos } from 'react-icons/md'
 import { FaGlobe } from 'react-icons/fa'
 import Actions from '../../components/Actions'
@@ -17,7 +15,8 @@ import {
   fetchPromptInputFields,
   PromptInputField,
 } from 'helpers/fetchPromptInputFields'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
@@ -310,12 +309,14 @@ export default function ContentEditor({
       <div className="flex w-full h-auto p-5 items-center justify-items-center bg-indigo-50">
         <div className="flex justify-start">
           <Button
-            href="/dashboard/content"
-            color="neutral"
+            asChild
+            variant="secondary"
             className="flex items-center whitespace-nowrap"
           >
-            <MdOutlineArrowBackIos className="text-sm" />
-            <span className="hidden md:inline">&nbsp; Back</span>
+            <Link href="/dashboard/content">
+              <MdOutlineArrowBackIos className="text-sm" />
+              <span className="hidden md:inline">&nbsp; Back</span>
+            </Link>
           </Button>
 
           {/* desktop new document name. (not shown on mobile) */}
@@ -336,7 +337,8 @@ export default function ContentEditor({
 
         <div className="flex w-full justify-end items-center justify-items-center">
           {inputFields && (
-            <div
+            <Button
+              size="medium"
               className="mr-3"
               onClick={() => {
                 trackEvent(EVENTS.ContentBuilder.Editor.ClickRegenerate, {
@@ -346,51 +348,39 @@ export default function ContentEditor({
                 setShowModal(true)
               }}
             >
-              <PrimaryButton size="medium">
-                <div className="flex items-center">
-                  <MdAutoAwesome className="mr-2" />
-                  Regenerate
-                </div>
-              </PrimaryButton>
-            </div>
+              <MdAutoAwesome />
+              Regenerate
+            </Button>
           )}
           {/* copy button mobile */}
-          <div className="md:hidden mr-3">
-            <CopyToClipboard text={typeof plan === 'string' ? plan : ''}>
-              <PrimaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap px-1  h-6">
-                  <LuClipboard className="text-sm" />
-                  &nbsp;
-                </div>
-              </PrimaryButton>
-            </CopyToClipboard>
-          </div>
+          <CopyToClipboard text={typeof plan === 'string' ? plan : ''}>
+            <Button size="medium" className="md:hidden mr-3">
+              <LuClipboard />
+            </Button>
+          </CopyToClipboard>
           {/* copy button desktop */}
-          <div className="hidden md:block mr-3">
-            <CopyToClipboard
-              text={typeof plan === 'string' ? plan : ''}
-              onCopy={() => {
-                trackEvent(EVENTS.ContentBuilder.Editor.ClickCopy, {
-                  name: documentName,
-                  key,
-                })
-              }}
+          <CopyToClipboard
+            text={typeof plan === 'string' ? plan : ''}
+            onCopy={() => {
+              trackEvent(EVENTS.ContentBuilder.Editor.ClickCopy, {
+                name: documentName,
+                key,
+              })
+            }}
+          >
+            <Button
+              size="medium"
+              className="hidden md:inline-flex mr-3 whitespace-nowrap"
             >
-              <PrimaryButton
-                size="medium"
-                className="flex items-center whitespace-nowrap"
-              >
-                <div className="flex items-center whitespace-nowrap h-6">
-                  <LuClipboard className="text-sm mr-1" />
-                  <div>Copy</div>
-                </div>
-              </PrimaryButton>
-            </CopyToClipboard>
-          </div>
+              <LuClipboard />
+              Copy
+            </Button>
+          </CopyToClipboard>
 
           {/* translate button desktop */}
-          <div
-            className="hidden md:block mr-3"
+          <Button
+            size="medium"
+            className="hidden md:inline-flex mr-3 whitespace-nowrap"
             onClick={() => {
               trackEvent(EVENTS.ContentBuilder.Editor.ClickTranslate, {
                 name: documentName,
@@ -399,16 +389,9 @@ export default function ContentEditor({
               setShowTranslate(true)
             }}
           >
-            <PrimaryButton
-              size="medium"
-              className="flex items-center whitespace-nowrap"
-            >
-              <div className="flex items-center whitespace-nowrap h-6">
-                <FaGlobe className="text-sm mr-1" />
-                <div>Translate</div>
-              </div>
-            </PrimaryButton>
-          </div>
+            <FaGlobe />
+            Translate
+          </Button>
 
           {/* version button */}
           <PlanVersion
@@ -455,11 +438,13 @@ export default function ContentEditor({
                       <div className="text-center text-xl">
                         Failed to generate plan click here to try again
                         <div className="mt-4 text-base font-black">
-                          <a
-                            href={`/onboarding/${campaign.slug}/campaign-plan`}
-                          >
-                            <BlackButton>Regenerate</BlackButton>
-                          </a>
+                          <Button asChild>
+                            <a
+                              href={`/onboarding/${campaign.slug}/campaign-plan`}
+                            >
+                              Regenerate
+                            </a>
+                          </Button>
                         </div>
                       </div>
                     ) : (

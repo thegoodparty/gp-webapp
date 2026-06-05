@@ -8,8 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@styleguide'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
 import H6 from '@shared/typography/H6'
@@ -64,15 +63,17 @@ const TranslateAction = ({
             </SelectContent>
           </Select>
           <div className="mt-16 flex w-full justify-end">
-            <div
+            <Button
+              variant="secondary"
               onClick={() => {
                 setShowTranslate?.(false)
               }}
             >
-              <SecondaryButton>Cancel</SecondaryButton>
-            </div>
-            <div
+              Cancel
+            </Button>
+            <Button
               className="ml-3"
+              disabled={newLanguage.length === 0 || newLanguage.length >= 50}
               onClick={() => {
                 setShowTranslate?.(false)
                 trackEvent(EVENTS.ContentBuilder.Editor.SubmitTranslate, {
@@ -81,12 +82,8 @@ const TranslateAction = ({
                 handleTranslateCallback?.(newLanguage)
               }}
             >
-              <PrimaryButton
-                disabled={newLanguage.length === 0 || newLanguage.length >= 50}
-              >
-                Translate
-              </PrimaryButton>
-            </div>
+              Translate
+            </Button>
           </div>
         </div>
       </Modal>

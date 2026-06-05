@@ -6,9 +6,8 @@ import { MdFlag, MdPeople, MdPerson } from 'react-icons/md'
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion'
 import { ChangeEvent, useState } from 'react'
 import Body1 from '@shared/typography/Body1'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
 import Link from 'next/link'
+import { Button } from '@styleguide'
 import { TermAndTerminationText } from 'app/dashboard/pro-sign-up/service-agreement/components/TermAndTerminationText'
 import { ServiceAgreementSignatureSection } from 'app/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementSignatureSection'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -132,27 +131,34 @@ export const ServiceAgreementPage = ({
             }}
           />
           <div className="flex flex-col justify-between md:flex-row">
-            <Link href={backLink}>
-              <SecondaryButton
-                className="w-full mb-4 md:mb-0 md:w-auto"
+            <Button
+              asChild
+              variant="secondary"
+              className="w-full mb-4 md:mb-0 md:w-auto"
+            >
+              <Link
+                href={backLink}
                 onClick={() => {
                   trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickBack)
                 }}
               >
                 Back
-              </SecondaryButton>
-            </Link>
-            <Link href="/dashboard/pro-sign-up/purchase-redirect">
-              <PrimaryButton
-                className="w-full md:w-auto"
-                disabled={!allAccepted || !signature}
+              </Link>
+            </Button>
+            <Button
+              asChild
+              className="w-full md:w-auto"
+              disabled={!allAccepted || !signature}
+            >
+              <Link
+                href="/dashboard/pro-sign-up/purchase-redirect"
                 onClick={() => {
                   trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickFinish)
                 }}
               >
                 Finish
-              </PrimaryButton>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </>
       )}
