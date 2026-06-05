@@ -1,4 +1,4 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import Image from 'next/image'
@@ -30,9 +30,9 @@ export default function NotFound(): React.JSX.Element {
             It seems the page has decided to join one of the two major parties,
             and therefore no longer meets the standards of GoodParty.org.
           </Body1>
-          <Link href="/">
-            <PrimaryButton>Back to our homepage</PrimaryButton>
-          </Link>
+          <Button asChild>
+            <Link href="/">Back to our homepage</Link>
+          </Button>
         </div>
       </div>
     </div>

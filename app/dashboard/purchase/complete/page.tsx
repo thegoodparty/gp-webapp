@@ -6,8 +6,7 @@ import { completeCheckoutSession } from 'app/dashboard/purchase/utils/purchaseFe
 import { reportErrorToSentry } from 'app/shared/sentry'
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import { LoaderCircleIcon } from '@styleguide'
+import { Button, LoaderCircleIcon } from '@styleguide'
 
 export default function PurchaseCompletePage() {
   const searchParams = useSearchParams()
@@ -72,9 +71,9 @@ export default function PurchaseCompletePage() {
           <Body1 className="mb-6">
             Thank you for your purchase. Your order is being processed.
           </Body1>
-          <PrimaryButton onClick={() => router.push('/dashboard')}>
+          <Button onClick={() => router.push('/dashboard')}>
             Return to Dashboard
-          </PrimaryButton>
+          </Button>
         </div>
       )}
 
@@ -85,9 +84,9 @@ export default function PurchaseCompletePage() {
           <Body1 className="mb-6 text-red-600">
             {errorMessage || 'There was an issue processing your payment.'}
           </Body1>
-          <PrimaryButton onClick={() => router.push('/dashboard')}>
+          <Button onClick={() => router.push('/dashboard')}>
             Return to Dashboard
-          </PrimaryButton>
+          </Button>
         </div>
       )}
     </div>

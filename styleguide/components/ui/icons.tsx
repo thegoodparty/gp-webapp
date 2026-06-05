@@ -38,6 +38,7 @@ export {
   MessageSquare as MessageSquareIcon,
   Mic as MicIcon,
   Minus as MinusIcon,
+  Plus as PlusIcon,
   MoreHorizontal as MoreHorizontalIcon,
   Paperclip as PaperclipIcon,
   Pencil as PencilIcon,

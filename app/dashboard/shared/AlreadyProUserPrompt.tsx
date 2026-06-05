@@ -1,7 +1,7 @@
 import H1 from '@shared/typography/H1'
 import H2 from '@shared/typography/H2'
 import Link from 'next/link'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 
 export const AlreadyProUserPrompt = (): React.JSX.Element => (
   <>
@@ -9,8 +9,8 @@ export const AlreadyProUserPrompt = (): React.JSX.Element => (
     <H2 className="text-center mb-8">
       Thank you! <span className="text-4xl">👏</span>
     </H2>
-    <Link href="/dashboard" className="mx-auto block w-fit">
-      <SecondaryButton className="">Go Back to your Dashboard</SecondaryButton>
-    </Link>
+    <Button asChild variant="secondary" className="mx-auto block w-fit">
+      <Link href="/dashboard">Go Back to your Dashboard</Link>
+    </Button>
   </>
 )
