@@ -50,10 +50,7 @@ export const Footer = ({
               {column.links.map((link, linkKey) => (
                 <FooterLinkWrapper key={linkKey}>
                   {link.buttonStyle ? (
-                    <FooterButtonLink
-                      {...link}
-                      buttonStyle={link.buttonStyle as 'tertiary' | 'secondary'}
-                    />
+                    <FooterButtonLink {...link} />
                   ) : link.isExternal ? (
                     <FooterExternalLink {...link} />
                   ) : link.useNativeLink ? (
