@@ -164,7 +164,7 @@ export default function CampaignSection(
           const value = state[field.key] ?? ''
           return (
             <div key={field.key} className="col-span-12 md:col-span-6">
-              <div className={`${field.type === 'select' ? '' : 'pt-5'}`}>
+              <div className="pt-5">
                 <RenderInputField
                   field={field}
                   value={value}
