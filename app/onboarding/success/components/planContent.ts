@@ -4,6 +4,21 @@ import type {
   StrategicLandscapeData,
 } from 'gpApi/api-endpoints'
 import type { RaceCandidate, RaceMilestones } from 'helpers/types'
+import {
+  computeBudget,
+  LITERATURE_PACK_COST,
+  LITERATURE_PACK_SIZE,
+  MAIL_COST_PER_PIECE,
+  resolveVoterContactGoal,
+  ROBOCALL_COST,
+  TEXT_COST,
+} from '../../components/budget'
+import {
+  type CampaignHours,
+  computeCampaignHours,
+  CONTACTS_PER_VOLUNTEER_HOUR,
+  resolveWeeksRemaining,
+} from '../../components/volunteerHours'
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
@@ -236,16 +251,12 @@ export interface PlanData {
   voterContactGoal: number
 
   opponentCount: number
-  matchedCellRecords: number
-  matchedLandlineRecords: number
   volunteerHourTarget: number
   totalBudget: number
   averageTouchesPerVoter: number
   eventCount: number
   mediaCount: number
 
-  candidateHoursPerWeek: number
-  volunteerHoursPerWeek: number
   weeksRemaining: number
   filingDateStart: string | null
   filingDateEnd: string | null
@@ -287,9 +298,6 @@ export interface PlanData {
   filingFee: number | null
   filingRequirementsText: string | null
 }
-
-const PLACEHOLDER_MATCH_RATE_CELL = 0.65
-const PLACEHOLDER_MATCH_RATE_LANDLINE = 0.35
 
 const buildTimeline = (
   electionDate: Date | null,
@@ -576,15 +584,6 @@ const buildPressOutlets = (
   }))
 }
 
-const DEFAULT_FILING_FEE = 100
-const YARD_SIGNS_COST = 385
-const PALM_CARDS_COST = 67
-const TEXT_CAMPAIGN_COUNT = 4
-const ROBOCALL_CAMPAIGN_COUNT = 3
-const TEXT_COST = 0.035
-const ROBOCALL_COST = 0.045
-const CONTINGENCY_RATE = 0.05
-
 const formatDollars = (value: number): string =>
   `$${Math.round(value).toLocaleString('en-US')}`
 
@@ -594,109 +593,100 @@ interface BudgetBreakdown {
 }
 
 const buildBudgetBreakdown = (
-  matchedCell: number,
-  matchedLandline: number,
+  contactGoal: number,
+  projectedTurnout: number,
   filingFee: number | null,
 ): BudgetBreakdown => {
-  const filing = filingFee ?? DEFAULT_FILING_FEE
-  const textCampaignsCost = TEXT_CAMPAIGN_COUNT * matchedCell * TEXT_COST
-  const robocallCampaignsCost =
-    ROBOCALL_CAMPAIGN_COUNT * matchedLandline * ROBOCALL_COST
-  const subtotal =
-    filing +
-    YARD_SIGNS_COST +
-    PALM_CARDS_COST +
-    textCampaignsCost +
-    robocallCampaignsCost
-  const contingency = subtotal * CONTINGENCY_RATE
-  const totalBudget = Math.round(subtotal + contingency)
+  const budget = computeBudget(contactGoal, projectedTurnout, filingFee)
 
   const lineItems: BudgetRow[] = [
     {
-      category: 'Filing fees',
-      amount: formatDollars(filing),
-      rationale:
-        filingFee != null
-          ? 'Sourced from BallotReady for this race.'
-          : 'Nomination papers, any mandatory state/local filings. Replaced with BallotReady value once available.',
-    },
-    {
-      category: 'Yard signs',
-      amount: formatDollars(YARD_SIGNS_COST),
-      rationale:
-        'Core visibility in a small precinct; reusable between canvassers; estimated 50 yard signs for $385.',
-    },
-    {
-      category: 'Palm cards',
-      amount: formatDollars(PALM_CARDS_COST),
-      rationale:
-        'Handoffs at events and passive drops where canvassing allows; estimated 250 palm cards for $67.',
-    },
-    {
       category: 'Text campaigns',
-      amount: formatDollars(textCampaignsCost),
-      rationale: `${TEXT_CAMPAIGN_COUNT} text campaigns to ${matchedCell.toLocaleString(
+      amount: formatDollars(budget.textCost),
+      rationale: `60% of your ${contactGoal.toLocaleString(
         'en-US',
-      )} at $${TEXT_COST.toFixed(3)} per text.`,
+      )} voter contacts (${budget.textCount.toLocaleString(
+        'en-US',
+      )} texts) at $${TEXT_COST.toFixed(3)} per text.`,
     },
     {
       category: 'Robocall campaigns',
-      amount: formatDollars(robocallCampaignsCost),
-      rationale: `${ROBOCALL_CAMPAIGN_COUNT} robocall campaigns to ${matchedLandline.toLocaleString(
+      amount: formatDollars(budget.robocallCost),
+      rationale: `20% of your ${contactGoal.toLocaleString(
         'en-US',
-      )} at $${ROBOCALL_COST.toFixed(3)} per call.`,
+      )} voter contacts (${budget.robocallCount.toLocaleString(
+        'en-US',
+      )} calls) at $${ROBOCALL_COST.toFixed(3)} per call.`,
+    },
+    {
+      category: 'Literature',
+      amount: formatDollars(budget.literatureCost),
+      rationale: `Door hanger or palm card for each of ${budget.doorGoal.toLocaleString(
+        'en-US',
+      )} doors — ${budget.literaturePacks.toLocaleString(
+        'en-US',
+      )} packs of ${LITERATURE_PACK_SIZE} at $${LITERATURE_PACK_COST} per pack.`,
+    },
+    {
+      category: 'Direct mail',
+      amount: formatDollars(budget.mailCost),
+      rationale: `${budget.mailCount.toLocaleString(
+        'en-US',
+      )} mailers (40% of likely voters) at $${MAIL_COST_PER_PIECE.toFixed(
+        2,
+      )} per piece.`,
+    },
+    {
+      category: 'Yard signs',
+      amount: formatDollars(budget.yardSignsCost),
+      rationale: 'Flat estimate of 50 yard signs.',
+    },
+    {
+      category: 'Filing fees',
+      amount: formatDollars(budget.filingFee),
+      rationale: budget.filingFeeIsDefault
+        ? 'Estimated $100 default. Replaced with the BallotReady value once available.'
+        : 'Sourced from BallotReady for this race.',
     },
     {
       category: 'Contingency (5%)',
-      amount: formatDollars(contingency),
+      amount: formatDollars(budget.contingency),
       rationale: 'Reserve for last-week opportunities.',
     },
     {
       category: 'Total',
-      amount: formatDollars(totalBudget),
+      amount: formatDollars(budget.totalBudget),
       rationale: 'Sum of all budget line-items.',
     },
   ]
 
-  return { totalBudget, lineItems }
+  return { totalBudget: budget.totalBudget, lineItems }
 }
-
-const VOLUNTEERS_PER_WEEK = 45
-const VOLUNTEER_HOURS_PER_SHIFT = 3
-const CANDIDATE_HOURS_PER_WEEK = 14
-const DOORS_PER_HOUR = 15
-const MAX_CAMPAIGN_WEEKS = 12
-// Share of voter contacts assumed to come from door knocking (vs. text /
-// robocall). Drives both the volunteer-hour target and the per-week door
-// load below.
-const CANVASS_SHARE_OF_CONTACTS = 0.2
 
 const buildTimeBreakdown = (
-  weeksRemaining: number,
-): { rows: TimeRow[]; totalHours: number } => {
-  const candidateHours = CANDIDATE_HOURS_PER_WEEK * weeksRemaining
-  const volunteerHours =
-    VOLUNTEERS_PER_WEEK * VOLUNTEER_HOURS_PER_SHIFT * weeksRemaining
-  const totalHours = candidateHours + volunteerHours
-  const rows: TimeRow[] = [
-    {
-      category: 'Your time (hours)',
-      amount: `${candidateHours.toLocaleString('en-US')} hours`,
-      rationale: `${CANDIDATE_HOURS_PER_WEEK} hours per week knocking doors and meeting voters in person.`,
-    },
-    {
-      category: 'Volunteer time (hours)',
-      amount: `${volunteerHours.toLocaleString('en-US')} hours`,
-      rationale: `${VOLUNTEERS_PER_WEEK} volunteers × ${VOLUNTEER_HOURS_PER_SHIFT}-hour shifts per week.`,
-    },
-    {
-      category: 'Total',
-      amount: `${totalHours.toLocaleString('en-US')} hours`,
-      rationale: 'Sum of all time line-items.',
-    },
-  ]
-  return { rows, totalHours }
-}
+  hours: CampaignHours,
+  contactGoal: number,
+): TimeRow[] => [
+  {
+    category: 'Your time (hours)',
+    amount: `${hours.candidateHours.toLocaleString('en-US')} hours`,
+    rationale: `${hours.candidateHoursPerWeek} hours per week for the ${hours.weeksRemaining} weeks remaining.`,
+  },
+  {
+    category: 'Volunteer time (hours)',
+    amount: `${hours.volunteerHours.toLocaleString('en-US')} hours`,
+    rationale: `Assuming ${CONTACTS_PER_VOLUNTEER_HOUR} voter contact attempts per hour to reach your door-knocking goal of ${hours.doorGoal.toLocaleString(
+      'en-US',
+    )} doors (20% of your ${contactGoal.toLocaleString(
+      'en-US',
+    )} voter contacts).`,
+  },
+  {
+    category: 'Total',
+    amount: `${hours.totalHours.toLocaleString('en-US')} hours`,
+    rationale: 'Sum of all time line-items.',
+  },
+]
 
 const FUNDRAISING_MIX: FundraisingRow[] = [
   { source: 'Self-fund or loan', share: '30%' },
@@ -1026,10 +1016,10 @@ export const buildPlanData = (input: PlanInput): PlanData => {
 
   const winNumber = input.winNumber
   const projectedTurnout = input.projectedTurnout
-  const voterContactGoal =
-    input.voterContactGoal > 0
-      ? input.voterContactGoal
-      : Math.round(winNumber * 5)
+  const voterContactGoal = resolveVoterContactGoal(
+    input.voterContactGoal,
+    winNumber,
+  )
 
   const winNumberLow = Math.max(0, Math.round(winNumber * 0.9))
   const winNumberHigh = Math.round(winNumber * 1.1)
@@ -1048,67 +1038,28 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   const registeredVotersLow = Math.max(0, Math.round(registeredVoters * 0.9))
   const registeredVotersHigh = Math.round(registeredVoters * 1.1)
 
-  // Real phone-match counts when available. Each L2 record can carry up to
-  // 4 cell numbers and 2 landlines per household — keep the same multipliers
-  // the placeholder heuristic used so downstream budget math stays
-  // consistent regardless of source.
-  const cellMatchRate =
-    input.uniqueCellphones != null && registeredVoters > 0
-      ? input.uniqueCellphones / registeredVoters
-      : PLACEHOLDER_MATCH_RATE_CELL
-  const landlineMatchRate =
-    input.uniqueLandlines != null && registeredVoters > 0
-      ? input.uniqueLandlines / registeredVoters
-      : PLACEHOLDER_MATCH_RATE_LANDLINE
-  const matchedCellRecords = Math.max(
-    0,
-    Math.round(projectedTurnout * cellMatchRate * 4),
-  )
-  const matchedLandlineRecords = Math.max(
-    0,
-    Math.round(projectedTurnout * landlineMatchRate * 2),
-  )
   const averageTouchesPerVoter =
     projectedTurnout > 0
       ? Number((voterContactGoal / projectedTurnout).toFixed(1))
       : 0
 
-  const { totalBudget, lineItems: budgetLineItems } = buildBudgetBreakdown(
-    matchedCellRecords,
-    matchedLandlineRecords,
-    input.filingFee,
-  )
+  // Mirror the onboarding step's guard: without a contact goal and projected
+  // turnout the plan's resourcing is degenerate (direct mail keys off
+  // turnout), so emit empty budget and time tables together rather than
+  // silently wrong ones.
+  const metricsReady = voterContactGoal > 0 && projectedTurnout > 0
+  const emptyBudget: BudgetBreakdown = { totalBudget: 0, lineItems: [] }
+  const { totalBudget, lineItems: budgetLineItems } = metricsReady
+    ? buildBudgetBreakdown(voterContactGoal, projectedTurnout, input.filingFee)
+    : emptyBudget
 
-  let weeksRemaining = MAX_CAMPAIGN_WEEKS
-  if (electionDateValid) {
-    const ms = electionDateValid.getTime() - Date.now()
-    if (ms > 0) {
-      weeksRemaining = Math.min(
-        Math.ceil(ms / (7 * 24 * 60 * 60 * 1000)),
-        MAX_CAMPAIGN_WEEKS,
-      )
-    }
-  }
-
-  // Volunteer-only portion of the Section 5 time budget — matches the
-  // "Volunteer time" row of buildTimeBreakdown. Excludes the candidate's
-  // own hours so the figure on the Key Targets table reconciles with the
-  // volunteer line in the Section 5 table.
-  const volunteerHourTarget =
-    VOLUNTEERS_PER_WEEK * VOLUNTEER_HOURS_PER_SHIFT * weeksRemaining
-  const totalDoors = Math.round(voterContactGoal * CANVASS_SHARE_OF_CONTACTS)
-  const doorsPerWeek = totalDoors / weeksRemaining
-  const candidateDoorsPerWeek = CANDIDATE_HOURS_PER_WEEK * DOORS_PER_HOUR
-  const volunteerDoorsPerWeek = Math.max(
-    0,
-    doorsPerWeek - candidateDoorsPerWeek,
-  )
-  const volunteerHoursPerWeek = Math.round(
-    volunteerDoorsPerWeek / DOORS_PER_HOUR,
-  )
-
-  const { rows: timeBreakdown, totalHours: totalCampaignHours } =
-    buildTimeBreakdown(weeksRemaining)
+  const weeksRemaining = resolveWeeksRemaining(electionDateValid)
+  const campaignHours = computeCampaignHours(voterContactGoal, weeksRemaining)
+  const volunteerHourTarget = campaignHours.volunteerHours
+  const timeBreakdown: TimeRow[] = metricsReady
+    ? buildTimeBreakdown(campaignHours, voterContactGoal)
+    : []
+  const totalCampaignHours = campaignHours.totalHours
 
   // civicEvents must be computed before buildTimeline so the Section 6
   // keyDates entry can substitute the actual event count instead of a
@@ -1219,7 +1170,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     {
       metric: 'Volunteer-Hour Target',
       target: `${volunteerHourTarget.toLocaleString('en-US')} volunteer hours`,
-      source: `${VOLUNTEERS_PER_WEEK} volunteers × ${VOLUNTEER_HOURS_PER_SHIFT}-hour shift per week × ${weeksRemaining} weeks of campaigning.`,
+      source: `Door-knocking goal ÷ ${CONTACTS_PER_VOLUNTEER_HOUR} contact attempts per volunteer hour.`,
     },
   ]
 
@@ -1245,15 +1196,11 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     registeredVotersHigh,
     voterContactGoal,
     opponentCount,
-    matchedCellRecords,
-    matchedLandlineRecords,
     volunteerHourTarget,
     totalBudget,
     averageTouchesPerVoter,
     eventCount,
     mediaCount,
-    candidateHoursPerWeek: CANDIDATE_HOURS_PER_WEEK,
-    volunteerHoursPerWeek,
     weeksRemaining,
     filingDateStart: formatDateMaybe(input.filingDateStartIso),
     filingDateEnd: formatDateMaybe(input.filingDateEndIso),
