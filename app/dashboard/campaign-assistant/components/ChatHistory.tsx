@@ -75,7 +75,7 @@ const ChatHistory = (): React.JSX.Element => {
         onOpenChange={(next) => !next && closeDrawer()}
         direction="right"
       >
-        <DrawerContent className="bg-primary-dark min-w-[300px] h-full text-white">
+        <DrawerContent className="bg-gray-900 min-w-[300px] h-full text-white">
           <DrawerHeader className="border-b border-slate-50">
             <DrawerTitle asChild>
               <H2>History</H2>

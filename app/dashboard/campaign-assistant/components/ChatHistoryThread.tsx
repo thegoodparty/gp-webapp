@@ -23,7 +23,7 @@ const ChatHistoryThread = ({
   }
   return (
     <div
-      className="py-2 flex justify-between px-3 pb-3 hover:bg-primary-main rounded-md transition-colors cursor-pointer max-w-xs"
+      className="py-2 flex justify-between px-3 pb-3 hover:bg-white/10 rounded-md transition-colors cursor-pointer max-w-xs"
       onClick={handleClick}
     >
       <div className="flex">
