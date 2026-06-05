@@ -1,7 +1,8 @@
 'use client'
 
 import { MdArrowBack } from 'react-icons/md'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 
 interface TextingComplianceHeaderProps {
   children: React.ReactNode
@@ -28,24 +29,20 @@ export default function TextingComplianceHeader({
     "
     >
       <div className="flex items-center justify-between">
-        <Button
-          href="/dashboard/profile"
-          color="neutral"
-          variant="text"
-          className="md:hidden"
-        >
-          <MdArrowBack className="text-lg" />
+        <Button asChild variant="ghost" className="md:hidden">
+          <Link href="/dashboard/profile">
+            <MdArrowBack className="text-lg" />
+          </Link>
         </Button>
 
         {children}
 
         <Button
-          href="/dashboard/profile"
-          color="neutral"
-          variant="outlined"
+          asChild
+          variant="outline"
           className="hidden rounded-full px-6 py-2 md:flex"
         >
-          Exit
+          <Link href="/dashboard/profile">Exit</Link>
         </Button>
       </div>
     </header>

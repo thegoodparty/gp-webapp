@@ -73,6 +73,23 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button'
     const isDisabled = disabled || loading
 
+    if (asChild) {
+      return (
+        <Comp
+          ref={ref}
+          data-slot="button"
+          data-loading={loading}
+          className={cn(
+            buttonVariants({ variant, size, iconPosition, className }),
+          )}
+          {...props}
+          disabled={isDisabled}
+        >
+          {children}
+        </Comp>
+      )
+    }
+
     return (
       <Comp
         ref={ref}

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import TextField from '@shared/inputs/TextField'
 import Body2 from '@shared/typography/Body2'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { updateUser } from 'helpers/userHelper'
 import { useUser } from '@shared/hooks/useUser'
 import Paper from '@shared/utils/Paper'
@@ -128,14 +128,14 @@ const ContactInfoSection = ({
           </div>
         </div>
         <div className="mt-4">
-          <PrimaryButton
+          <Button
             disabled={!canSave}
             loading={saving}
             type="submit"
             onClick={submit}
           >
             Save Changes
-          </PrimaryButton>
+          </Button>
         </div>
       </form>
     </Paper>

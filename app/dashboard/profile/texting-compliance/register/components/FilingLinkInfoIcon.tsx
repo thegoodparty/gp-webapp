@@ -3,7 +3,7 @@ import { MdInfoOutline } from 'react-icons/md'
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 export const FilingLinkInfoIcon = () => {
   const [open, setOpen] = useState(false)
@@ -47,12 +47,10 @@ export const FilingLinkInfoIcon = () => {
           https://fec.gov/data/committee/C00123456 ).
         </Body2>
         <Button
-          {...{
-            color: 'neutral',
-            size: 'large',
-            className: 'flex-1 md:flex-initial w-full',
-            onClick: closeModal,
-          }}
+          variant="secondary"
+          size="large"
+          className="flex-1 md:flex-initial w-full"
+          onClick={closeModal}
         >
           Close
         </Button>
