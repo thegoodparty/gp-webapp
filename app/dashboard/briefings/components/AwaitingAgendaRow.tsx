@@ -16,25 +16,39 @@ type PillVariant = {
   icon?: React.ReactNode
 }
 
-const pillFor = (
-  status: BriefingSummary['userAgendaStatus'],
-): PillVariant => {
-  if (status === 'processing') {
-    return {
-      label: 'Processing your agenda…',
-      className: 'bg-primary/10 text-primary',
-      icon: <LoaderCircle className="size-3 animate-spin" aria-hidden />,
-    }
-  }
-  if (status === 'failed') {
-    return {
-      label: 'Briefing failed',
-      className: 'bg-destructive/10 text-destructive',
-    }
-  }
-  return {
-    label: 'Awaiting agenda',
-    className: 'bg-muted text-muted-foreground',
+// Explicit switch keeps every userAgendaStatus enum value handled. The
+// 'completed' case happens in the brief window between the agent finishing
+// and the MeetingBriefing row landing locally — without the explicit branch
+// the row defaults to "Awaiting agenda" which is a misleading label.
+const pillFor = (status: BriefingSummary['userAgendaStatus']): PillVariant => {
+  switch (status) {
+    case 'processing':
+      return {
+        label: 'Processing your agenda…',
+        className: 'bg-primary/10 text-primary',
+        icon: <LoaderCircle className="size-3 animate-spin" aria-hidden />,
+      }
+    case 'failed':
+      return {
+        label: 'Briefing failed',
+        className: 'bg-destructive/10 text-destructive',
+      }
+    case 'completed':
+      // Race window: agent finished, briefing row not yet upserted into
+      // local DB. Render a brief "Finishing up" pill instead of bouncing
+      // back to "Awaiting agenda."
+      return {
+        label: 'Finishing up…',
+        className: 'bg-primary/10 text-primary',
+        icon: <LoaderCircle className="size-3 animate-spin" aria-hidden />,
+      }
+    case 'unknown':
+    case null:
+    case undefined:
+      return {
+        label: 'Awaiting agenda',
+        className: 'bg-muted text-muted-foreground',
+      }
   }
 }
 

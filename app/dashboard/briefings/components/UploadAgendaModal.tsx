@@ -4,7 +4,13 @@ import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { Link as LinkIcon, Upload } from 'lucide-react'
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@styleguide'
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@styleguide'
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
 import {
   AgendaFileTooLargeError,
@@ -48,6 +54,13 @@ export default function UploadAgendaModal({
     setUrl('')
     setFile(null)
     setErrorMessage(null)
+    // Native file inputs retain their selected value across re-opens, which
+    // blocks re-selecting the same PDF after the user closes the modal. Clear
+    // the DOM value so the next selection — even of the same file — fires
+    // the change handler.
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
   }
 
   const handleOpenChange = (next: boolean) => {
@@ -64,11 +77,17 @@ export default function UploadAgendaModal({
   const handleFileSelected = (chosen: File) => {
     setErrorMessage(null)
     const sizeMb = chosen.size / 1024 / 1024
+    // Clear any previously-accepted file before validating the new one —
+    // otherwise the upload button keeps showing the old filename and
+    // submit stays enabled with the OLD file while we render an error
+    // about the NEW one.
     if (chosen.type && chosen.type !== 'application/pdf') {
+      setFile(null)
       setErrorMessage('That file isn’t a PDF. Please upload a PDF.')
       return
     }
     if (chosen.size > MAX_AGENDA_BYTES) {
+      setFile(null)
       setErrorMessage(
         `That file is ${sizeMb.toFixed(1)} MB. Max size is ${MAX_MB} MB.`,
       )
@@ -106,8 +125,7 @@ export default function UploadAgendaModal({
   })
 
   const urlIsValid = url.trim().length > 0 && isLikelyValidUrl(url)
-  const canSubmit =
-    !submitMutation.isPending && (urlIsValid || file !== null)
+  const canSubmit = !submitMutation.isPending && (urlIsValid || file !== null)
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

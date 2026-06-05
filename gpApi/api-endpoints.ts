@@ -40,16 +40,12 @@ export interface MeetingsListItemDto {
   userAgendaStatus?: UserAgendaStatus | null
 }
 
-export type UserAgendaStatus =
-  | 'processing'
-  | 'failed'
-  | 'completed'
-  | 'unknown'
+export type UserAgendaStatus = 'processing' | 'failed' | 'completed' | 'unknown'
 
 /** Request/response shapes for the user-agenda-upload flow. */
 export type UserAgendaSubmitRequest =
   | { source: 'URL'; sourceUrl: string }
-  | { source: 'UPLOAD'; uploadId: string; uploadKey: string }
+  | { source: 'UPLOAD'; uploadId: string }
 
 export interface UserAgendaSubmitResponse {
   experimentRunId: string

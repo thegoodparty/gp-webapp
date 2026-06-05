@@ -86,13 +86,16 @@ export const submitAgendaFile = async (
     throw new Error(`s3_upload_failed:${putResponse.status}`)
   }
 
+  // Note: we DON'T send presign.uploadKey here even though the presign
+  // endpoint returns it. gp-api reconstructs the S3 key server-side from
+  // electedOffice + meetingDate + uploadId; sending a client-supplied key
+  // would be an IDOR vector and is rejected by the schema.
   const { data } = await clientRequest(
     'POST /v1/meetings/:date/briefing/agenda',
     {
       date: meetingDate,
       source: 'UPLOAD',
       uploadId: presign.uploadId,
-      uploadKey: presign.uploadKey,
     },
   )
   return data
