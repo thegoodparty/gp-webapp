@@ -214,9 +214,7 @@ const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
         <span className="font-semibold text-foreground">
           {plan.electionDate}
         </span>
-        . Because the electorate is small and no party cue appears on the
-        ballot, the race is decided by name recognition and turnout, not by
-        ideological persuasion.
+        .
       </p>
     )
   }
