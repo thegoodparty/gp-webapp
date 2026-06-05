@@ -73,7 +73,7 @@ describe('computeBudget', () => {
     expect(withFee.filingFeeIsDefault).toBe(false)
   })
 
-  it('adds a 5% contingency and rounds the total', () => {
+  it('adds a rounded 5% contingency on top of the subtotal', () => {
     const subtotal =
       subject.textCost +
       subject.robocallCost +
@@ -82,10 +82,26 @@ describe('computeBudget', () => {
       YARD_SIGNS_COST +
       subject.filingFee
     expect(subject.subtotal).toBe(subtotal)
-    expect(subject.contingency).toBe(subtotal * CONTINGENCY_RATE)
-    expect(subject.totalBudget).toBe(
-      Math.round(subtotal + subtotal * CONTINGENCY_RATE),
-    )
+    expect(subject.contingency).toBe(Math.round(subtotal * CONTINGENCY_RATE))
+  })
+
+  it('keeps the displayed line items summing exactly to the total', () => {
+    // Regression guard: every cost is whole-dollar, so the rows the UI shows
+    // add up to the total it shows. Inputs chosen to produce fractional
+    // pre-rounding costs (e.g. 300 texts × $0.035 = $10.50).
+    const b = computeBudget(500, 400, 100)
+    const rowSum =
+      b.textCost +
+      b.robocallCost +
+      b.literatureCost +
+      b.mailCost +
+      b.yardSignsCost +
+      b.filingFee +
+      b.contingency
+    expect(rowSum).toBe(b.totalBudget)
+    expect(Number.isInteger(b.textCost)).toBe(true)
+    expect(Number.isInteger(b.mailCost)).toBe(true)
+    expect(Number.isInteger(b.contingency)).toBe(true)
   })
 
   it('produces no spurious literature pack when the contact goal is zero', () => {

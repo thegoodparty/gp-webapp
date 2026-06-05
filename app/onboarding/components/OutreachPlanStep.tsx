@@ -267,7 +267,10 @@ export const OutreachPlanStep = ({
     winNumber,
   )
 
-  if (voterContactGoal <= 0) {
+  // Both inputs must be positive: voterContactGoal sizes texts/robocalls/doors,
+  // and projectedTurnout sizes direct mail. A zero turnout (missing metric)
+  // would otherwise render a $0 mail row and silently understate the total.
+  if (voterContactGoal <= 0 || projectedTurnout <= 0) {
     return <ResourcesUnavailable />
   }
 

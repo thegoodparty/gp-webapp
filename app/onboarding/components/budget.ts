@@ -70,10 +70,12 @@ export const computeBudget = (
   projectedTurnout: number,
   filingFee: number | null,
 ): BudgetComputation => {
+  // Every line item is rounded to whole dollars here so the displayed rows sum
+  // exactly to the displayed total (the UI rounds each row for display).
   const textCount = Math.round(contactGoal * TEXTS_PERCENT)
-  const textCost = textCount * TEXT_COST
+  const textCost = Math.round(textCount * TEXT_COST)
   const robocallCount = Math.round(contactGoal * ROBOCALLS_PERCENT)
-  const robocallCost = robocallCount * ROBOCALL_COST
+  const robocallCost = Math.round(robocallCount * ROBOCALL_COST)
 
   const doorGoal = Math.round(contactGoal * DOORS_PERCENT)
   const literaturePieces = doorGoal * LITERATURE_PIECES_PER_DOOR
@@ -81,7 +83,7 @@ export const computeBudget = (
   const literatureCost = literaturePacks * LITERATURE_PACK_COST
 
   const mailCount = Math.round(projectedTurnout * MAIL_UNIVERSE_RATE)
-  const mailCost = mailCount * MAIL_COST_PER_PIECE
+  const mailCost = Math.round(mailCount * MAIL_COST_PER_PIECE)
 
   const filingFeeIsDefault = filingFee == null
   const resolvedFilingFee = filingFee ?? DEFAULT_FILING_FEE
@@ -93,8 +95,8 @@ export const computeBudget = (
     mailCost +
     YARD_SIGNS_COST +
     resolvedFilingFee
-  const contingency = subtotal * CONTINGENCY_RATE
-  const totalBudget = Math.round(subtotal + contingency)
+  const contingency = Math.round(subtotal * CONTINGENCY_RATE)
+  const totalBudget = subtotal + contingency
 
   return {
     textCount,
