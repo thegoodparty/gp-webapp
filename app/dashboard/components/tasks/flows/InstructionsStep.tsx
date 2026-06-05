@@ -3,7 +3,7 @@ import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo } from 'react'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
@@ -97,12 +97,12 @@ export default function InstructionsStep({
         ))}
       </ol>
       <div className="flex justify-between">
-        <Button size="large" color="neutral" onClick={closeCallback}>
+        <Button size="large" variant="secondary" onClick={closeCallback}>
           Cancel
         </Button>
         <Button
           size="large"
-          color="secondary"
+          variant="secondary"
           onClick={nextCallback}
           {...trackingAttrs}
         >

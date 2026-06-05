@@ -1,7 +1,7 @@
 'use client'
 
 import H1 from '@shared/typography/H1'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import { Alert, AlertDescription, AlertTitle } from '@styleguide'
 import { MdError } from 'react-icons/md'
@@ -291,7 +291,7 @@ export default function AudienceStep({
           <div className="col-span-6 text-left mt-6">
             <Button
               size="large"
-              color="neutral"
+              variant="secondary"
               onClick={backCallback}
               {...backTrackingAttrs}
             >
@@ -301,7 +301,7 @@ export default function AudienceStep({
           <div className="col-span-6 text-right mt-6">
             <Button
               size="large"
-              color="secondary"
+              variant="secondary"
               onClick={handleOnNext}
               disabled={isNextDisabled}
               loading={loading}

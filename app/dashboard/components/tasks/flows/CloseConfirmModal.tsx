@@ -1,4 +1,4 @@
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
@@ -44,7 +44,7 @@ export default function CloseConfirmModal({
         <div className="flex justify-center gap-4">
           <Button
             size="large"
-            color="neutral"
+            variant="secondary"
             onClick={onCancel}
             {...continueTrackingAttrs}
           >
@@ -52,7 +52,7 @@ export default function CloseConfirmModal({
           </Button>
           <Button
             size="large"
-            color="error"
+            variant="destructive"
             onClick={onConfirm}
             {...exitTrackingAttrs}
           >
