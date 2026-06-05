@@ -166,15 +166,15 @@ export async function* streamChat({
       res.status === 429
         ? 'rate_limited'
         : res.status >= 500
-        ? 'upstream_unavailable'
-        : 'internal'
+          ? 'upstream_unavailable'
+          : 'internal'
     yield streamErrorEvent(
       code,
       code === 'rate_limited'
         ? 'Too many requests. Try again in a moment.'
         : code === 'upstream_unavailable'
-        ? 'Chat is temporarily unavailable.'
-        : 'Something went wrong. Please try again.',
+          ? 'Chat is temporarily unavailable.'
+          : 'Something went wrong. Please try again.',
       code !== 'internal',
     )
     return

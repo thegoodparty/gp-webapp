@@ -44,7 +44,7 @@ const DeleteThread = ({ chat }: DeleteThreadProps): React.JSX.Element => {
             className="fixed h-screen w-screen top-14 left-0"
             onClick={toggleShow}
           />
-          <div className="absolute bg-primary-main p-2 rounded-xl shadow-lg z-10 right-2 top-2 min-w-[240px]">
+          <div className="absolute bg-gray-800 p-2 rounded-xl shadow-lg z-10 right-2 top-2 min-w-[240px]">
             <div
               className="p-2 hover:bg-white hover:bg-opacity-10 hover:rounded transition-colors"
               onClick={showDelete}

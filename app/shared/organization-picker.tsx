@@ -122,14 +122,17 @@ export const OrganizationProvider = ({
     [queryClient],
   )
 
+  const contextValue = useMemo(
+    () => ({
+      organizations,
+      selected: selectedOrganization,
+      setSelectedSlug,
+    }),
+    [organizations, selectedOrganization, setSelectedSlug],
+  )
+
   return (
-    <OrganizationContext.Provider
-      value={{
-        organizations,
-        selected: selectedOrganization,
-        setSelectedSlug,
-      }}
-    >
+    <OrganizationContext.Provider value={contextValue}>
       {children}
     </OrganizationContext.Provider>
   )

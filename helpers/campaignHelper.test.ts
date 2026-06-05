@@ -9,7 +9,7 @@ const makeCampaign = (details: Partial<Campaign['details']> = {}): Campaign =>
       primaryElectionDate: undefined,
       ...details,
     },
-  } as unknown as Campaign)
+  }) as unknown as Campaign
 
 const toLocalDateString = (d: Date): string => {
   const y = d.getFullYear()

@@ -120,7 +120,7 @@ export function AnnotationSurfaceSheet({
     ? items.findIndex((i) => i.id === selectedId)
     : -1
   const safeIndex = foundIndex >= 0 ? foundIndex : 0
-  const current = foundIndex >= 0 ? items[foundIndex] ?? null : null
+  const current = foundIndex >= 0 ? (items[foundIndex] ?? null) : null
 
   // Notify parent on focused-annotation transitions so it can clear
   // per-annotation UI state (error banners, draft body, edit mode).

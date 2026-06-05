@@ -160,7 +160,6 @@ const TextField = ({
         error && 'border-destructive',
         startAdornment ? 'pl-9' : null,
         endAdornment ? 'pr-9' : null,
-        className,
       )}
       {...inputProps}
     />
@@ -173,7 +172,6 @@ const TextField = ({
         error && 'border-destructive',
         startAdornment ? 'pl-9' : null,
         endAdornment ? 'pr-9' : null,
-        className,
       )}
       {...inputProps}
     />
@@ -199,7 +197,7 @@ const TextField = ({
     )
 
   return (
-    <div className="flex w-full flex-col gap-1.5">
+    <div className={cn('flex w-full flex-col gap-1.5', className)}>
       {label ? (
         <Label
           htmlFor={inputId}

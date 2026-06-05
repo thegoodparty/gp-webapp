@@ -167,14 +167,14 @@
   --border-width-8: 8px;
   --box-shadow-none: 0 0 #0000;
   --box-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
-    0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --box-shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --box-shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --box-shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --box-shadow-sm:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --box-shadow-base:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --box-shadow-md:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --box-shadow-lg:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   --box-shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   --box-shadow-2xl: 0 50px 100px -20px rgba(0, 0, 0, 0.25);
   --box-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
@@ -256,10 +256,12 @@
   --spacing-component-form-field-gap: 8px;
   --spacing-component-form-input-padding-x: 12px;
   --spacing-component-form-input-padding-y: 8px;
-  --typography-font-family-sans: Inter, system-ui, -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --typography-font-family-mono: ui-monospace, SFMono-Regular, 'SF Mono',
-    Consolas, 'Liberation Mono', Menlo, monospace;
+  --typography-font-family-sans:
+    Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --typography-font-family-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo,
+    monospace;
   --typography-font-size-xs: 12px;
   --typography-font-size-sm: 14px;
   --typography-font-size-base: 16px;
@@ -642,15 +644,15 @@
   --component-card-default-border: #d1d8df;
   --component-card-default-border-radius: 16px;
   --component-card-default-border-width: 1px;
-  --component-card-default-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
-    0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --component-card-default-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   --component-card-default-padding: 24px;
   --component-card-elevated-background: #ffffff;
   --component-card-elevated-border: transparent;
   --component-card-elevated-border-radius: 16px;
   --component-card-elevated-border-width: 0px;
-  --component-card-elevated-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --component-card-elevated-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   --component-card-elevated-padding: 24px;
   --component-card-outlined-background: #ffffff;
   --component-card-outlined-border: #70757a;
@@ -685,14 +687,14 @@
   --component-card-content-caption-color: #879099;
   --component-card-interactive-hover-background: #f7fafb;
   --component-card-interactive-hover-border: #70757a;
-  --component-card-interactive-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --component-card-interactive-hover-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   --component-card-interactive-focus-border: #1b6afc;
-  --component-card-interactive-focus-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --component-card-interactive-focus-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --component-card-interactive-active-background: #eef3f6;
-  --component-card-interactive-active-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
-    0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --component-card-interactive-active-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 
   /* ==========================================================================
    * WARNING COLOR SCALE (from Figma semantic colors)

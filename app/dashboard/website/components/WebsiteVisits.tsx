@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import Paper from '@shared/utils/Paper'
 import H5 from '@shared/typography/H5'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -10,19 +11,27 @@ import { Button } from '@styleguide'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import StepList from './StepList'
 import H1 from '@shared/typography/H1'
-import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { format, subDays } from 'date-fns'
+import type { VisitsChartDataPoint } from './VisitsChart'
+
+// recharts (+ its d3 deps) is the single largest chunk in the app. Loading the
+// chart lazily keeps it out of the website route's initial JS; the panel shell,
+// header and modal still render/hydrate immediately.
+const VisitsChart = dynamic(() => import('./VisitsChart'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full flex items-center justify-center">
+      <div className="text-gray-500">Loading...</div>
+    </div>
+  ),
+})
 
 interface Visit {
   createdAt: string
 }
 
-interface ChartDataPoint {
-  weekday: string
-  visitors: number
-  date: Date
-}
+type ChartDataPoint = VisitsChartDataPoint
 
 interface WebsiteVisitsProps {
   className?: string
@@ -77,7 +86,7 @@ export default function WebsiteVisits({
     }
   }, [])
 
-  const chartData = processVisitsData(visits)
+  const chartData = useMemo(() => processVisitsData(visits), [visits])
   const totalVisitors = visits.length
 
   return (
@@ -100,47 +109,7 @@ export default function WebsiteVisits({
             <div className="text-gray-500">Loading...</div>
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={chartData}
-              margin={{ top: 0, right: 10, left: 15, bottom: 0 }}
-            >
-              <XAxis
-                dataKey="weekday"
-                stroke="#6b7280"
-                fontSize={12}
-                tickLine={false}
-                axisLine={false}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                }}
-                labelStyle={{ color: '#374151', fontWeight: '600' }}
-                labelFormatter={(_, payload) => {
-                  if (
-                    payload &&
-                    payload.length > 0 &&
-                    payload[0]?.payload?.date
-                  ) {
-                    return format(payload[0].payload.date, 'MMM d, yyyy')
-                  }
-                  return ''
-                }}
-              />
-              <Line
-                type="linear"
-                dataKey="visitors"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <VisitsChart data={chartData} />
         )}
       </div>
 

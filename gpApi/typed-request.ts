@@ -23,14 +23,14 @@ export type PathParamsOf<Route> =
   Route extends `${string} ${infer Path}`
     ? PathParamsOf<Path>
     : // Now, split by the "/", and check the strings before + after.
-    Route extends `${infer Before}/${infer After}`
-    ? PathParamsOf<Before> & PathParamsOf<After>
-    : // If the path part looks like a param, return the object.
-    Route extends `:${infer Param}`
-    ? {
-        [Key in Param]: string
-      }
-    : {}
+      Route extends `${infer Before}/${infer After}`
+      ? PathParamsOf<Before> & PathParamsOf<After>
+      : // If the path part looks like a param, return the object.
+        Route extends `:${infer Param}`
+        ? {
+            [Key in Param]: string
+          }
+        : {}
 
 export type RequestPayloadOf<Route extends keyof APIEndpoints> =
   APIEndpoints[Route]['Request'] & PathParamsOf<Route>
@@ -74,11 +74,9 @@ const substitutePathParams = (route: string, params: object): string =>
 const removePathParamsFromRequestPayload = (route: string, payload: object) =>
   (Object.entries(payload) as [string, string][])
     .filter(([, value]) => value !== undefined)
-    .reduce<Record<string, string>>(
-      (accum, [name, value]) =>
-        route.includes(`:${name}`) ? accum : { ...accum, [name]: value },
-      {},
-    )
+    .reduce<
+      Record<string, string>
+    >((accum, [name, value]) => (route.includes(`:${name}`) ? accum : { ...accum, [name]: value }), {})
 
 export type RequestOptions = FetchOptions<'json'>
 

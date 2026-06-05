@@ -26,7 +26,7 @@ vi.mock('helpers/useSnackbar', () => ({
 }))
 
 const websiteWithBio = (bio: string): Website =>
-  ({ content: { about: { bio, issues: [] } } } as unknown as Website)
+  ({ content: { about: { bio, issues: [] } } }) as unknown as Website
 
 beforeEach(() => {
   vi.clearAllMocks()
