@@ -61,12 +61,16 @@ export default function AwaitingAgendaRow({
 
   const status = summary.userAgendaStatus
   const isProcessing = status === 'processing'
+  const isCompleted = status === 'completed'
   const pill = pillFor(status)
 
-  // While the user's agenda is processing, don't let them re-open the
-  // modal — they've already submitted. `failed` and `null`/awaiting both
-  // open the modal (failed allows a retry).
-  const rowDisabled = isProcessing
+  // Block re-opening the modal while the user's agenda is either processing
+  // OR completed-but-not-yet-rendered. `completed` is a brief race window
+  // between the agent finishing and the briefing row appearing in the list —
+  // re-opening here would let the user submit a second agenda for the same
+  // meeting and double-dispatch the briefing run. `failed` and `null`/awaiting
+  // both open the modal (failed allows a retry).
+  const rowDisabled = isProcessing || isCompleted
 
   return (
     <>
