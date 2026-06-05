@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { ChevronRight, MapPin } from 'lucide-react'
 import {
   Dialog,
@@ -14,6 +15,7 @@ import {
   formatShortDate,
 } from '@shared/briefings/dateHelpers'
 import type { BriefingSummary } from '@shared/briefings/types'
+import AgendaUploadBlock from './AgendaUploadBlock'
 
 type Props = {
   summary: BriefingSummary
@@ -22,12 +24,13 @@ type Props = {
 export default function AwaitingAgendaRow({
   summary,
 }: Props): React.JSX.Element {
+  const [open, setOpen] = useState(false)
   const shortDate = formatShortDate(summary.scheduledAt)
   const dayTime = formatDayTime(summary.scheduledAt)
   const countdown = countdownLabel(summary.scheduledAt)
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button
           type="button"
@@ -84,9 +87,11 @@ export default function AwaitingAgendaRow({
           ) : null}
         </div>
 
-        <p className="text-sm">
-          <span className="font-medium">Status:</span> Agenda not posted yet
-        </p>
+        <AgendaUploadBlock
+          meetingName={summary.meetingName}
+          meetingSlug={summary.slug}
+          onSubmitted={() => setOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   )

@@ -1,7 +1,8 @@
-import { CalendarClock } from 'lucide-react'
+import { TargetIcon, MessageSquareIcon, DownloadIcon } from '@styleguide'
 import UpcomingCountdownCard from './UpcomingCountdownCard'
 import BriefingListSection from './BriefingListSection'
 import DevAgentTriggerBar from './DevAgentTriggerBar'
+import AgendaUploadBlock from './AgendaUploadBlock'
 import type { BriefingSummary } from '@shared/briefings/types'
 
 type Props = {
@@ -25,19 +26,42 @@ const isFeaturedEligible = (s: BriefingSummary): boolean => {
   return s.status === 'briefing_ready' && now - t <= FOUR_DAYS_MS
 }
 
+const VALUE_PROPS = [
+  {
+    icon: TargetIcon,
+    text: 'Your briefing focuses on the issues your district cares most about.',
+  },
+  {
+    icon: MessageSquareIcon,
+    text: "Ask all of your questions, we've got answers.",
+  },
+  {
+    icon: DownloadIcon,
+    text: 'Add notes and download the briefing before you walk in.',
+  },
+]
+
 const EmptyState = () => (
-  <section className="flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-6 shadow-sm">
-    <span className="inline-flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-      <CalendarClock className="size-5" aria-hidden />
-    </span>
-    <h2 className="text-xl font-semibold leading-7 text-foreground">
-      We&apos;re tracking down your meetings
+  <section className="flex flex-col items-center gap-6 py-4">
+    <h2 className="max-w-[28rem] text-center text-3xl font-bold leading-tight text-foreground">
+      Be the most prepared person in the room with meeting briefings
     </h2>
-    <p className="text-sm text-muted-foreground">
-      We&apos;re finding your upcoming meetings and building briefings from the
-      public agendas. As soon as the first one is ready, we&apos;ll email you so
-      you can review it before you walk in.
-    </p>
+
+    <ul className="flex w-full flex-col gap-3">
+      {VALUE_PROPS.map(({ icon: Icon, text }) => (
+        <li
+          key={text}
+          className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm"
+        >
+          <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Icon className="size-5" aria-hidden />
+          </span>
+          <p className="text-sm font-medium text-foreground">{text}</p>
+        </li>
+      ))}
+    </ul>
+
+    <AgendaUploadBlock />
   </section>
 )
 
