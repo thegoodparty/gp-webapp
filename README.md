@@ -73,5 +73,3 @@ The `ai-rules/` directory is a git submodule containing rule files for AI code r
 ## License
 
 This project is licensed under the [Creative Common Zero (CC0)](https://creativecommons.org/share-your-work/public-domain/cc0/) License
-
-fewfewfwe
