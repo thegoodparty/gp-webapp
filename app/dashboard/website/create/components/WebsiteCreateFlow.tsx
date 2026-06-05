@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useMemo, useState } from 'react'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import WebsitePreview from '../../editor/components/WebsitePreview'
 import WebsiteEditorPageStepper from '../../editor/components/WebsiteEditorPageStepper'
@@ -411,12 +412,14 @@ export default function WebsiteCreateFlow({
       <div className="flex flex-col gap-4 h-full min-h-full">
         <div className="flex justify-between items-center">
           {step === COMPLETE_STEP ? (
-            <Button variant="outlined" href="/dashboard/website">
-              {step === COMPLETE_STEP ? 'Done' : 'Exit'}
+            <Button asChild variant="outline">
+              <Link href="/dashboard/website">
+                {step === COMPLETE_STEP ? 'Done' : 'Exit'}
+              </Link>
             </Button>
           ) : (
             <Button
-              variant="outlined"
+              variant="outline"
               onClick={handleSaveAndExit}
               disabled={saveLoading}
               loading={saveLoading}
@@ -426,7 +429,7 @@ export default function WebsiteCreateFlow({
           )}
           <Button
             className="block lg:hidden"
-            variant="outlined"
+            variant="outline"
             onClick={() => setPreviewOpen(true)}
           >
             Preview

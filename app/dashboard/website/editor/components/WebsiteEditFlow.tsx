@@ -1,7 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { LuArrowLeft } from 'react-icons/lu'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import { useWebsite } from '../../components/WebsiteProvider'
 import H4 from '@shared/typography/H4'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
@@ -354,8 +355,10 @@ export default function WebsiteEditFlow(): React.JSX.Element {
       <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
         <div className="lg:border-r lg:border-black/[0.12]">
           <div className="flex items-center justify-between p-2 pt-0 lg:px-8">
-            <Button variant="text" href="/dashboard/website">
-              <LuArrowLeft size={24} />
+            <Button asChild variant="ghost">
+              <Link href="/dashboard/website">
+                <LuArrowLeft size={24} />
+              </Link>
             </Button>
             <H4>Edit website</H4>
             <EditSettingsMenu />

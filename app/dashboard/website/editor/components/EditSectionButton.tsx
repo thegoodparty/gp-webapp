@@ -1,5 +1,5 @@
 import { LuCloudUpload } from 'react-icons/lu'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { DisplaySwatch } from './ThemeSwatch'
 import { getWebsiteUrl } from '../../util/website.util'
 import H5 from '@shared/typography/H5'
@@ -77,8 +77,7 @@ const EditSectionButton = ({
   const url = getWebsiteUrl(website.vanityPath, false, website.domain)
   return (
     <Button
-      variant="outlined"
-      color="neutral"
+      variant="outline"
       className={`!text-left !border-[1px] !border-black/[0.12] !py-4 ${
         currentSection === section
           ? 'outline outline-2 outline-black !border-transparent'
