@@ -18,6 +18,7 @@ cp .env.example .env
 **Notes**:
 
 - The `BASE_URL` in `.env` controls which app to test against. Values you can use:
+
   - `http://localhost:4000` (test against a local-running app)
   - `http://dev.goodparty.org` (test against the dev app)
   - ...etc

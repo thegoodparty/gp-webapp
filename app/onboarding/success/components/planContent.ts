@@ -1033,8 +1033,8 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     input.registeredVoters && input.registeredVoters > 0
       ? input.registeredVoters
       : projectedTurnout > 0
-        ? Math.round(projectedTurnout / 0.22)
-        : 0
+      ? Math.round(projectedTurnout / 0.22)
+      : 0
   const registeredVotersLow = Math.max(0, Math.round(registeredVoters * 0.9))
   const registeredVotersHigh = Math.round(registeredVoters * 1.1)
 

@@ -184,10 +184,10 @@ const paymentColumns: ColumnDef<Payment>[] = [
         status === 'success'
           ? 'default'
           : status === 'processing'
-            ? 'secondary'
-            : status === 'failed'
-              ? 'destructive'
-              : 'outline'
+          ? 'secondary'
+          : status === 'failed'
+          ? 'destructive'
+          : 'outline'
 
       return (
         <Badge variant={variant} className="capitalize">
@@ -383,8 +383,8 @@ const productColumns: ColumnDef<Product>[] = [
         status === 'in-stock'
           ? 'default'
           : status === 'low-stock'
-            ? 'secondary'
-            : 'destructive'
+          ? 'secondary'
+          : 'destructive'
 
       return (
         <Badge variant={variant} className="capitalize">
@@ -487,10 +487,10 @@ function InteractiveExample() {
           status === 'success'
             ? 'default'
             : status === 'processing'
-              ? 'secondary'
-              : status === 'failed'
-                ? 'destructive'
-                : 'outline'
+            ? 'secondary'
+            : status === 'failed'
+            ? 'destructive'
+            : 'outline'
 
         return (
           <Badge variant={variant} className="capitalize">

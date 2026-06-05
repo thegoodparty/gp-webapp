@@ -632,8 +632,8 @@ const TasksList = ({
                       {isThisWeek
                         ? 'This week'
                         : weekStart
-                          ? formatWeekLabel(weekStart)
-                          : `Week ${weekNum}`}
+                        ? formatWeekLabel(weekStart)
+                        : `Week ${weekNum}`}
                     </span>
                   </div>
                   <ul className="border-b border-border">

@@ -6,10 +6,8 @@ import { Input } from './input'
 import { Button, type ButtonProps } from './button'
 import { Label } from './label'
 
-interface InputWithButtonProps extends Omit<
-  React.ComponentProps<'input'>,
-  'children'
-> {
+interface InputWithButtonProps
+  extends Omit<React.ComponentProps<'input'>, 'children'> {
   label?: string
   showLabel?: boolean
   buttonLabel: React.ReactNode

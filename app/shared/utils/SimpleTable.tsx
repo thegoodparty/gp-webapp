@@ -94,8 +94,8 @@ const SimpleTable = <T extends object>({
                 {column.cell
                   ? column.cell({ row })
                   : column.accessorKey
-                    ? String(row[column.accessorKey] ?? '')
-                    : null}
+                  ? String(row[column.accessorKey] ?? '')
+                  : null}
               </td>
             ))}
           </tr>

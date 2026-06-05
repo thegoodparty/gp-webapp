@@ -34,9 +34,7 @@ type TemplateCategoryKey = keyof typeof TEMPLATE_CATEGORY_ICONS
 const isTemplateCategoryKey = (key: string): key is TemplateCategoryKey =>
   key in TEMPLATE_CATEGORY_ICONS
 
-const getTemplateCategoryIcon = (
-  name: string,
-): React.JSX.Element | undefined =>
+const getTemplateCategoryIcon = (name: string): React.JSX.Element | undefined =>
   isTemplateCategoryKey(name) ? TEMPLATE_CATEGORY_ICONS[name] : undefined
 
 interface Template {

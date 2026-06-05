@@ -10,8 +10,9 @@ import CandidateProfile from './CandidateProfile'
 
 const mockTrackEvent = vi.fn()
 vi.mock('helpers/analyticsHelper', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('helpers/analyticsHelper')>()
+  const actual = await importOriginal<
+    typeof import('helpers/analyticsHelper')
+  >()
   return {
     ...actual,
     trackEvent: (...args: unknown[]) => mockTrackEvent(...args),
@@ -48,7 +49,7 @@ const websiteWith = (bio: string, issueCount: number): Website =>
         })),
       },
     },
-  }) as unknown as Website
+  } as unknown as Website)
 
 beforeEach(() => {
   vi.clearAllMocks()

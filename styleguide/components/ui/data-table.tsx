@@ -400,9 +400,8 @@ function DataTable<TData, TValue>({
 }
 
 // Helper components for common column patterns
-interface DataTableColumnHeaderProps<
-  TData extends RowData,
-> extends React.HTMLAttributes<HTMLDivElement> {
+interface DataTableColumnHeaderProps<TData extends RowData>
+  extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData>
   title: string
 }

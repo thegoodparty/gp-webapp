@@ -60,7 +60,7 @@ export default function ReportErrorSheet({
 
   const initialDescription =
     sheet.kind === 'report_error_view'
-      ? (sheet.annotation.bugReport?.description ?? '')
+      ? sheet.annotation.bugReport?.description ?? ''
       : ''
   const [description, setDescription] = useState(initialDescription)
   const [saving, setSaving] = useState(false)

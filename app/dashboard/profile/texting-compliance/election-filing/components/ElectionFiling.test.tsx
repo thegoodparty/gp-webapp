@@ -8,8 +8,9 @@ type Campaign = Parameters<typeof getInitialFormState>[0]
 
 const mockTrackEvent = vi.fn()
 vi.mock('helpers/analyticsHelper', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('helpers/analyticsHelper')>()
+  const actual = await importOriginal<
+    typeof import('helpers/analyticsHelper')
+  >()
   return {
     ...actual,
     trackEvent: (...args: unknown[]) => mockTrackEvent(...args),

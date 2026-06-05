@@ -28,12 +28,12 @@ export default function DictationDemoWidget() {
     dictation.status === 'requesting_mic'
       ? 'Requesting mic\u2026'
       : dictation.status === 'connecting'
-        ? 'Connecting\u2026'
-        : dictation.status === 'recording'
-          ? 'Stop dictation'
-          : dictation.status === 'stopping'
-            ? 'Stopping\u2026'
-            : 'Dictate'
+      ? 'Connecting\u2026'
+      : dictation.status === 'recording'
+      ? 'Stop dictation'
+      : dictation.status === 'stopping'
+      ? 'Stopping\u2026'
+      : 'Dictate'
 
   return (
     <div className="rounded-lg border border-border bg-card p-4">

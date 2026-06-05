@@ -36,7 +36,7 @@ const websiteWithIssues = (count: number): Website =>
         })),
       },
     },
-  }) as unknown as Website
+  } as unknown as Website)
 
 beforeEach(() => {
   vi.clearAllMocks()

@@ -88,8 +88,8 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         carded
           ? ''
           : organization?.electedOfficeId
-            ? 'pt-6'
-            : 'border-t pt-6 border-gray-600'
+          ? 'pt-6'
+          : 'border-t pt-6 border-gray-600'
       }
     >
       <H3 className="pb-6">Office Details</H3>

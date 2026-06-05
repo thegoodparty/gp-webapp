@@ -25,7 +25,7 @@ const baseBriefing = (overrides: Record<string, unknown> = {}): Briefing =>
     },
     title: 'City Council meeting briefing for June 1, 2026',
     ...overrides,
-  }) as unknown as Briefing
+  } as unknown as Briefing)
 
 const featuredItem = (overrides: Record<string, unknown> = {}): Item =>
   ({
@@ -43,7 +43,7 @@ const featuredItem = (overrides: Record<string, unknown> = {}): Item =>
       talking_points: null,
     },
     ...overrides,
-  }) as unknown as Item
+  } as unknown as Item)
 
 describe('renderBriefingForSpeech', () => {
   it('reads the header, executive summary, and every item section in page order', () => {
@@ -175,7 +175,7 @@ const itemWithDisplay = (overrides: Record<string, unknown> = {}): Item =>
       talking_points: null,
       ...overrides,
     },
-  }) as unknown as Item
+  } as unknown as Item)
 
 describe('renderItemForSpeech', () => {
   it('joins title, section headers, and bodies with single spaces in page order', () => {

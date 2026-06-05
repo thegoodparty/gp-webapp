@@ -46,8 +46,8 @@ const Consumer = () => {
         {ctx.threadId === null
           ? 'null'
           : ctx.threadId === ''
-            ? 'empty'
-            : ctx.threadId}
+          ? 'empty'
+          : ctx.threadId}
       </div>
       <div data-testid="loading">{String(ctx.loading)}</div>
       <div data-testid="error">{ctx.error ? ctx.error.message : 'none'}</div>

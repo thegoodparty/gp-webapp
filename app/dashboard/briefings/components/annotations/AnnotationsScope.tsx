@@ -660,8 +660,8 @@ export default function AnnotationsScope({
             const resolvedAnchor: AnnotationAnchor = anchor
               ? anchorPayload(anchor)
               : activeCard
-                ? { jsonPath: activeCard.jsonPath, start: null, end: null }
-                : EMPTY_ANCHOR
+              ? { jsonPath: activeCard.jsonPath, start: null, end: null }
+              : EMPTY_ANCHOR
             const created = await create.mutateAsync({
               kind: 'note',
               anchor: resolvedAnchor,

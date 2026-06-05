@@ -46,10 +46,10 @@ export default function AboutStep({
     errors?.bio && errors?.issues
       ? 'Please complete Your Bio and add a Key Issue'
       : errors?.bio
-        ? 'Please complete Your Bio'
-        : errors?.issues
-          ? errors.issues
-          : null
+      ? 'Please complete Your Bio'
+      : errors?.issues
+      ? errors.issues
+      : null
 
   return (
     <div>

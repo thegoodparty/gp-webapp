@@ -50,13 +50,19 @@ export const getAiTemplatesFromCategories = (
   type: string = TASK_TYPES.text,
 ): AiTemplate[] =>
   categories
-    ?.reduce<
-      AiTemplate[]
-    >((aiTemplates, { templates = [] }) => [...aiTemplates, ...templates.filter(({ key }) => AI_TEMPLATE_KEYS_BY_TASK_TYPE[type]?.includes(key))], [])
+    ?.reduce<AiTemplate[]>(
+      (aiTemplates, { templates = [] }) => [
+        ...aiTemplates,
+        ...templates.filter(({ key }) =>
+          AI_TEMPLATE_KEYS_BY_TASK_TYPE[type]?.includes(key),
+        ),
+      ],
+      [],
+    )
     .sort((a, b) =>
       a.requiresQuestions && !b.requiresQuestions
         ? 1
         : !a.requiresQuestions && b.requiresQuestions
-          ? -1
-          : 0,
+        ? -1
+        : 0,
     ) || []

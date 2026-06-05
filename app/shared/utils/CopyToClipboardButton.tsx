@@ -67,8 +67,8 @@ const CopyToClipboardButton = ({
   const resolvedVariant: ButtonProps['variant'] = variant
     ? variantMap[variant]
     : color
-      ? colorMap[color]
-      : 'default'
+    ? colorMap[color]
+    : 'default'
 
   const resolvedSize = size as ButtonProps['size'] | undefined
 

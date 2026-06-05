@@ -12,12 +12,8 @@
 }
 .h1,
 .h2 {
-  -webkit-transition:
-    opacity 0.5s linear,
-    margin-top 0.5s linear; /* Safari */
-  transition:
-    opacity 0.5s linear,
-    margin-top 0.5s linear;
+  -webkit-transition: opacity 0.5s linear, margin-top 0.5s linear; /* Safari */
+  transition: opacity 0.5s linear, margin-top 0.5s linear;
   font-weight: 900;
 }
 .loading h1,

@@ -86,8 +86,8 @@ export default function SegmentSection() {
 
     const isCustomSegment = !isDefaultSegment(segments, selectedSegment)
     const segmentName = isCustomSegment
-      ? (findCustomSegment(customSegments, selectedSegment)?.name ??
-        selectedSegment)
+      ? findCustomSegment(customSegments, selectedSegment)?.name ??
+        selectedSegment
       : selectedSegment
 
     trackEvent(EVENTS.Contacts.SegmentViewed, {

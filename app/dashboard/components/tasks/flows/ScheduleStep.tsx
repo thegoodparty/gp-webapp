@@ -98,8 +98,8 @@ export default function ScheduleStep({
           {isRobocall
             ? 'Request robocall'
             : isTextMessage
-              ? 'Schedule text message'
-              : 'Schedule campaign'}
+            ? 'Schedule text message'
+            : 'Schedule campaign'}
         </H1>{' '}
         {/* Dynamic header: "Request" for robocall, "Schedule text message" for text, "Schedule campaign" for others */}
         <Body1 className="mt-4 mb-8">
