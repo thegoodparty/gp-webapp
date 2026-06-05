@@ -1043,11 +1043,17 @@ export const buildPlanData = (input: PlanInput): PlanData => {
       ? Number((voterContactGoal / projectedTurnout).toFixed(1))
       : 0
 
-  const { totalBudget, lineItems: budgetLineItems } = buildBudgetBreakdown(
-    voterContactGoal,
-    projectedTurnout,
-    input.filingFee,
-  )
+  // Mirror the onboarding step's guard: without a contact goal and projected
+  // turnout the budget is degenerate (direct mail keys off turnout), so emit
+  // an empty budget rather than a silently understated one.
+  const { totalBudget, lineItems: budgetLineItems } =
+    voterContactGoal > 0 && projectedTurnout > 0
+      ? buildBudgetBreakdown(
+          voterContactGoal,
+          projectedTurnout,
+          input.filingFee,
+        )
+      : { totalBudget: 0, lineItems: [] as BudgetRow[] }
 
   const weeksRemaining = resolveWeeksRemaining(electionDateValid)
   const campaignHours = computeCampaignHours(voterContactGoal, weeksRemaining)
