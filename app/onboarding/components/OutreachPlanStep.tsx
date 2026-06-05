@@ -4,13 +4,13 @@ import { ChevronDown, Clock, DollarSign, Info } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@styleguide'
 import { numberFormatter } from 'helpers/numberHelper'
 import type { Campaign } from 'helpers/types'
+import {
+  computeBudget,
+  MAIL_COST_PER_PIECE,
+  type BudgetComputation,
+} from './budget'
 
 const VOTER_CONTACT_MULTIPLIER = 5
-const DOORS_PERCENT = 0.2
-const ROBOCALLS_PERCENT = 0.2
-const TEXTS_PERCENT = 0.6
-const ROBOCALL_COST = 0.045
-const TEXT_COST = 0.035
 const DOORS_PER_HOUR = 15
 const VOLUNTEER_HOURS_PER_WEEK = 3
 const CANDIDATE_HOURS_PER_WEEK = 14
@@ -18,43 +18,6 @@ const CANDIDATE_HOURS_PER_WEEK = 14
 // as "still in the prep window" — the plan assumes a final 12-week sprint.
 const MAX_CAMPAIGN_WEEKS = 12
 const FALLBACK_WEEKS_REMAINING = MAX_CAMPAIGN_WEEKS
-
-/**
- * Budget channel benchmarks — first-stab values for researcher review.
- * Each rate is a midpoint of public sources; tighten or tier these once
- * GoodParty.org strategy has a preferred number.
- *
- * Direct mail
- *   MAIL_UNIVERSE_RATE: real mail goes to a persuadable subset of the voter-
- *   contact universe, not all of it. 40% is a midpoint between high-prop
- *   targeting (~25%) and full-universe (~60%).
- *   MAIL_COST_PER_PIECE: $0.55 = midpoint of $0.50–$0.70 typical bulk political
- *   postcards (printing + postage). Drops to ~$0.32 at 50k+ pieces.
- *   https://suttonsmart.com/political-mailers/budgeting-cost-management/political-mailer-pricing-guide/
- *   https://www.thecampaignworkshop.com/blog/political-direct-mail/political-direct-mail
- *
- * Yard signs & literature
- *   SIGNS_PER_CONTACT_DENOMINATOR: 1 sign per 100 voter contacts. Calibrated so
- *   a ~10k voter-contact race lands near 100 signs. May be too few for
- *   sprawling rural districts or too many for dense urban ones.
- *   SIGN_COST: $5 = mid-bulk price for an 18×24" coroplast sign (sign + stake).
- *   DOOR_HANGER_COST: $0.20/piece = bulk printing midpoint. Quantity reuses the
- *   already-computed `totalDoors` so it tracks the canvassing plan.
- *   https://www.thecampaignworkshop.com/yard-sign-calculator-learn-what-campaign-signs-cost
- *   https://www.doorhangerswork.com/door-hanger-distribution-cost/
- *
- * Compliance & filing fees
- *   Sourced live from BallotReady via election-api on
- *   `campaign.raceTargetMetrics.filingFee` (+ raw text in
- *   `filingRequirementsText`). `null` when BR returns multiple amounts in one
- *   row, has no data, or the regex can't extract a clean number — in those
- *   cases the row shows "—" and the popover surfaces the raw BR string.
- */
-const MAIL_UNIVERSE_RATE = 0.4
-const MAIL_COST_PER_PIECE = 0.55
-const SIGNS_PER_CONTACT_DENOMINATOR = 100
-const SIGN_COST = 5
-const DOOR_HANGER_COST = 0.2
 
 interface OutreachPlanStepProps {
   campaign: Campaign | null
@@ -76,19 +39,8 @@ export const computeWeeksRemaining = (electionDate?: string | null): number => {
   return Math.min(weeks, MAX_CAMPAIGN_WEEKS)
 }
 
-interface ResourcesComputation {
-  textCount: number
-  textCost: number
-  robocallCount: number
-  robocallCost: number
-  mailCount: number
-  mailCost: number
-  signCount: number
-  doorHangerCount: number
-  yardLitCost: number
-  filingFee: number | null
+interface ResourcesComputation extends BudgetComputation {
   filingRequirementsText: string | null
-  totalBudget: number
   candidateHoursPerWeek: number
   volunteersPerWeek: number
   volunteerHoursPerWeek: number
@@ -99,54 +51,28 @@ interface ResourcesComputation {
 
 const computeResources = (
   voterContactGoal: number,
+  projectedTurnout: number,
   weeksRemaining: number,
   filingFee: number | null,
   filingRequirementsText: string | null,
 ): ResourcesComputation => {
-  // Volunteers needed each week:
-  //   doors_to_knock = voterContactGoal × DOORS_PERCENT
-  //   volunteers/week = doors_to_knock / (doors_per_hr × vol_hrs_week × weeks)
+  const budget = computeBudget(voterContactGoal, projectedTurnout, filingFee)
+
+  // Volunteers needed each week to clear the door goal:
+  //   volunteers/week = doorGoal / (doors_per_hr × vol_hrs_week × weeks)
   // Each volunteer covers (doors_per_hr × vol_hrs_week × weeks) doors over
   // the campaign; this many running concurrently each week clears the total.
-  const totalDoors = Math.round(voterContactGoal * DOORS_PERCENT)
   const doorsPerVolunteerOverCampaign =
     DOORS_PER_HOUR * VOLUNTEER_HOURS_PER_WEEK * weeksRemaining
   const volunteersPerWeek =
     doorsPerVolunteerOverCampaign > 0
-      ? Math.ceil(totalDoors / doorsPerVolunteerOverCampaign)
+      ? Math.ceil(budget.doorGoal / doorsPerVolunteerOverCampaign)
       : 0
-
-  const textCount = Math.round(voterContactGoal * TEXTS_PERCENT)
-  const textCost = textCount * TEXT_COST
-  const robocallCount = Math.round(voterContactGoal * ROBOCALLS_PERCENT)
-  const robocallCost = robocallCount * ROBOCALL_COST
-
-  const mailCount = Math.round(voterContactGoal * MAIL_UNIVERSE_RATE)
-  const mailCost = mailCount * MAIL_COST_PER_PIECE
-
-  const signCount = Math.max(
-    0,
-    Math.ceil(voterContactGoal / SIGNS_PER_CONTACT_DENOMINATOR),
-  )
-  const doorHangerCount = totalDoors
-  const yardLitCost = signCount * SIGN_COST + doorHangerCount * DOOR_HANGER_COST
-
   const volunteerHoursPerWeek = volunteersPerWeek * VOLUNTEER_HOURS_PER_WEEK
 
   return {
-    textCount,
-    textCost,
-    robocallCount,
-    robocallCost,
-    mailCount,
-    mailCost,
-    signCount,
-    doorHangerCount,
-    yardLitCost,
-    filingFee,
+    ...budget,
     filingRequirementsText,
-    totalBudget:
-      textCost + robocallCost + mailCost + yardLitCost + (filingFee ?? 0),
     candidateHoursPerWeek: CANDIDATE_HOURS_PER_WEEK,
     volunteersPerWeek,
     volunteerHoursPerWeek,
@@ -235,10 +161,8 @@ const BudgetAccordion = ({
     icon={<DollarSign className="size-5" aria-hidden="true" />}
   >
     <p className="px-5 pt-4 text-xs text-muted-foreground">
-      Based on a {resources.weeksRemaining}-week campaign. The final
-      &ldquo;Recommended Budget&rdquo; in your campaign plan uses actual
-      phone-match counts from the voter file, so it may differ from this
-      estimate.
+      Based on a {resources.weeksRemaining}-week campaign. Your campaign plan
+      uses this same formula, so the numbers will match.
     </p>
     <ul className="divide-y divide-base-border p-0 m-0">
       <BreakdownRow
@@ -252,45 +176,51 @@ const BudgetAccordion = ({
         hint={`${numberFormatter(resources.robocallCount)} calls × 4.5¢`}
       />
       <BreakdownRow
+        label="Literature"
+        value={formatCurrency(resources.literatureCost)}
+        hint={`${numberFormatter(
+          resources.literaturePacks,
+        )} packs of 250 — door hangers + palm cards`}
+      />
+      <BreakdownRow
         label="Direct mail"
         value={formatCurrency(resources.mailCost)}
         hint={`${numberFormatter(
           resources.mailCount,
         )} pieces × $${MAIL_COST_PER_PIECE}`}
       />
-      <BreakdownRow
-        label="Yard signs & literature"
-        value={formatCurrency(resources.yardLitCost)}
-        hint={`${numberFormatter(
-          resources.signCount,
-        )} signs + ${numberFormatter(resources.doorHangerCount)} door hangers`}
-      />
+      <BreakdownRow label="Yard signs" value={formatCurrency(resources.yardSignsCost)} hint="50 signs" />
       <FilingFeeRow
         filingFee={resources.filingFee}
+        filingFeeIsDefault={resources.filingFeeIsDefault}
         filingRequirementsText={resources.filingRequirementsText}
+      />
+      <BreakdownRow
+        label="Contingency (5%)"
+        value={formatCurrency(resources.contingency)}
+        hint="Reserve for last-week opportunities."
       />
     </ul>
   </ResourceAccordion>
 )
 
 interface FilingFeeRowProps {
-  filingFee: number | null
+  filingFee: number
+  filingFeeIsDefault: boolean
   filingRequirementsText: string | null
 }
 
 const FilingFeeRow = ({
   filingFee,
+  filingFeeIsDefault,
   filingRequirementsText,
 }: FilingFeeRowProps): React.JSX.Element => {
-  const hasFee = filingFee !== null
   const hasRawText =
     filingRequirementsText !== null && filingRequirementsText.trim() !== ''
-  const value = hasFee ? formatCurrency(filingFee) : '—'
-  const hintLabel = hasFee
-    ? 'Estimated. Filing fees come from BallotReady.'
-    : hasRawText
-      ? 'Filing fee varies. See BallotReady for the full text.'
-      : 'No filing fee data for this race yet.'
+  const value = formatCurrency(filingFee)
+  const hintLabel = filingFeeIsDefault
+    ? 'Estimated $100 default. Replaced with the BallotReady value once available.'
+    : 'Estimated. Filing fees come from BallotReady.'
 
   const hint = (
     <span className="inline-flex items-center gap-1">
@@ -373,6 +303,7 @@ export const OutreachPlanStep = ({
 }: OutreachPlanStepProps): React.JSX.Element => {
   const metrics = campaign?.raceTargetMetrics ?? null
   const winNumber = metrics?.winNumber ?? 0
+  const projectedTurnout = metrics?.projectedTurnout ?? 0
   const voterContactGoal =
     metrics?.voterContactGoal ?? winNumber * VOTER_CONTACT_MULTIPLIER
 
@@ -383,6 +314,7 @@ export const OutreachPlanStep = ({
   const weeksRemaining = computeWeeksRemaining(campaign?.details?.electionDate)
   const resources = computeResources(
     voterContactGoal,
+    projectedTurnout,
     weeksRemaining,
     metrics?.filingFee ?? null,
     metrics?.filingRequirementsText ?? null,
