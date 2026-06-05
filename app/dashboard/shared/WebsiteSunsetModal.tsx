@@ -28,7 +28,9 @@ export function WebsiteSunsetModal({
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader className="gap-1.5">
-          <DialogTitle>Website is being discontinued</DialogTitle>
+          <DialogTitle>
+            Our build your own website feature is being discontinued
+          </DialogTitle>
           <DialogDescription>
             Your site will remain live for one year from your original purchase
             date, and you can still update your website content anytime under My
