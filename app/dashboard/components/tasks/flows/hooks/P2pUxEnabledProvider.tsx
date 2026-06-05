@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useContext, ReactNode } from 'react'
+import { createContext, useContext, useMemo, ReactNode } from 'react'
 import { noop } from '@shared/utils/noop'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useTcrComplianceCheck } from 'app/dashboard/components/tasks/flows/hooks/useTcrComplianceCheck'
@@ -29,17 +29,19 @@ export const P2pUxEnabledProvider = ({
   const [tcrCompliant] = useTcrComplianceCheck()
   const { details: campaignDetails } = campaign || {}
   const { isProUpdatedAt } = campaignDetails || {}
-  const proUpdatedAtDate = new Date(isProUpdatedAt || '')
+
+  const contextValue = useMemo<P2pUxEnabledContextValue>(
+    () => ({
+      resetP2pUxEnabled: noop,
+      proUpdatedAtDate: new Date(isProUpdatedAt || ''),
+      p2pUxEnabled: true,
+      tcrCompliant,
+    }),
+    [isProUpdatedAt, tcrCompliant],
+  )
 
   return (
-    <P2pUxEnabledContext.Provider
-      value={{
-        resetP2pUxEnabled: noop,
-        proUpdatedAtDate,
-        p2pUxEnabled: true,
-        tcrCompliant,
-      }}
-    >
+    <P2pUxEnabledContext.Provider value={contextValue}>
       {children}
     </P2pUxEnabledContext.Provider>
   )

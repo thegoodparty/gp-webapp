@@ -1,7 +1,7 @@
 'use client'
 
 import { useUser as useClerkUser } from '@clerk/nextjs'
-import { createContext, useCallback } from 'react'
+import { createContext, useCallback, useMemo } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { User } from 'helpers/types'
 import { apiRoutes } from 'gpApi/routes'
@@ -53,9 +53,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const value: User | null = isLoaded && !isSignedIn ? null : appUser ?? null
 
+  // Without memoization this tuple is a new reference on every render, forcing
+  // every UserContext consumer (used across the whole authed app) to re-render
+  // even when the underlying user/loading state is unchanged.
+  const contextValue = useMemo<UserContextValue>(
+    () => [value, updateUser, isUserLoading],
+    [value, updateUser, isUserLoading],
+  )
+
   return (
-    <UserContext.Provider value={[value, updateUser, isUserLoading]}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   )
 }
