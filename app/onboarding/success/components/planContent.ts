@@ -286,7 +286,6 @@ export interface PlanData {
   filingRequirementsText: string | null
 }
 
-
 const placeholderCity = (city: string): string => city || 'your district'
 
 const buildTimeline = (
