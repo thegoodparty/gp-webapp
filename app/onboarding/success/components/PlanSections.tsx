@@ -4,6 +4,10 @@ import { Skeleton, SourceCitation } from '@styleguide'
 import { VoterDemographicsStep } from 'app/onboarding/components/VoterDemographicsStep'
 import PlanSectionNav, { type PlanSectionRef } from './PlanSectionNav'
 import type { PlanData } from './planContent'
+import {
+  getNumberedPlanSections,
+  type PlanSectionKey,
+} from '../planSectionManifest'
 
 interface StrategyState {
   isGenerating: boolean
@@ -78,19 +82,22 @@ const Section = ({
   </section>
 )
 
-const PLAN_SECTIONS: PlanSectionRef[] = [
-  { id: 'plan-section-1', label: '1. Executive Summary' },
-  { id: 'plan-section-2', label: '2. Strategic Landscape' },
-  { id: 'plan-section-3', label: '3. Electoral Goals & Key Metrics' },
-  { id: 'plan-section-4', label: '4. Voter Insights For Your District' },
-  { id: 'plan-section-5', label: '5. Projected Minimum Resources Needed' },
-  { id: 'plan-section-6', label: '6. Campaign Timeline' },
-  { id: 'plan-section-7', label: '7. Community Engagement & Earned Media' },
-  { id: 'plan-section-8', label: '8. Voter Contact Plan' },
-  { id: 'plan-section-9', label: '9. Measurement & Accountability' },
-  { id: 'plan-section-10', label: '10. Methodology & Data Sources' },
-  { id: 'plan-section-11', label: '11. Glossary' },
-]
+// Stable DOM anchors for each section, keyed by the shared manifest. These
+// ids never change with display numbering — only the visible "Section N"
+// label and nav number shift when Strategic Landscape drops out.
+const SECTION_DOM_ID: Record<PlanSectionKey, string> = {
+  executiveSummary: 'plan-section-1',
+  strategicLandscape: 'plan-section-2',
+  electoralGoals: 'plan-section-3',
+  voterInsights: 'plan-section-4',
+  resources: 'plan-section-5',
+  timeline: 'plan-section-6',
+  community: 'plan-section-7',
+  voterContact: 'plan-section-8',
+  measurement: 'plan-section-9',
+  methodology: 'plan-section-10',
+  glossary: 'plan-section-11',
+}
 
 interface SubsectionProps {
   title: string
@@ -187,8 +194,8 @@ const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
     plan.electionType === 'partisan'
       ? 'partisan'
       : plan.electionType === 'nonpartisan'
-        ? 'nonpartisan'
-        : null
+      ? 'nonpartisan'
+      : null
 
   const electionTypeFragment = electionTypeLabel ? (
     <>
@@ -447,9 +454,16 @@ const PlanSections = ({
     plan.opportunities.length > 0 || plan.challenges.length > 0
   const showSection2 =
     !isStrategyError && (isStrategyGenerating || hasStrategyContent)
-  const navSections = showSection2
-    ? PLAN_SECTIONS
-    : PLAN_SECTIONS.filter((s) => s.id !== 'plan-section-2')
+  // Derive display numbers from the shared manifest so hiding Strategic
+  // Landscape renumbers the rest contiguously (1, 2, 3 … no gap) and stays
+  // in lockstep with the PDF.
+  const numberedSections = getNumberedPlanSections(showSection2)
+  const numberFor = (key: PlanSectionKey): number =>
+    numberedSections.find((s) => s.key === key)?.number ?? 0
+  const navSections: PlanSectionRef[] = numberedSections.map((s) => ({
+    id: SECTION_DOM_ID[s.key],
+    label: `${s.number}. ${s.title}`,
+  }))
 
   return (
     <div className="text-left">
@@ -459,7 +473,7 @@ const PlanSections = ({
         {/* 1. Executive Summary */}
         <Section
           id="plan-section-1"
-          number={1}
+          number={numberFor('executiveSummary')}
           title="Executive Summary"
           transition="The race is mapped by your opponents, your projected votes needed to win, and your timeline. What shapes everything else is you: the issues you're running on, the people and money you can mobilize, and where you are right now in your campaign. Continue to your Campaign Manager and we'll help rebuild this plan around you specifically."
         >
@@ -541,7 +555,7 @@ const PlanSections = ({
         {showSection2 ? (
           <Section
             id="plan-section-2"
-            number={2}
+            number={numberFor('strategicLandscape')}
             title="Strategic Landscape"
             transition="The strategic landscape is drawn from public data and historical election results. What it can't yet account for is the issues you're championing and how you stack up against your opponents. Head to your Campaign Manager to provide us with that information, and we'll reframe the opportunities and challenges around your platform."
           >
@@ -576,7 +590,7 @@ const PlanSections = ({
         {/* 3. Electoral Goals & Key Metrics */}
         <Section
           id="plan-section-3"
-          number={3}
+          number={numberFor('electoralGoals')}
           title="Electoral Goals & Key Metrics"
           transition="These projections come straight from public voter data and proprietary models. Once you confirm your platform issues in Campaign Manager, we can re-forecast against the audience you're actually targeting."
         >
@@ -639,7 +653,7 @@ const PlanSections = ({
         {/* 4. Voter Insights For Your District */}
         <Section
           id="plan-section-4"
-          number={4}
+          number={numberFor('voterInsights')}
           title="Voter Insights For Your District"
           transition="Voter insights sharpen as you fill in your platform and we layer in district-specific survey data. Update your issues in Campaign Manager and this section will re-frame around your priorities."
         >
@@ -656,7 +670,7 @@ const PlanSections = ({
         {/* 5. Projected Minimum Resources Needed */}
         <Section
           id="plan-section-5"
-          number={5}
+          number={numberFor('resources')}
           title="Projected Minimum Resources Needed"
           transition={`The $${plan.totalBudget.toLocaleString(
             'en-US',
@@ -754,7 +768,7 @@ const PlanSections = ({
         {/* 6. Campaign Timeline */}
         <Section
           id="plan-section-6"
-          number={6}
+          number={numberFor('timeline')}
           title="Campaign Timeline"
           transition="The key dates you need to know about your race have been established. What it doesn't yet reflect is your launch event, your fundraising rollout, and the issue moments you want to own. Share those with us on your Campaign Manager and we'll turn this into a working plan."
         >
@@ -782,7 +796,7 @@ const PlanSections = ({
         {/* 7. Community Engagement & Earned Media */}
         <Section
           id="plan-section-7"
-          number={7}
+          number={numberFor('community')}
           title="Community Engagement & Earned Media"
           transition="These are your highest-value rooms and your best media targets. Once you tell us why you're running and what you stand for in Campaign Manager, we can turn this list into ready-to-use talking points for each event and a press pitch you can send this week."
         >
@@ -875,7 +889,7 @@ const PlanSections = ({
         {/* 8. Voter Contact Plan */}
         <Section
           id="plan-section-8"
-          number={8}
+          number={numberFor('voterContact')}
           title="Voter Contact Plan"
           transition="This plan puts you in front of every likely voter at the right moment. But repeated exposure only converts to votes if the message is specific and credible. Once you share your issues and your story in Campaign Manager, we'll help you build the actual message for each campaign so all you need to do is schedule the campaign."
         >
@@ -926,7 +940,7 @@ const PlanSections = ({
         {/* 9. Measurement & Accountability */}
         <Section
           id="plan-section-9"
-          number={9}
+          number={numberFor('measurement')}
           title="Measurement & Accountability"
           transition="The measurement system is live in Campaign Manager. What it's measuring right now is a default campaign. Once you personalize your plan with your goals, your capacity, and your timeline, the dashboard starts tracking the campaign you're actually running, and the gap between where you are and where you need to be becomes a lot easier to read."
         >
@@ -969,7 +983,7 @@ const PlanSections = ({
         {/* 10. Methodology & Data Sources */}
         <Section
           id="plan-section-10"
-          number={10}
+          number={numberFor('methodology')}
           title="Methodology & Data Sources"
           transition="This plan was prepared by GoodParty.org's automated campaign-intelligence system and is intended as a working starting point for the campaign. All estimates should be revisited weekly as new data arrives."
         >
@@ -1051,7 +1065,11 @@ const PlanSections = ({
         </Section>
 
         {/* 11. Glossary */}
-        <Section id="plan-section-11" number={11} title="Glossary">
+        <Section
+          id="plan-section-11"
+          number={numberFor('glossary')}
+          title="Glossary"
+        >
           <PlanTable
             columns={['Term', 'Definition']}
             rows={plan.glossary.map((g) => [
