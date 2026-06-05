@@ -5,7 +5,7 @@ import { useState, KeyboardEvent } from 'react'
 import isPostalCode from 'validator/lib/isPostalCode'
 import Modal from '@shared/utils/Modal'
 import H2 from '@shared/typography/H2'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 
 interface ZipChangerProps {
   zip: string
@@ -62,9 +62,9 @@ export default function ZipChanger({
           error={!isValid}
         />
         <div className="mt-6 text-center">
-          <PrimaryButton onClick={handleToggle} disabled={!isValid}>
+          <Button onClick={handleToggle} disabled={!isValid}>
             Save
-          </PrimaryButton>
+          </Button>
         </div>
       </Modal>
     </div>

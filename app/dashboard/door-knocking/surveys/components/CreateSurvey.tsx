@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { FaPlus } from 'react-icons/fa'
 import { useState } from 'react'
 import Modal from '@shared/utils/Modal'
@@ -130,7 +130,7 @@ export default function CreateSurvey({
 
   return (
     <>
-      <Button color="primary" onClick={() => setIsOpen(true)}>
+      <Button onClick={() => setIsOpen(true)}>
         <div className="flex items-center">
           <FaPlus className="mr-2" />
           <div>Create a Door Knocking Script</div>
@@ -152,11 +152,10 @@ export default function CreateSurvey({
               </div>
             ))}
             <div className="flex justify-end mt-6 items-center">
-              <Button color="neutral" onClick={() => setIsOpen(false)}>
+              <Button variant="secondary" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>
               <Button
-                color="primary"
                 onClick={handleSubmit}
                 className="ml-4"
                 disabled={!canSubmit}

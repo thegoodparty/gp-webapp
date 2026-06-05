@@ -1,5 +1,6 @@
 'use client'
 import {
+  Button,
   Drawer,
   DrawerContent,
   DrawerHeader,
@@ -7,7 +8,6 @@ import {
   DrawerDescription,
   MenuIcon,
 } from '@styleguide'
-import Button from '@shared/buttons/Button'
 import H2 from '@shared/typography/H2'
 import Subtitle1 from '@shared/typography/Subtitle1'
 import { useEffect, useState } from 'react'

@@ -6,7 +6,7 @@ import {
   dateFromNonStandardUSFormatString,
   isSameDay,
 } from 'helpers/dateHelper'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import { identifyUser } from '@shared/utils/analytics'
@@ -208,16 +208,10 @@ export default function CustomOfficeForm({
       </div>
 
       <div className="flex justify-between mt-12">
-        <Button
-          color="neutral"
-          size="medium"
-          variant="contained"
-          onClick={onBack}
-        >
+        <Button variant="secondary" size="medium" onClick={onBack}>
           Back to search
         </Button>
         <Button
-          variant="contained"
           size="large"
           onClick={handleSave}
           disabled={Boolean(disableSubmit)}

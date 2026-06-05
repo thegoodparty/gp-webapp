@@ -1,5 +1,5 @@
 'use client'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { FiPlus } from 'react-icons/fi'
 import useChat from 'app/dashboard/campaign-assistant/components/useChat'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -15,7 +15,7 @@ const CreateNewChat = (): React.JSX.Element => {
   return (
     <Button
       size="large"
-      color="tertiary"
+      variant="secondary"
       onClick={handleCreate}
       className="!px-3 md:!px-6"
     >
