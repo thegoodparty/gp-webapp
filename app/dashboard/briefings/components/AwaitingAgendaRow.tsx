@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronRight, LoaderCircle } from 'lucide-react'
+import { ChevronRightIcon, LoaderCircleIcon } from '@styleguide'
 import { formatDayTime, formatShortDate } from '@shared/briefings/dateHelpers'
 import type { BriefingSummary } from '@shared/briefings/types'
 import UploadAgendaModal from './UploadAgendaModal'
