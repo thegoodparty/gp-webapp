@@ -8,7 +8,6 @@ const withPWA = require('next-pwa')({
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['ui'],
   images: {
     domains: [
       'assets.goodparty.org',
