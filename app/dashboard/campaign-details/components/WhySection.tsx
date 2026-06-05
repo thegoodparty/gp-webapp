@@ -4,9 +4,8 @@ import H3 from '@shared/typography/H3'
 import Body1 from '@shared/typography/Body1'
 import RenderInputField from '@shared/inputs/RenderInputField'
 import { useEffect, useState } from 'react'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button, LoaderCircleIcon } from '@styleguide'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
-import { LoaderCircleIcon } from '@styleguide'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
 
@@ -117,14 +116,14 @@ const WhySection = (props: WhySectionProps): React.JSX.Element => {
       ))}
       <div className="flex justify-end mb-6">
         {saving ? (
-          <PrimaryButton disabled>
+          <Button disabled>
             <div className="px-3">
               <LoaderCircleIcon size={16} className="animate-spin" />
             </div>
-          </PrimaryButton>
+          </Button>
         ) : (
           <div onClick={handleSave}>
-            <PrimaryButton disabled={!canSave()}>Save</PrimaryButton>
+            <Button disabled={!canSave()}>Save</Button>
           </div>
         )}
       </div>

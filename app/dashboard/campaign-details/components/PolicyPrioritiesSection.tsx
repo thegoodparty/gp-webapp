@@ -2,8 +2,7 @@
 
 import H3 from '@shared/typography/H3'
 import Body1 from '@shared/typography/Body1'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import { Alert, AlertDescription, CircleAlertIcon } from '@styleguide'
+import { Alert, AlertDescription, Button, CircleAlertIcon } from '@styleguide'
 import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -88,9 +87,9 @@ export default function PolicyPrioritiesSection(): React.JSX.Element {
         disabled={saving}
       />
       <div className="flex justify-end mt-6">
-        <PrimaryButton loading={saving} disabled={saving} onClick={handleSave}>
+        <Button loading={saving} disabled={saving} onClick={handleSave}>
           {saving ? 'Saving...' : 'Save'}
-        </PrimaryButton>
+        </Button>
       </div>
     </section>
   )

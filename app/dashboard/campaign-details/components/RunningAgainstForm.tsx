@@ -7,8 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@styleguide'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 import { RunningAgainst } from 'helpers/types'
 
 const partyOptions = [
@@ -122,12 +121,17 @@ export default function RunningAgainstForm({
       </div>
 
       <div className="flex gap-2 mt-4">
-        <SecondaryButton size="small" type="button" onClick={handleCancel}>
+        <Button
+          variant="secondary"
+          size="small"
+          type="button"
+          onClick={handleCancel}
+        >
           Cancel
-        </SecondaryButton>
-        <PrimaryButton size="small" type="submit" disabled={!canSave}>
+        </Button>
+        <Button size="small" type="submit" disabled={!canSave}>
           {isNew ? 'Add Opponent' : 'Finish Editing'}
-        </PrimaryButton>
+        </Button>
       </div>
     </form>
   )

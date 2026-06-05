@@ -2,7 +2,7 @@
 
 import H3 from '@shared/typography/H3'
 import { useEffect, useState } from 'react'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { getCampaign } from 'app/onboarding/shared/ajaxActions'
 import { OfficeFieldState } from 'helpers/campaignOfficeFields'
 import { CampaignOfficeInputFields } from 'app/dashboard/shared/CampaignOfficeInputFields'
@@ -105,7 +105,7 @@ const OfficeSection = (props: OfficeSectionProps): React.JSX.Element => {
         />
       </div>
       <div className={`flex justify-end mt-2 ${carded ? '' : 'mb-6'}`}>
-        <PrimaryButton onClick={handleEdit}>Edit Office Details</PrimaryButton>
+        <Button onClick={handleEdit}>Edit Office Details</Button>
       </div>
       <CampaignOfficeSelectionModal
         campaign={campaign}
