@@ -9,6 +9,18 @@ export const TEXTS_PERCENT = 0.6
 export const ROBOCALLS_PERCENT = 0.2
 export const DOORS_PERCENT = 0.2
 
+// The voter contact goal is the win number × 5. When a race-specific goal is
+// missing or non-positive, derive it from the win number.
+export const VOTER_CONTACT_MULTIPLIER = 5
+
+export const resolveVoterContactGoal = (
+  voterContactGoal: number | null | undefined,
+  winNumber: number,
+): number =>
+  voterContactGoal && voterContactGoal > 0
+    ? voterContactGoal
+    : Math.round(winNumber * VOTER_CONTACT_MULTIPLIER)
+
 export const TEXT_COST = 0.035
 export const ROBOCALL_COST = 0.045
 export const MAIL_COST_PER_PIECE = 0.55

@@ -9,6 +9,7 @@ import {
   LITERATURE_PACK_COST,
   LITERATURE_PACK_SIZE,
   MAIL_COST_PER_PIECE,
+  resolveVoterContactGoal,
   ROBOCALL_COST,
   TEXT_COST,
 } from '../../components/budget'
@@ -1017,10 +1018,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
 
   const winNumber = input.winNumber
   const projectedTurnout = input.projectedTurnout
-  const voterContactGoal =
-    input.voterContactGoal > 0
-      ? input.voterContactGoal
-      : Math.round(winNumber * 5)
+  const voterContactGoal = resolveVoterContactGoal(input.voterContactGoal, winNumber)
 
   const winNumberLow = Math.max(0, Math.round(winNumber * 0.9))
   const winNumberHigh = Math.round(winNumber * 1.1)

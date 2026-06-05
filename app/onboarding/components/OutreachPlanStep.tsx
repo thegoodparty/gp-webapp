@@ -7,6 +7,7 @@ import type { Campaign } from 'helpers/types'
 import {
   computeBudget,
   MAIL_COST_PER_PIECE,
+  resolveVoterContactGoal,
   type BudgetComputation,
 } from './budget'
 import {
@@ -15,8 +16,6 @@ import {
   CONTACTS_PER_VOLUNTEER_HOUR,
   resolveWeeksRemaining,
 } from './volunteerHours'
-
-const VOTER_CONTACT_MULTIPLIER = 5
 
 interface OutreachPlanStepProps {
   campaign: Campaign | null
@@ -149,7 +148,7 @@ const BudgetAccordion = ({
         value={formatCurrency(resources.literatureCost)}
         hint={`${numberFormatter(
           resources.literaturePacks,
-        )} packs of 250 — door hangers + palm cards`}
+        )} packs of 250 — door hangers or palm cards`}
       />
       <BreakdownRow
         label="Direct mail"
@@ -263,8 +262,10 @@ export const OutreachPlanStep = ({
   const metrics = campaign?.raceTargetMetrics ?? null
   const winNumber = metrics?.winNumber ?? 0
   const projectedTurnout = metrics?.projectedTurnout ?? 0
-  const voterContactGoal =
-    metrics?.voterContactGoal ?? winNumber * VOTER_CONTACT_MULTIPLIER
+  const voterContactGoal = resolveVoterContactGoal(
+    metrics?.voterContactGoal,
+    winNumber,
+  )
 
   if (voterContactGoal <= 0) {
     return <ResourcesUnavailable />
