@@ -464,7 +464,7 @@ export const EVENTS = {
     },
     CandidateProfile: {
       ClickSubmit: 'Profile - Candidate Profile: Click Submit',
-      SubmitSuccess: 'Profile - Candidate Profile: Submit Success',
+      SubmitSuccess: 'Pro Upgrade - Candidate Profile Submitted',
       SubmitError: 'Profile - Candidate Profile: Submit Error',
     },
   },
@@ -497,7 +497,7 @@ export const EVENTS = {
       ComplianceStarted: 'Voter Outreach - 10DLC Compliance Started',
     },
     DlcCompliance: {
-      RegistrationSubmitted: '10 DLC Compliance - Registration Submitted',
+      RegistrationSubmitted: 'Pro Upgrade - Filing Details Submitted',
       PinVerificationCompleted:
         '10 DLC Compliance - PIN Verification Completed',
     },
