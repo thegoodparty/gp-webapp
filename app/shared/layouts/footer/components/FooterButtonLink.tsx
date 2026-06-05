@@ -5,7 +5,6 @@ interface FooterButtonLinkProps {
   link: string
   id: string
   label: string
-  buttonStyle: 'tertiary' | 'secondary'
   isExternal?: boolean
 }
 
