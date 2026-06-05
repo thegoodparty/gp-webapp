@@ -3,7 +3,7 @@ import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Paper from '@shared/utils/Paper'
 import StepList from './StepList'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 interface EmptyStateProps {
   onClickCreate: () => void
@@ -26,7 +26,7 @@ const EmptyState = ({
       </Body2>
       <StepList />
       <Button
-        color="secondary"
+        variant="secondary"
         className="mt-12 w-full md:w-auto px-10"
         onClick={onClickCreate}
         disabled={createLoading}

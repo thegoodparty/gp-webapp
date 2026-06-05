@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { deleteDomain } from '../../util/domainFetch.util'
 
 export default function DeleteDomain(): React.JSX.Element {
