@@ -12,6 +12,12 @@ import {
   ROBOCALL_COST,
   TEXT_COST,
 } from '../../components/budget'
+import {
+  type CampaignHours,
+  computeCampaignHours,
+  CONTACTS_PER_VOLUNTEER_HOUR,
+  resolveWeeksRemaining,
+} from '../../components/volunteerHours'
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
@@ -250,8 +256,6 @@ export interface PlanData {
   eventCount: number
   mediaCount: number
 
-  candidateHoursPerWeek: number
-  volunteerHoursPerWeek: number
   weeksRemaining: number
   filingDateStart: string | null
   filingDateEnd: string | null
@@ -618,7 +622,7 @@ const buildBudgetBreakdown = (
     {
       category: 'Literature',
       amount: formatDollars(budget.literatureCost),
-      rationale: `Door hanger + palm card for each of ${budget.doorGoal.toLocaleString(
+      rationale: `Door hanger or palm card for each of ${budget.doorGoal.toLocaleString(
         'en-US',
       )} doors — ${budget.literaturePacks.toLocaleString(
         'en-US',
@@ -629,7 +633,7 @@ const buildBudgetBreakdown = (
       amount: formatDollars(budget.mailCost),
       rationale: `${budget.mailCount.toLocaleString(
         'en-US',
-      )} mailers (40% of projected turnout, your likely voters) at $${MAIL_COST_PER_PIECE.toFixed(
+      )} mailers (40% of likely voters) at $${MAIL_COST_PER_PIECE.toFixed(
         2,
       )} per piece.`,
     },
@@ -660,42 +664,30 @@ const buildBudgetBreakdown = (
   return { totalBudget: budget.totalBudget, lineItems }
 }
 
-const VOLUNTEERS_PER_WEEK = 45
-const VOLUNTEER_HOURS_PER_SHIFT = 3
-const CANDIDATE_HOURS_PER_WEEK = 14
-const DOORS_PER_HOUR = 15
-const MAX_CAMPAIGN_WEEKS = 12
-// Share of voter contacts assumed to come from door knocking (vs. text /
-// robocall). Drives both the volunteer-hour target and the per-week door
-// load below.
-const CANVASS_SHARE_OF_CONTACTS = 0.2
-
 const buildTimeBreakdown = (
-  weeksRemaining: number,
-): { rows: TimeRow[]; totalHours: number } => {
-  const candidateHours = CANDIDATE_HOURS_PER_WEEK * weeksRemaining
-  const volunteerHours =
-    VOLUNTEERS_PER_WEEK * VOLUNTEER_HOURS_PER_SHIFT * weeksRemaining
-  const totalHours = candidateHours + volunteerHours
-  const rows: TimeRow[] = [
-    {
-      category: 'Your time (hours)',
-      amount: `${candidateHours.toLocaleString('en-US')} hours`,
-      rationale: `${CANDIDATE_HOURS_PER_WEEK} hours per week knocking doors and meeting voters in person.`,
-    },
-    {
-      category: 'Volunteer time (hours)',
-      amount: `${volunteerHours.toLocaleString('en-US')} hours`,
-      rationale: `${VOLUNTEERS_PER_WEEK} volunteers × ${VOLUNTEER_HOURS_PER_SHIFT}-hour shifts per week.`,
-    },
-    {
-      category: 'Total',
-      amount: `${totalHours.toLocaleString('en-US')} hours`,
-      rationale: 'Sum of all time line-items.',
-    },
-  ]
-  return { rows, totalHours }
-}
+  hours: CampaignHours,
+  contactGoal: number,
+): TimeRow[] => [
+  {
+    category: 'Your time (hours)',
+    amount: `${hours.candidateHours.toLocaleString('en-US')} hours`,
+    rationale: `${hours.candidateHoursPerWeek} hours per week for the ${hours.weeksRemaining} weeks remaining.`,
+  },
+  {
+    category: 'Volunteer time (hours)',
+    amount: `${hours.volunteerHours.toLocaleString('en-US')} hours`,
+    rationale: `Assuming ${CONTACTS_PER_VOLUNTEER_HOUR} voter contact attempts per hour to reach your door-knocking goal of ${hours.doorGoal.toLocaleString(
+      'en-US',
+    )} doors (20% of your ${contactGoal.toLocaleString(
+      'en-US',
+    )} voter contacts).`,
+  },
+  {
+    category: 'Total',
+    amount: `${hours.totalHours.toLocaleString('en-US')} hours`,
+    rationale: 'Sum of all time line-items.',
+  },
+]
 
 const FUNDRAISING_MIX: FundraisingRow[] = [
   { source: 'Self-fund or loan', share: '30%' },
@@ -1058,36 +1050,11 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     input.filingFee,
   )
 
-  let weeksRemaining = MAX_CAMPAIGN_WEEKS
-  if (electionDateValid) {
-    const ms = electionDateValid.getTime() - Date.now()
-    if (ms > 0) {
-      weeksRemaining = Math.min(
-        Math.ceil(ms / (7 * 24 * 60 * 60 * 1000)),
-        MAX_CAMPAIGN_WEEKS,
-      )
-    }
-  }
-
-  // Volunteer-only portion of the Section 5 time budget — matches the
-  // "Volunteer time" row of buildTimeBreakdown. Excludes the candidate's
-  // own hours so the figure on the Key Targets table reconciles with the
-  // volunteer line in the Section 5 table.
-  const volunteerHourTarget =
-    VOLUNTEERS_PER_WEEK * VOLUNTEER_HOURS_PER_SHIFT * weeksRemaining
-  const totalDoors = Math.round(voterContactGoal * CANVASS_SHARE_OF_CONTACTS)
-  const doorsPerWeek = totalDoors / weeksRemaining
-  const candidateDoorsPerWeek = CANDIDATE_HOURS_PER_WEEK * DOORS_PER_HOUR
-  const volunteerDoorsPerWeek = Math.max(
-    0,
-    doorsPerWeek - candidateDoorsPerWeek,
-  )
-  const volunteerHoursPerWeek = Math.round(
-    volunteerDoorsPerWeek / DOORS_PER_HOUR,
-  )
-
-  const { rows: timeBreakdown, totalHours: totalCampaignHours } =
-    buildTimeBreakdown(weeksRemaining)
+  const weeksRemaining = resolveWeeksRemaining(electionDateValid)
+  const campaignHours = computeCampaignHours(voterContactGoal, weeksRemaining)
+  const volunteerHourTarget = campaignHours.volunteerHours
+  const timeBreakdown = buildTimeBreakdown(campaignHours, voterContactGoal)
+  const totalCampaignHours = campaignHours.totalHours
 
   // civicEvents must be computed before buildTimeline so the Section 6
   // keyDates entry can substitute the actual event count instead of a
@@ -1198,7 +1165,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     {
       metric: 'Volunteer-Hour Target',
       target: `${volunteerHourTarget.toLocaleString('en-US')} volunteer hours`,
-      source: `${VOLUNTEERS_PER_WEEK} volunteers × ${VOLUNTEER_HOURS_PER_SHIFT}-hour shift per week × ${weeksRemaining} weeks of campaigning.`,
+      source: `Door-knocking goal ÷ ${CONTACTS_PER_VOLUNTEER_HOUR} contact attempts per volunteer hour.`,
     },
   ]
 
@@ -1229,8 +1196,6 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     averageTouchesPerVoter,
     eventCount,
     mediaCount,
-    candidateHoursPerWeek: CANDIDATE_HOURS_PER_WEEK,
-    volunteerHoursPerWeek,
     weeksRemaining,
     filingDateStart: formatDateMaybe(input.filingDateStartIso),
     filingDateEnd: formatDateMaybe(input.filingDateEndIso),

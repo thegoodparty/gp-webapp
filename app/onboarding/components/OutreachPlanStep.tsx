@@ -9,15 +9,14 @@ import {
   MAIL_COST_PER_PIECE,
   type BudgetComputation,
 } from './budget'
+import {
+  type CampaignHours,
+  computeCampaignHours,
+  CONTACTS_PER_VOLUNTEER_HOUR,
+  resolveWeeksRemaining,
+} from './volunteerHours'
 
 const VOTER_CONTACT_MULTIPLIER = 5
-const DOORS_PER_HOUR = 15
-const VOLUNTEER_HOURS_PER_WEEK = 3
-const CANDIDATE_HOURS_PER_WEEK = 14
-// Cap the active campaign window at 12 weeks. Anything past this point counts
-// as "still in the prep window" — the plan assumes a final 12-week sprint.
-const MAX_CAMPAIGN_WEEKS = 12
-const FALLBACK_WEEKS_REMAINING = MAX_CAMPAIGN_WEEKS
 
 interface OutreachPlanStepProps {
   campaign: Campaign | null
@@ -29,24 +28,11 @@ const formatCurrency = (value: number): string =>
 const formatHours = (value: number): string =>
   `${numberFormatter(Math.round(value))} hrs`
 
-export const computeWeeksRemaining = (electionDate?: string | null): number => {
-  if (!electionDate) return FALLBACK_WEEKS_REMAINING
-  const election = new Date(electionDate)
-  if (Number.isNaN(election.getTime())) return FALLBACK_WEEKS_REMAINING
-  const ms = election.getTime() - Date.now()
-  if (ms <= 0) return FALLBACK_WEEKS_REMAINING
-  const weeks = Math.ceil(ms / (7 * 24 * 60 * 60 * 1000))
-  return Math.min(weeks, MAX_CAMPAIGN_WEEKS)
-}
+export const computeWeeksRemaining = (electionDate?: string | null): number =>
+  resolveWeeksRemaining(electionDate)
 
-interface ResourcesComputation extends BudgetComputation {
+interface ResourcesComputation extends BudgetComputation, CampaignHours {
   filingRequirementsText: string | null
-  candidateHoursPerWeek: number
-  volunteersPerWeek: number
-  volunteerHoursPerWeek: number
-  totalHoursPerWeek: number
-  weeksRemaining: number
-  totalHours: number
 }
 
 const computeResources = (
@@ -57,29 +43,12 @@ const computeResources = (
   filingRequirementsText: string | null,
 ): ResourcesComputation => {
   const budget = computeBudget(voterContactGoal, projectedTurnout, filingFee)
-
-  // Volunteers needed each week to clear the door goal:
-  //   volunteers/week = doorGoal / (doors_per_hr × vol_hrs_week × weeks)
-  // Each volunteer covers (doors_per_hr × vol_hrs_week × weeks) doors over
-  // the campaign; this many running concurrently each week clears the total.
-  const doorsPerVolunteerOverCampaign =
-    DOORS_PER_HOUR * VOLUNTEER_HOURS_PER_WEEK * weeksRemaining
-  const volunteersPerWeek =
-    doorsPerVolunteerOverCampaign > 0
-      ? Math.ceil(budget.doorGoal / doorsPerVolunteerOverCampaign)
-      : 0
-  const volunteerHoursPerWeek = volunteersPerWeek * VOLUNTEER_HOURS_PER_WEEK
+  const hours = computeCampaignHours(voterContactGoal, weeksRemaining)
 
   return {
     ...budget,
+    ...hours,
     filingRequirementsText,
-    candidateHoursPerWeek: CANDIDATE_HOURS_PER_WEEK,
-    volunteersPerWeek,
-    volunteerHoursPerWeek,
-    totalHoursPerWeek: CANDIDATE_HOURS_PER_WEEK + volunteerHoursPerWeek,
-    weeksRemaining,
-    totalHours:
-      (CANDIDATE_HOURS_PER_WEEK + volunteerHoursPerWeek) * weeksRemaining,
   }
 }
 
@@ -267,23 +236,13 @@ const TimeAccordion = ({
     <ul className="divide-y divide-base-border p-0 m-0">
       <BreakdownRow
         label="Your time"
-        value={formatHours(
-          resources.candidateHoursPerWeek * resources.weeksRemaining,
-        )}
-        hint={`${formatHours(
-          resources.candidateHoursPerWeek,
-        )} per week knocking doors and meeting voters in person.`}
+        value={formatHours(resources.candidateHours)}
+        hint={`${resources.candidateHoursPerWeek} hours per week for the ${resources.weeksRemaining} weeks remaining.`}
       />
       <BreakdownRow
         label="Volunteers"
-        value={formatHours(
-          resources.volunteerHoursPerWeek * resources.weeksRemaining,
-        )}
-        hint={`${numberFormatter(resources.volunteersPerWeek)} ${
-          resources.volunteersPerWeek === 1 ? 'volunteer' : 'volunteers'
-        } x ${VOLUNTEER_HOURS_PER_WEEK}hr ${
-          resources.volunteersPerWeek === 1 ? 'shift' : 'shifts'
-        } per week.`}
+        value={formatHours(resources.volunteerHours)}
+        hint={`Assuming ${CONTACTS_PER_VOLUNTEER_HOUR} voter contact attempts per hour to get to your total door knocking goals.`}
       />
     </ul>
   </ResourceAccordion>

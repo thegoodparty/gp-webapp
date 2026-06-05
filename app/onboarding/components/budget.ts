@@ -16,9 +16,9 @@ export const MAIL_COST_PER_PIECE = 0.55
 // turnout), not the full universe.
 export const MAIL_UNIVERSE_RATE = 0.4
 
-// Literature = one door hanger + one palm card per knocked door (2 pieces),
-// printed in 250-piece packs.
-export const LITERATURE_PIECES_PER_DOOR = 2
+// Literature = one piece per knocked door — a door hanger OR a palm card, not
+// both — printed in 250-piece packs.
+export const LITERATURE_PIECES_PER_DOOR = 1
 export const LITERATURE_PACK_SIZE = 250
 export const LITERATURE_PACK_COST = 80
 
