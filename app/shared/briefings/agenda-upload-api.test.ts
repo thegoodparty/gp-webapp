@@ -111,7 +111,8 @@ describe('submitAgendaFile happy path', () => {
       fakeFile('agenda.pdf', 'application/pdf'),
     )
 
-    const putReq = putSpy.mock.calls[0][0].request
+    expect(putSpy).toHaveBeenCalledOnce()
+    const putReq = putSpy.mock.calls[0]![0].request
     expect(putReq.headers.get('content-type')).toBe('application/pdf')
   })
 })
