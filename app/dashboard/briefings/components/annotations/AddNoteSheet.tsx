@@ -111,7 +111,7 @@ export default function AddNoteSheet({
   const direction = isDesktop ? 'right' : 'bottom'
 
   const initialBody =
-    sheet.kind === 'add_note_edit' ? sheet.annotation.note?.body ?? '' : ''
+    sheet.kind === 'add_note_edit' ? (sheet.annotation.note?.body ?? '') : ''
   const [body, setBody] = useState(initialBody)
   const [saving, setSaving] = useState(false)
 
@@ -144,8 +144,8 @@ export default function AddNoteSheet({
     sheet.kind === 'add_note_edit'
       ? `edit:${sheet.annotation.id}`
       : sheet.kind === 'add_note_new'
-      ? `new:${sheet.anchor ? sheet.anchor.jsonPath : 'top'}`
-      : sheet.kind
+        ? `new:${sheet.anchor ? sheet.anchor.jsonPath : 'top'}`
+        : sheet.kind
   const prevIdentityRef = useRef<string | null>(null)
   useEffect(() => {
     if (prevIdentityRef.current === sheetIdentity) return
@@ -170,13 +170,13 @@ export default function AddNoteSheet({
     sheet.kind === 'add_note_edit'
       ? sheet.annotation.jsonPath
       : sheet.kind === 'add_note_new'
-      ? sheet.anchor?.jsonPath ?? null
-      : null
+        ? (sheet.anchor?.jsonPath ?? null)
+        : null
   const sectionLabel = sectionLabelFromPath(anchorJsonPath, briefingItems)
   const isEdit = sheet.kind === 'add_note_edit'
   const existingAttachments =
     sheet.kind === 'add_note_edit'
-      ? sheet.annotation.note?.attachments ?? []
+      ? (sheet.annotation.note?.attachments ?? [])
       : []
 
   function markBusy(id: string, busy: boolean) {
@@ -486,8 +486,8 @@ export default function AddNoteSheet({
                 ? 'Saving…'
                 : 'Adding…'
               : isEdit
-              ? 'Save'
-              : 'Add Note'}
+                ? 'Save'
+                : 'Add Note'}
           </Button>
           <DictationFeedback dictation={dictation} />
           {saveError ? (

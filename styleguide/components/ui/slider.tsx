@@ -18,8 +18,8 @@ function Slider({
       Array.isArray(value)
         ? value
         : Array.isArray(defaultValue)
-        ? defaultValue
-        : [min],
+          ? defaultValue
+          : [min],
     [value, defaultValue, min],
   )
 

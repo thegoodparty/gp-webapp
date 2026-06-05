@@ -1,7 +1,9 @@
 import { ReactNode, HTMLAttributes } from 'react'
 
-interface H4Props
-  extends Omit<HTMLAttributes<HTMLHeadingElement>, 'children' | 'className'> {
+interface H4Props extends Omit<
+  HTMLAttributes<HTMLHeadingElement>,
+  'children' | 'className'
+> {
   children?: ReactNode
   className?: string
 }

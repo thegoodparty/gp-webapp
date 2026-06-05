@@ -53,7 +53,7 @@ const pickSlug = (
   candidate: string | null | false,
 ): string | null => {
   const isValid = candidate && organizations.some((o) => o.slug === candidate)
-  return isValid ? (candidate as string) : organizations[0]?.slug ?? null
+  return isValid ? (candidate as string) : (organizations[0]?.slug ?? null)
 }
 
 export const resolveSlug = (organizations: Organization[]): string | null =>

@@ -1,8 +1,10 @@
 import { ReactNode, CSSProperties, ButtonHTMLAttributes } from 'react'
 import BaseButton from './BaseButton'
 
-interface PurpleButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'style'> {
+interface PurpleButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'children' | 'style'
+> {
   children?: ReactNode
   style?: CSSProperties
 }

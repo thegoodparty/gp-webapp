@@ -8,10 +8,10 @@ const isAiContentData = (
 ): value is AiContentData =>
   Boolean(
     value &&
-      typeof value === 'object' &&
-      'name' in value &&
-      'content' in value &&
-      'updatedAt' in value,
+    typeof value === 'object' &&
+    'name' in value &&
+    'content' in value &&
+    'updatedAt' in value,
   )
 
 export const buildAiContentSections = (

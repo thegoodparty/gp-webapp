@@ -23,8 +23,7 @@ const alertVariants = cva(
 )
 
 interface AlertProps
-  extends React.ComponentProps<'div'>,
-    VariantProps<typeof alertVariants> {
+  extends React.ComponentProps<'div'>, VariantProps<typeof alertVariants> {
   icon?: React.ReactNode
 }
 

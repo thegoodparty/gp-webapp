@@ -5,8 +5,10 @@ import ButtonLoading from './ButtonLoading'
 import { setSize } from './PrimaryButton'
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler'
 
-interface WarningButtonProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, 'onClick' | 'className'> {
+interface WarningButtonProps extends Omit<
+  HTMLAttributes<HTMLButtonElement>,
+  'onClick' | 'className'
+> {
   children?: ReactNode
   className?: Record<string, boolean> | string
   variant?: 'contained' | 'outlined' | 'text'

@@ -6,11 +6,10 @@ import { isValidEmail } from 'helpers/validations'
 
 export { isValidEmail }
 
-interface EmailInputProps
-  extends Omit<
-    TextFieldProps<'outlined'>,
-    'value' | 'onChange' | 'onBlur' | 'error' | 'label' | 'name'
-  > {
+interface EmailInputProps extends Omit<
+  TextFieldProps<'outlined'>,
+  'value' | 'onChange' | 'onBlur' | 'error' | 'label' | 'name'
+> {
   value: string
   onChangeCallback:
     | ((value: string, isValid: boolean) => void)

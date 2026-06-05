@@ -33,8 +33,8 @@ export default function DevAgentTriggerBar({
     } catch (err) {
       const detail =
         err instanceof Error
-          ? (err as { data?: { message?: string } }).data?.message ??
-            err.message
+          ? ((err as { data?: { message?: string } }).data?.message ??
+            err.message)
           : 'unknown error'
       setMessage(`Failed to dispatch ${kind}: ${detail}`)
     } finally {

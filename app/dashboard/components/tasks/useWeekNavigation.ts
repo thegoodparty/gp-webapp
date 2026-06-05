@@ -82,9 +82,11 @@ export function useWeekNavigation(
   const canGoPrevious = activeIndex > 0
   const canGoNext = activeIndex < weekNumbers.length - 1
   const previousWeekNumber = canGoPrevious
-    ? weekNumbers[activeIndex - 1] ?? null
+    ? (weekNumbers[activeIndex - 1] ?? null)
     : null
-  const nextWeekNumber = canGoNext ? weekNumbers[activeIndex + 1] ?? null : null
+  const nextWeekNumber = canGoNext
+    ? (weekNumbers[activeIndex + 1] ?? null)
+    : null
 
   const navigateTo = (index: number) => {
     if (index < 0 || index >= weekNumbers.length) return

@@ -40,7 +40,7 @@ describe('resolveSelection', () => {
       isCollapsed: range.collapsed,
       rangeCount: 1,
       getRangeAt: () => range,
-    } as unknown as Selection)
+    }) as unknown as Selection
 
   const rangeBetween = (start: [Node, number], end: [Node, number]): Range => {
     const range = document.createRange()
@@ -58,7 +58,7 @@ describe('resolveSelection', () => {
         x: 0,
         y: 0,
         toJSON: () => ({}),
-      } as DOMRect)
+      }) as DOMRect
     return range
   }
 
@@ -193,7 +193,7 @@ describe('scrollAnchorIntoView', () => {
         y: 0,
         toJSON: () => ({}),
         ...rect,
-      } as DOMRect)
+      }) as DOMRect
     return el
   }
 
@@ -214,7 +214,7 @@ describe('scrollAnchorIntoView', () => {
         y: 0,
         toJSON: () => ({}),
         ...rect,
-      } as DOMRect)
+      }) as DOMRect
     return drawer
   }
 

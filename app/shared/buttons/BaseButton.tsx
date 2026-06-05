@@ -1,11 +1,10 @@
 'use client'
 import { ReactNode, CSSProperties, ButtonHTMLAttributes } from 'react'
 
-interface BaseButtonProps
-  extends Omit<
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    'children' | 'className' | 'style'
-  > {
+interface BaseButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'children' | 'className' | 'style'
+> {
   children?: ReactNode
   style?: CSSProperties
   className?: string

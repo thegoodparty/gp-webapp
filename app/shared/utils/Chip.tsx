@@ -1,7 +1,9 @@
 import React, { ReactNode, HTMLAttributes } from 'react'
 
-interface ChipProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
+interface ChipProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children' | 'className'
+> {
   children?: ReactNode
   icon?: ReactNode
   label?: string
