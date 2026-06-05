@@ -18,7 +18,7 @@ export const ChatHistoryGroup = ({
     <>
       {chats.length > 0 && (
         <div className="p-6 mt-3">
-          <Overline className="mb-2 text-gray-400">{title}</Overline>
+          <Overline className="mb-2 text-muted-foreground">{title}</Overline>
           <div className="">
             {chats.map((chat) => (
               <ChatHistoryThread
