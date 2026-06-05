@@ -44,7 +44,7 @@ const Modal = ({
     ) : null}
     <DialogContent
       className={cn(
-        '!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 max-h-[90vh] overflow-y-auto',
+        'w-auto !min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!max-w-[calc(100vw-2rem)] sm:!p-4 md:!p-8 max-h-[90vh] overflow-y-auto',
         hideClose && '[&>button:last-child]:hidden',
         boxClassName,
       )}
