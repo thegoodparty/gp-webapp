@@ -36,5 +36,5 @@ export const getPreviousOnboardingStep = (
 ): OnboardingStepConfig | null => {
   const visibleSteps = getVisibleOnboardingSteps(steps, answers)
   const activeIndex = visibleSteps.findIndex((step) => step.id === activeStepId)
-  return activeIndex > 0 ? (visibleSteps[activeIndex - 1] ?? null) : null
+  return activeIndex > 0 ? visibleSteps[activeIndex - 1] ?? null : null
 }

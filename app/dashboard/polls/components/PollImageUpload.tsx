@@ -63,8 +63,8 @@ export const PollImageUpload: React.FC<{
           errorMessage
             ? 'border-red-300 bg-red-50'
             : imageUrl
-              ? 'border-green-300 bg-green-50'
-              : 'border-gray-300 hover:border-gray-400'
+            ? 'border-green-300 bg-green-50'
+            : 'border-gray-300 hover:border-gray-400'
         }`}
         onClick={onFileBrowseClick}
         onDrop={(e) => {

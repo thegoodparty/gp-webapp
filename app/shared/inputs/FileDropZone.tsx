@@ -113,8 +113,8 @@ const FileDropZone = ({
         isDragging
           ? 'bg-indigo-100'
           : cannotDrop
-            ? 'bg-error-background border-error'
-            : 'hover:bg-indigo-100 cursor'
+          ? 'bg-error-background border-error'
+          : 'hover:bg-indigo-100 cursor'
       }  ${className}`}
       onDrop={handleDrop}
       onDragOver={handleDragOver}

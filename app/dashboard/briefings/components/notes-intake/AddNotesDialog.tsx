@@ -178,7 +178,7 @@ export default function AddNotesDialog({
       const att = ann.note?.attachments?.[0]
       const kind: NotePillKind =
         section === 'typed' ? 'typed' : section === 'camera' ? 'image' : 'file'
-      const text = att ? att.fileName : (ann.note?.body ?? '(empty note)')
+      const text = att ? att.fileName : ann.note?.body ?? '(empty note)'
       out[section].push({
         id: ann.id,
         kind,

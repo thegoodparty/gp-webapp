@@ -36,7 +36,7 @@ function readVarChain(varName, isDark) {
       else lightChain = match[1]
     }
   }
-  return isDark ? (darkChain ?? lightChain) : lightChain
+  return isDark ? darkChain ?? lightChain : lightChain
 }
 
 function buildBaseRefMap(prefix, names, isDark) {
@@ -549,8 +549,8 @@ export const ThemeColors = ({ mode }) => {
                     {(groupKey === 'theme'
                       ? THEME_GROUPS
                       : groupKey === 'base'
-                        ? BASE_GROUPS
-                        : COMPONENT_GROUPS
+                      ? BASE_GROUPS
+                      : COMPONENT_GROUPS
                     ).map((keys) => (
                       <SwatchRow key={keys[0]}>
                         {keys.map((name) => {

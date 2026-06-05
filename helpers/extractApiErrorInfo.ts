@@ -11,8 +11,8 @@ export const extractApiErrorInfo = (data: unknown): ApiErrorInfo => {
     typeof rawMessage === 'string'
       ? rawMessage
       : Array.isArray(rawMessage)
-        ? rawMessage.filter((m) => typeof m === 'string').join(', ')
-        : undefined
+      ? rawMessage.filter((m) => typeof m === 'string').join(', ')
+      : undefined
   const errorCode =
     typeof record.errorCode === 'string' ? record.errorCode : undefined
   return { message, errorCode }

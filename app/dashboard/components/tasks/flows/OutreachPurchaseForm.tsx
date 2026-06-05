@@ -39,7 +39,7 @@ export const OutreachPurchaseForm = ({
   const isFree =
     checkoutSession?.amount === 0 ||
     (hasFreeTextsOffer && contactCount <= FREE_TEXTS_OFFER.COUNT)
-  const totalCost = isFree ? 0 : (checkoutSession?.amount ?? 0)
+  const totalCost = isFree ? 0 : checkoutSession?.amount ?? 0
 
   const handleFreeComplete = async () => {
     if (isRedeemingRef.current) return

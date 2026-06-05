@@ -60,8 +60,8 @@ const fetchRaces = async (zipcode: string, level?: string): Promise<Race[]> => {
     level === 'Local/Township/City'
       ? 'Local'
       : level === 'County/Regional'
-        ? 'County'
-        : level
+      ? 'County'
+      : level
 
   const payload = {
     zipcode,

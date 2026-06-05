@@ -299,7 +299,6 @@ export interface PlanData {
   filingRequirementsText: string | null
 }
 
-
 const buildTimeline = (
   electionDate: Date | null,
   filingDateStart: Date | null,
@@ -584,7 +583,6 @@ const buildPressOutlets = (
     contact: formatOutletContact(o),
   }))
 }
-
 
 const formatDollars = (value: number): string =>
   `$${Math.round(value).toLocaleString('en-US')}`
@@ -1018,7 +1016,10 @@ export const buildPlanData = (input: PlanInput): PlanData => {
 
   const winNumber = input.winNumber
   const projectedTurnout = input.projectedTurnout
-  const voterContactGoal = resolveVoterContactGoal(input.voterContactGoal, winNumber)
+  const voterContactGoal = resolveVoterContactGoal(
+    input.voterContactGoal,
+    winNumber,
+  )
 
   const winNumberLow = Math.max(0, Math.round(winNumber * 0.9))
   const winNumberHigh = Math.round(winNumber * 1.1)
@@ -1032,8 +1033,8 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     input.registeredVoters && input.registeredVoters > 0
       ? input.registeredVoters
       : projectedTurnout > 0
-        ? Math.round(projectedTurnout / 0.22)
-        : 0
+      ? Math.round(projectedTurnout / 0.22)
+      : 0
   const registeredVotersLow = Math.max(0, Math.round(registeredVoters * 0.9))
   const registeredVotersHigh = Math.round(registeredVoters * 1.1)
 

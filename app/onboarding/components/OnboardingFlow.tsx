@@ -1048,8 +1048,8 @@ export default function OnboardingFlow({
             {nextStep
               ? 'Continue'
               : activeStep.id === 'pledge'
-                ? 'Agree & Create My Plan'
-                : 'Complete'}
+              ? 'Agree & Create My Plan'
+              : 'Complete'}
           </Button>
         </div>
       </div>

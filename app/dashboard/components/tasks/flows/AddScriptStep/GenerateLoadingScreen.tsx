@@ -48,12 +48,9 @@ export const GenerateLoadingScreen = ({
 
   const startTimeout = () => {
     setGenerateTimeoutId(
-      setTimeout(
-        () => {
-          fireError()
-        },
-        1000 * 60 * 5,
-      ),
+      setTimeout(() => {
+        fireError()
+      }, 1000 * 60 * 5),
     )
   }
 

@@ -21,9 +21,9 @@ export const isAddressValue = (
 ): value is RegistrationFormData['address'] =>
   Boolean(
     value &&
-    typeof value === 'object' &&
-    'formatted_address' in value &&
-    'place_id' in value,
+      typeof value === 'object' &&
+      'formatted_address' in value &&
+      'place_id' in value,
   )
 
 export const toRegistrationFormData = (

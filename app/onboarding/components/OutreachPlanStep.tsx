@@ -157,7 +157,11 @@ const BudgetAccordion = ({
           resources.mailCount,
         )} pieces × $${MAIL_COST_PER_PIECE}`}
       />
-      <BreakdownRow label="Yard signs" value={formatCurrency(resources.yardSignsCost)} hint="50 signs" />
+      <BreakdownRow
+        label="Yard signs"
+        value={formatCurrency(resources.yardSignsCost)}
+        hint="50 signs"
+      />
       <FilingFeeRow
         filingFee={resources.filingFee}
         filingFeeIsDefault={resources.filingFeeIsDefault}

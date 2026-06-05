@@ -8,10 +8,8 @@ import type { Campaign, CandidatePosition } from 'helpers/types'
 
 type IssuesListProps = ComponentProps<typeof IssuesList>
 
-interface IssuesSelectorProps extends Omit<
-  IssuesListProps,
-  'nextCallback' | 'campaign' | 'topIssues'
-> {
+interface IssuesSelectorProps
+  extends Omit<IssuesListProps, 'nextCallback' | 'campaign' | 'topIssues'> {
   completeCallback?: (value: string) => void | Promise<void>
   updatePositionsCallback?: (
     value: CandidatePosition[] | false,

@@ -18,8 +18,8 @@ export const packageFormData = (
       value instanceof Date
         ? value.toISOString()
         : typeof value === 'object' && value !== null
-          ? JSON.stringify(value)
-          : value
+        ? JSON.stringify(value)
+        : value
 
     if (coerced === undefined) continue
 

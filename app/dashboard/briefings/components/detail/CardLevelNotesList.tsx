@@ -62,8 +62,8 @@ export default function CardLevelNotesList({
           body.length > 0
             ? truncate(body, PREVIEW_CHARS)
             : attachmentCount > 0
-              ? `${attachmentCount} attachment${attachmentCount === 1 ? '' : 's'}`
-              : '(empty note)'
+            ? `${attachmentCount} attachment${attachmentCount === 1 ? '' : 's'}`
+            : '(empty note)'
         return (
           <li key={n.id}>
             <button

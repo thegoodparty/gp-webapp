@@ -143,8 +143,8 @@ export default function PollTextBiasInput({
   const displayValue = showLoadingState
     ? ''
     : isStreaming
-      ? streamingText
-      : value
+    ? streamingText
+    : value
   const shouldShowHighlights =
     !!biasAnalysis && hasIssues && !isProcessing && !isWaitingToOptimize
 

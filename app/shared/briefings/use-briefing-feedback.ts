@@ -61,7 +61,7 @@ export function useBriefingFeedback(meetingDate: string) {
       // contract in the optimistic copy so the UI doesn't briefly show a
       // wrong comment value mid-mutation.
       const nextComment =
-        comment === undefined ? (existing?.comment ?? null) : comment
+        comment === undefined ? existing?.comment ?? null : comment
       const next: ArtifactFeedback[] = [
         ...others,
         existing

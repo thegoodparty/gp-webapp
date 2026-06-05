@@ -39,18 +39,18 @@ export default function TextComplianceSteps(): React.JSX.Element {
   const electionFilingStatus: StepStatus = tcrCompliancePending
     ? STEP_STATUS.DISABLED
     : filingComplete
-      ? STEP_STATUS.COMPLETED
-      : candidateProfileComplete
-        ? STEP_STATUS.ACTIVE
-        : STEP_STATUS.DISABLED
+    ? STEP_STATUS.COMPLETED
+    : candidateProfileComplete
+    ? STEP_STATUS.ACTIVE
+    : STEP_STATUS.DISABLED
 
   const pinStatus: StepStatus = tcrCompliancePending
     ? STEP_STATUS.DISABLED
     : pinComplete
-      ? STEP_STATUS.COMPLETED
-      : filingComplete
-        ? STEP_STATUS.ACTIVE
-        : STEP_STATUS.DISABLED
+    ? STEP_STATUS.COMPLETED
+    : filingComplete
+    ? STEP_STATUS.ACTIVE
+    : STEP_STATUS.DISABLED
 
   const steps: Step[] = [
     {
