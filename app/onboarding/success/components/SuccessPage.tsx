@@ -15,6 +15,7 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
 import type { User } from 'helpers/types'
+import { resolveVoterContactGoal } from '../../components/budget'
 import { localNewsQueryOptions } from '../../components/LocalNewsSourcesSection'
 import { voterIssuesQueryOptions } from '../../components/TopVoterIssuesSection'
 import ConfettiCanvas from './ConfettiCanvas'
@@ -90,7 +91,10 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     campaign?.data?.hubSpotUpdates?.incumbent?.trim() || null
   const winNumber = metrics?.winNumber ?? 0
   const projectedTurnout = metrics?.projectedTurnout ?? 0
-  const voterContactGoal = metrics?.voterContactGoal ?? winNumber * 5
+  const voterContactGoal = resolveVoterContactGoal(
+    metrics?.voterContactGoal,
+    winNumber,
+  )
   const filingFee = metrics?.filingFee ?? null
   const filingRequirementsText = metrics?.filingRequirementsText ?? null
   const registeredVoters = metrics?.registeredVoters ?? null

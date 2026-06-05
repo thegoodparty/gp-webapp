@@ -9,7 +9,10 @@ interface H2Props extends Omit<
 }
 
 const H2 = ({ children, className = '', ...restProps }: H2Props) => (
-  <h2 className={`font-semibold text-2xl ${className}`} {...restProps}>
+  <h2
+    className={`font-semibold leading-snug text-2xl ${className}`}
+    {...restProps}
+  >
     {children}
   </h2>
 )

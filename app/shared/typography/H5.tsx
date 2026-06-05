@@ -6,7 +6,9 @@ interface H5Props {
 }
 
 const H5 = ({ children, className = '' }: H5Props) => (
-  <h5 className={`font-medium text-base ${className}`}>{children}</h5>
+  <h5 className={`font-medium leading-normal text-base ${className}`}>
+    {children}
+  </h5>
 )
 
 export default H5

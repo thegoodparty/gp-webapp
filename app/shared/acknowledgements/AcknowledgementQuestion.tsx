@@ -50,7 +50,7 @@ export const AcknowledgementQuestion = ({
               onClick={() => {
                 onAcknowledge(false)
               }}
-              className="flex items-center"
+              className="flex items-center !bg-success-main !text-success-contrast hover:!bg-success-dark"
               size="large"
             >
               <FaCheck />
