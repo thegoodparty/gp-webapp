@@ -35,6 +35,7 @@ const toSummary = (item: MeetingsListItemDto): BriefingSummary => ({
   scheduledAt: buildScheduledAt(item),
   location: item.location,
   status: item.hasBriefing ? 'briefing_ready' : 'awaiting_agenda',
+  userAgendaStatus: item.userAgendaStatus ?? null,
 })
 
 export const getBriefingsList = async (): Promise<BriefingSummary[]> => {
