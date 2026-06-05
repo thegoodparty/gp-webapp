@@ -27,7 +27,6 @@ Background: see `gpApi/CLAUDE.md`. The typed system is canonical; legacy fetch h
    - Avoid `Record<string, unknown>` — define explicit shapes.
 
 2. **Choose `clientRequest` or `serverRequest`.**
-
    - Browser / client component → `import { clientRequest } from 'gpApi/typed-request'`
    - Server component / route handler / `'use server'` → `import { serverRequest } from 'gpApi/server-request'`
 

@@ -67,7 +67,7 @@ const makeUser = (overrides: Partial<User> = {}): User =>
     createdAt: '2024-01-01',
     updatedAt: '2024-01-01',
     ...overrides,
-  } as User)
+  }) as User
 
 const EMPTY_VOTER_CONTACTS: VoterContactsState = {
   doorKnocking: 0,

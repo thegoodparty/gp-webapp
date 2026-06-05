@@ -72,10 +72,10 @@ export const Playground: StoryObj<PlaygroundArgs> = {
             ? formatDate(date)
             : 'Pick a date'
           : range?.from
-          ? range.to
-            ? `${formatDate(range.from)} – ${formatDate(range.to)}`
-            : formatDate(range.from)
-          : 'Pick a date range'
+            ? range.to
+              ? `${formatDate(range.from)} – ${formatDate(range.to)}`
+              : formatDate(range.from)
+            : 'Pick a date range'
       const triggerWidth = mode === 'single' ? 'w-72' : 'w-96'
       return (
         <div className={cn('flex flex-col gap-2', triggerWidth)}>

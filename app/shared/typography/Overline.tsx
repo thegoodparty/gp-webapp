@@ -1,8 +1,10 @@
 import clsx from 'clsx'
 import { ReactNode, HTMLAttributes } from 'react'
 
-interface OverlineProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
+interface OverlineProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children' | 'className'
+> {
   children?: ReactNode
   className?: string
 }

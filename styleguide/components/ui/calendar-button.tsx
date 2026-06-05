@@ -35,7 +35,8 @@ const calendarButtonVariants = cva(
 )
 
 export interface CalendarButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof calendarButtonVariants> {
   asChild?: boolean
 }

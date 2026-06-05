@@ -11,14 +11,14 @@ const makeCampaign = (metrics?: Partial<RaceTargetMetrics> | null): Campaign =>
       metrics === null
         ? null
         : metrics
-        ? {
-            projectedTurnout: 0,
-            winNumber: 0,
-            voterContactGoal: 0,
-            ...metrics,
-          }
-        : undefined,
-  } as unknown as Campaign)
+          ? {
+              projectedTurnout: 0,
+              winNumber: 0,
+              voterContactGoal: 0,
+              ...metrics,
+            }
+          : undefined,
+  }) as unknown as Campaign
 
 describe('getVoterContactsGoal', () => {
   it('returns voterContactGoal when positive', () => {

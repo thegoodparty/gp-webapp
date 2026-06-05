@@ -1,7 +1,9 @@
 import { ReactNode, HTMLAttributes } from 'react'
 
-interface Subtitle2Props
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
+interface Subtitle2Props extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children' | 'className'
+> {
   children?: ReactNode
   className?: string
 }

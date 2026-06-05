@@ -51,7 +51,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isUserLoading = !isLoaded || (!!isSignedIn && isQueryLoading)
 
-  const value: User | null = isLoaded && !isSignedIn ? null : appUser ?? null
+  const value: User | null = isLoaded && !isSignedIn ? null : (appUser ?? null)
 
   // Without memoization this tuple is a new reference on every render, forcing
   // every UserContext consumer (used across the whole authed app) to re-render

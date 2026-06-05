@@ -379,8 +379,8 @@ export default function WebsiteCreateFlow({
       bioCharCount > 0
         ? bioCharCount
         : website?.content?.about?.bio
-        ? stripHtml(website.content.about.bio).result.trim().length
-        : 0
+          ? stripHtml(website.content.about.bio).result.trim().length
+          : 0
 
     if (effectiveBioCharCount < MIN_BIO_LENGTH) {
       errors.bio = 'Please complete Your Bio'
