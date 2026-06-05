@@ -5,8 +5,8 @@ export const GtmButtonClickTracker = (): null => {
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       const target = event.target as Element | null
-      const button = target?.closest('button[data-slot="button"]')
-      if (button instanceof HTMLButtonElement && button.id) {
+      const button = target?.closest('[data-slot="button"]')
+      if (button instanceof HTMLElement && button.id) {
         const w = window as Window & {
           dataLayer?: Array<Record<string, unknown>>
         }

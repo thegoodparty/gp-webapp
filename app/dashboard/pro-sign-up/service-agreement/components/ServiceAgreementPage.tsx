@@ -7,6 +7,7 @@ import { AcknowledgementQuestion } from '@shared/acknowledgements/Acknowledgemen
 import { ChangeEvent, useState } from 'react'
 import Body1 from '@shared/typography/Body1'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from '@styleguide'
 import { TermAndTerminationText } from 'app/dashboard/pro-sign-up/service-agreement/components/TermAndTerminationText'
 import { ServiceAgreementSignatureSection } from 'app/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementSignatureSection'
@@ -68,6 +69,7 @@ export const ServiceAgreementPage = ({
   ])
   const allAccepted = acknowledgements.every((ack) => ack.accepted)
   const [campaignStatus] = useCampaignStatus()
+  const router = useRouter()
   const isVerified = campaignStatus?.['isVerified']
 
   const onAcknowledge =
@@ -146,18 +148,14 @@ export const ServiceAgreementPage = ({
               </Link>
             </Button>
             <Button
-              asChild
               className="w-full md:w-auto"
               disabled={!allAccepted || !signature}
+              onClick={() => {
+                trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickFinish)
+                router.push('/dashboard/pro-sign-up/purchase-redirect')
+              }}
             >
-              <Link
-                href="/dashboard/pro-sign-up/purchase-redirect"
-                onClick={() => {
-                  trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickFinish)
-                }}
-              >
-                Finish
-              </Link>
+              Finish
             </Button>
           </div>
         </>
