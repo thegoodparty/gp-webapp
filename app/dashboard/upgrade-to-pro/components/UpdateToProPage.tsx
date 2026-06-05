@@ -3,7 +3,8 @@ import DashboardLayout from '../../shared/DashboardLayout'
 import { CandidatePositionsProvider } from 'app/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import { ProPricingCard } from 'app/dashboard/upgrade-to-pro/components/ProPricingCard'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { usePageExit } from '@shared/hooks/usePageExit'
@@ -90,12 +91,14 @@ export default function DetailsPage(
           </div>
 
           <Button
+            asChild
             size="large"
-            href={'/dashboard/pro-sign-up'}
             onClick={handleJoinProOnClick}
             className="!block md:w-[300px] mx-auto mt-12"
           >
-            Start today for just $10/month.
+            <Link href="/dashboard/pro-sign-up">
+              Start today for just $10/month.
+            </Link>
           </Button>
         </div>
       </CandidatePositionsProvider>

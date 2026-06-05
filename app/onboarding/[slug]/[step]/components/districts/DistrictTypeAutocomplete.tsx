@@ -1,10 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Autocomplete } from '@mui/material'
-import TextField from '@shared/inputs/TextField'
+import { Combobox } from '@styleguide'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { noop } from '@shared/utils/noop'
 
 interface DistrictType {
   id?: string
@@ -50,48 +48,59 @@ export default function DistrictTypeAutocomplete({
 }: DistrictTypeAutocompleteProps) {
   const [options, setOptions] = useState<DistrictType[]>([])
   const [loading, setLoading] = useState(false)
+  const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
+    setInputValue('')
     if (!state || !electionYear) return
+
+    let ignore = false
     setLoading(true)
 
-    async function load() {
+    const load = async () => {
       const data = await fetchDistrictTypes(
         state,
         electionYear,
         excludeInvalidOverride,
       )
-      setOptions(
-        data.map((d) => ({
-          ...d,
-          label: d.L2DistrictType.replace(/_/g, ' '),
-        })),
-      )
-      setLoading(false)
+      if (!ignore) {
+        setOptions(
+          data.map((d) => ({
+            ...d,
+            label: d.L2DistrictType.replace(/_/g, ' '),
+          })),
+        )
+        setLoading(false)
+      }
     }
 
     load()
-    return noop
+    return () => {
+      ignore = true
+    }
   }, [state, electionYear, excludeInvalidOverride])
 
+  const getLabel = (o: DistrictType) => o.label || o.L2DistrictType
+
+  const filtered = inputValue
+    ? options.filter((o) =>
+        getLabel(o).toLowerCase().includes(inputValue.toLowerCase()),
+      )
+    : options
+
   return (
-    <Autocomplete
-      fullWidth
-      loading={loading}
-      options={options}
+    <Combobox
+      options={filtered}
       value={value}
-      getOptionLabel={(o) => o.label || o.L2DistrictType}
-      isOptionEqualToValue={(o, v) => o.id === v?.id}
-      onChange={(_, v) => onChange(v)}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="District Type"
-          required
-          variant="outlined"
-          InputProps={{ ...params.InputProps, style: { borderRadius: 4 } }}
-        />
-      )}
+      onChange={onChange}
+      onInputChange={setInputValue}
+      inputValue={inputValue}
+      getOptionLabel={getLabel}
+      getOptionKey={(o) => o.id ?? o.L2DistrictType}
+      disableClientFilter
+      loading={loading}
+      placeholder="District Type"
+      searchPlaceholder="Search district types..."
     />
   )
 }

@@ -7,7 +7,7 @@ import H1 from '@shared/typography/H1'
 import FileDropZone from '@shared/inputs/FileDropZone'
 import ImageCropPreview from '@shared/inputs/ImageCropPreview'
 import { trackEvent, buildTrackingAttrs } from 'helpers/analyticsHelper'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 const MAX_FILE_SIZE = 500000
 
@@ -72,12 +72,12 @@ export default function ImageStep({
         <FileDropZone maxSize={MAX_FILE_SIZE} onChange={handleOnChange} />
       )}
       <div className="mt-8 flex justify-between">
-        <Button size="large" color="neutral" onClick={backCallback}>
+        <Button size="large" variant="secondary" onClick={backCallback}>
           Back
         </Button>
         <Button
           size="large"
-          color="secondary"
+          variant="secondary"
           disabled={!file || fileTooLarge}
           onClick={nextCallback}
           {...trackingAttrs}

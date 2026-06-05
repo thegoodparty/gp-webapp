@@ -80,8 +80,8 @@ vi.mock('./OfficeStepForm', () => ({
   default: () => <div data-testid="office-step-form" />,
 }))
 
-vi.mock('@shared/buttons/Button', () => ({
-  default: ({
+vi.mock('@styleguide', () => ({
+  Button: ({
     children,
     onClick,
     disabled,

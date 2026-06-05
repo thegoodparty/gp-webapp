@@ -13,7 +13,7 @@ describe('WebsiteEditorPageStepper', () => {
   it('renders the progress indicators for all steps', () => {
     const { container } = render(<WebsiteEditorPageStepper {...defaultProps} />)
 
-    const progressDots = container.querySelectorAll('.rounded-full')
+    const progressDots = container.querySelectorAll('div.rounded-full')
     expect(progressDots).toHaveLength(6)
   })
 
@@ -22,7 +22,7 @@ describe('WebsiteEditorPageStepper', () => {
       <WebsiteEditorPageStepper {...defaultProps} currentStep={3} />,
     )
 
-    const progressDots = container.querySelectorAll('.rounded-full')
+    const progressDots = container.querySelectorAll('div.rounded-full')
     expect(progressDots[0]).toHaveClass('bg-neutral-800')
     expect(progressDots[1]).toHaveClass('bg-neutral-800')
     expect(progressDots[2]).toHaveClass('bg-neutral-800')

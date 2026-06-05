@@ -1,15 +1,15 @@
 'use client'
 import { useState, KeyboardEvent } from 'react'
 import { BsThreeDots } from 'react-icons/bs'
-import { Button } from '@mui/material'
 import { FaPencilAlt, FaTrashAlt, FaGlobe } from 'react-icons/fa'
 import DeleteAction from './DeleteAction'
 // import DuplicateAction from './DuplicateAction';
 import RenameAction from './RenameAction'
 import TranslateAction from './TranslateAction'
 import { kebabToCamel } from 'helpers/stringHelper'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
-import CircularProgress from '@mui/material/CircularProgress'
+
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
+import { Button } from '@styleguide'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 interface ActionsProps {
@@ -83,38 +83,38 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
             }}
             className="mr-10 hidden md:block"
           >
-            <CircularProgress size={20} />
+            <LoaderCircleIcon size={20} className="animate-spin" />
           </div>
         ) : (
           // otherwise if tableVersion === false, then it's a documentMode
           <>
-            <div
+            <Button
+              variant="secondary"
+              size="medium"
               className="ml-3 md:hidden"
               onClick={() => {
                 setShowMenu(!showMenu)
               }}
             >
-              <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap">
-                  <BsThreeDots className="text-sm" />
-                  &nbsp;
-                </div>
-              </SecondaryButton>
-            </div>
+              <div className="flex items-center whitespace-nowrap">
+                <BsThreeDots className="text-sm" />
+                &nbsp;
+              </div>
+            </Button>
 
-            <div
+            <Button
+              variant="secondary"
+              size="medium"
               onClick={() => {
                 setShowMenu(!showMenu)
               }}
               className="ml-5 hidden md:block"
             >
-              <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap">
-                  <BsThreeDots className="text-sm" />
-                  &nbsp;
-                </div>
-              </SecondaryButton>
-            </div>
+              <div className="flex items-center whitespace-nowrap">
+                <BsThreeDots className="text-sm" />
+                &nbsp;
+              </div>
+            </Button>
           </>
         )}
         {showMenu && (
@@ -128,6 +128,8 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
 
             <div className="absolute flex flex-col z-50 right-0 min-w-[270px] h-auto bg-primary-dark text-gray-300 rounded-xl shadow-md transition">
               <Button
+                variant="ghost"
+                className="w-full h-auto p-0 rounded-xl border-none"
                 onClick={() => {
                   trackEvent(EVENTS.ContentBuilder.KebabMenu.ClickRename, {
                     name: name,
@@ -148,6 +150,8 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
 
               <div className="md:hidden">
                 <Button
+                  variant="ghost"
+                  className="w-full h-auto p-0 rounded-xl border-none"
                   onClick={() => {
                     setShowTranslate?.(true)
                     setShowMenu(false)
@@ -179,6 +183,8 @@ export default function Actions(props: ActionsProps): React.JSX.Element {
               <span className="w-full height-1 border-b border-indigo-500 ml-3 mr-3"></span>
 
               <Button
+                variant="ghost"
+                className="w-full h-auto p-0 rounded-xl border-none"
                 onClick={() => {
                   trackEvent(EVENTS.ContentBuilder.KebabMenu.ClickDelete, {
                     name: name,

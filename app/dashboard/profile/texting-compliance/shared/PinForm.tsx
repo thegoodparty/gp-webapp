@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import {
   PinChannel,
   formatPinChannels,
@@ -188,7 +188,6 @@ export default function PinForm({
       <div className="flex justify-end">
         <Button
           type="submit"
-          color="primary"
           size="large"
           disabled={!isComplete || loading}
           loading={loading}

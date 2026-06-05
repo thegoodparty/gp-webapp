@@ -46,9 +46,10 @@ vi.mock('./AskAiChatBody', () => ({
 }))
 
 vi.mock('./enrichForCycler', async () => {
-  const actual = await vi.importActual<typeof import('./enrichForCycler')>(
-    './enrichForCycler',
-  )
+  const actual =
+    await vi.importActual<typeof import('./enrichForCycler')>(
+      './enrichForCycler',
+    )
   return {
     ...actual,
     enrichForCycler: vi.fn(actual.enrichForCycler),

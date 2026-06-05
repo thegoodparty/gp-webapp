@@ -6,7 +6,7 @@ import { AlreadyProUserPrompt } from 'app/dashboard/shared/AlreadyProUserPrompt'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { updateUser } from 'helpers/userHelper'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -82,7 +82,7 @@ const PurchaseRedirectPage = ({
           <p className="text-sm font-semibold mb-6">
             Redirecting in {countdown} seconds...
           </p>
-          <PrimaryButton
+          <Button
             className="w-full md:w-auto"
             onClick={() => {
               trackEvent(EVENTS.ProUpgrade.ClickGoToStripe)
@@ -90,7 +90,7 @@ const PurchaseRedirectPage = ({
             }}
           >
             Go to Stripe
-          </PrimaryButton>
+          </Button>
         </div>
       )}
     </FocusedExperienceWrapper>

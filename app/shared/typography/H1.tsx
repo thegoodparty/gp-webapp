@@ -6,7 +6,9 @@ interface H1Props {
 }
 
 const H1 = ({ children, className = '' }: H1Props) => (
-  <h1 className={`font-medium text-[32px] md:text-4xl  ${className}`}>
+  <h1
+    className={`font-bold leading-tight tracking-tight text-[32px] md:text-4xl ${className}`}
+  >
     {children}
   </h1>
 )

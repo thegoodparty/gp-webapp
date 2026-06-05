@@ -4,7 +4,7 @@ import CmsContentWrapper from '@shared/content/CmsContentWrapper'
 import { FaCheck } from 'react-icons/fa'
 import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar'
 import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { noop } from '@shared/utils/noop'
 
 interface AcknowledgementQuestionProps {
@@ -52,7 +52,6 @@ export const AcknowledgementQuestion = ({
               }}
               className="flex items-center"
               size="large"
-              color="success"
             >
               <FaCheck />
               <div className="ml-2">{buttonTexts[1]}</div>

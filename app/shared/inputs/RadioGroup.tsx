@@ -1,15 +1,40 @@
 'use client'
 
-import { ThemeProvider } from '@mui/material'
-import MuiRadioGroup, { RadioGroupProps } from '@mui/material/RadioGroup'
-import materialTheme from '@shared/materialTheme'
+import React from 'react'
+import {
+  RadioGroup as StyleguideRadioGroup,
+  RadioGroupItem,
+} from '@styleguide/components/ui/radio-group'
 
-const RadioGroup = (props: RadioGroupProps): React.JSX.Element => {
+interface RadioGroupProps {
+  name?: string
+  value?: string
+  defaultValue?: string
+  className?: string
+  children?: React.ReactNode
+  onValueChange?: (value: string) => void
+}
+
+const RadioGroup = ({
+  name,
+  value,
+  defaultValue,
+  className,
+  children,
+  onValueChange,
+}: RadioGroupProps): React.JSX.Element => {
   return (
-    <ThemeProvider theme={materialTheme}>
-      <MuiRadioGroup {...props} />
-    </ThemeProvider>
+    <StyleguideRadioGroup
+      name={name}
+      value={value}
+      defaultValue={defaultValue}
+      className={className}
+      onValueChange={onValueChange}
+    >
+      {children}
+    </StyleguideRadioGroup>
   )
 }
 
+export { RadioGroupItem }
 export default RadioGroup

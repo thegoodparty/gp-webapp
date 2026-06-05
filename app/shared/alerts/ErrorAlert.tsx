@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
-import { AlertProps } from '@mui/material'
-import { MdError } from 'react-icons/md'
+import { CircleAlertIcon } from '@styleguide/components/ui/icons'
 
-interface ErrorAlertProps extends Omit<AlertProps, 'severity'> {
+interface ErrorAlertProps {
   children: ReactNode
   className?: string
+  [key: string]: unknown
 }
 
 export const ErrorAlert = ({
@@ -15,7 +15,7 @@ export const ErrorAlert = ({
 }: ErrorAlertProps): React.JSX.Element => (
   <StyledAlert
     severity="error"
-    icon={<MdError />}
+    icon={<CircleAlertIcon />}
     className={className}
     {...restProps}
   >

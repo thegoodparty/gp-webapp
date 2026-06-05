@@ -1,10 +1,10 @@
-import { LockOutlined } from '@mui/icons-material'
 import { LuCloudUpload } from 'react-icons/lu'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { DisplaySwatch } from './ThemeSwatch'
 import { getWebsiteUrl } from '../../util/website.util'
 import H5 from '@shared/typography/H5'
 import { Website } from 'helpers/types'
+import { LockIcon } from '@styleguide/components/ui/icons'
 
 export const SECTIONS = {
   link: 'link',
@@ -77,8 +77,7 @@ const EditSectionButton = ({
   const url = getWebsiteUrl(website.vanityPath, false, website.domain)
   return (
     <Button
-      variant="outlined"
-      color="neutral"
+      variant="outline"
       className={`!text-left !border-[1px] !border-black/[0.12] !py-4 ${
         currentSection === section
           ? 'outline outline-2 outline-black !border-transparent'
@@ -95,7 +94,7 @@ const EditSectionButton = ({
             <H5>{SECTION_BTN_CONTENT[section]?.title}</H5>
             <p className="text-gray-500 text-xs">{url}</p>
           </div>
-          <LockOutlined className="text-gray-500" />
+          <LockIcon size={20} className="text-gray-500" />
         </>
       ) : section === SECTIONS.logo ? (
         <>

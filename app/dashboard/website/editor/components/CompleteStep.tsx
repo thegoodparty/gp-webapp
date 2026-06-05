@@ -1,4 +1,5 @@
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import HighFiveAnimation from '@shared/animations/HighFiveAnimation'
 import ShareModal from '../../components/ShareModal'
 import { useState } from 'react'
@@ -34,7 +35,7 @@ const CompleteStep = ({
         your website is live!
       </h3>
 
-      <Button onClick={() => setShareModalOpen(true)} color="neutral">
+      <Button variant="secondary" onClick={() => setShareModalOpen(true)}>
         Share
       </Button>
       {!domain ? (
@@ -67,13 +68,13 @@ const CompleteStep = ({
                 </div>
               </div>
               <Button
-                href="/dashboard/website/domain"
+                asChild
                 className="mt-12"
                 onClick={() =>
                   trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)
                 }
               >
-                Add a domain
+                <Link href="/dashboard/website/domain">Add a domain</Link>
               </Button>
             </div>
             <div className="md:w-1/2 flex justify-center items-center">
@@ -88,8 +89,8 @@ const CompleteStep = ({
           </div>
         </div>
       ) : (
-        <Button href="/dashboard/website" className="mt-12">
-          Back to website metrics
+        <Button asChild className="mt-12">
+          <Link href="/dashboard/website">Back to website metrics</Link>
         </Button>
       )}
       <ShareModal

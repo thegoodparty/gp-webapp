@@ -1,4 +1,4 @@
-import { CheckOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material'
+import { CheckIcon, CircleMinusIcon } from '@styleguide'
 import H3 from '@shared/typography/H3'
 
 interface ProPricingCardProps {
@@ -18,8 +18,8 @@ export const ProPricingCard = ({
 }: ProPricingCardProps): React.JSX.Element => {
   return (
     <div
-      className={`flex flex-col rounded-lg border border-black/[0.12] p-6 ${
-        primaryCard ? 'bg-[#ECF5FF]' : ''
+      className={`flex flex-col rounded-lg border border-border p-6 ${
+        primaryCard ? 'bg-blue-50' : ''
       }`}
     >
       <section className="top-section">
@@ -27,11 +27,7 @@ export const ProPricingCard = ({
         <ul className="list-none text-sm m-0 p-0 mb-8">
           {features.map((feature, i) => (
             <li className="mb-3 flex gap-3" key={i}>
-              {primaryCard ? (
-                <CheckOutlined />
-              ) : (
-                <RemoveCircleOutlineOutlined />
-              )}
+              {primaryCard ? <CheckIcon /> : <CircleMinusIcon />}
               <span>{feature}</span>
             </li>
           ))}

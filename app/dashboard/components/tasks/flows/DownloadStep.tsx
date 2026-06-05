@@ -1,7 +1,8 @@
 'use client'
 import { useMemo, useState } from 'react'
 import H1 from '@shared/typography/H1'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { useSnackbar } from 'helpers/useSnackbar'
 import CopyScriptButton from '../CopyScriptButton'
@@ -92,7 +93,7 @@ export default function DownloadStep({
         />
         <Button
           size="large"
-          color="secondary"
+          variant="secondary"
           onClick={handleDownload}
           disabled={downloading}
           loading={downloading}
@@ -100,15 +101,15 @@ export default function DownloadStep({
         >
           Download voter list
         </Button>
-        <Button
-          href={blogUrl}
-          onClick={trackCompletionEvent}
-          target="_blank"
-          size="large"
-          color="neutral"
-          {...blogTrackingAttrs}
-        >
-          Read more on our blog
+        <Button asChild size="large" variant="secondary" {...blogTrackingAttrs}>
+          <Link
+            href={blogUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={trackCompletionEvent}
+          >
+            Read more on our blog
+          </Link>
         </Button>
       </div>
     </div>

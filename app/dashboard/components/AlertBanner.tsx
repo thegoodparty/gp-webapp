@@ -1,9 +1,17 @@
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
-import Button, { ButtonColor } from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 
 type AlertSeverity = 'error' | 'info' | 'warning' | 'success'
+
+const SEVERITY_VARIANT = {
+  info: 'default',
+  success: 'default',
+  warning: 'destructive',
+  error: 'destructive',
+} as const
 
 interface AlertBannerProps {
   title?: string
@@ -35,16 +43,26 @@ export const AlertBanner = ({
         {title && <H4 className="mb-2">{title}</H4>}
         <Body2>{message}</Body2>
       </div>
-      {actionText && (
-        <Button
-          href={actionHref ? actionHref : undefined}
-          className="!text-base lg:self-center lg:mr-2"
-          onClick={actionOnClick}
-          color={severity as ButtonColor}
-        >
-          {actionText}
-        </Button>
-      )}
+      {actionText &&
+        (actionHref ? (
+          <Button
+            asChild
+            variant={SEVERITY_VARIANT[severity]}
+            className="!text-base lg:self-center lg:mr-2"
+          >
+            <Link href={actionHref} onClick={actionOnClick}>
+              {actionText}
+            </Link>
+          </Button>
+        ) : (
+          <Button
+            variant={SEVERITY_VARIANT[severity]}
+            className="!text-base lg:self-center lg:mr-2"
+            onClick={actionOnClick}
+          >
+            {actionText}
+          </Button>
+        ))}
     </div>
   </StyledAlert>
 )

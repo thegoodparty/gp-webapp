@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import CustomOfficeForm from './CustomOfficeForm'
 import Body2 from '@shared/typography/Body2'
 import { Campaign } from 'helpers/types'
@@ -56,12 +56,7 @@ export default function CantFindRaceModal({
                 </ol>
               </Body2>
               <div className="my-8 text-center">
-                <Button
-                  color="neutral"
-                  size="medium"
-                  variant="contained"
-                  onClick={onClose}
-                >
+                <Button variant="secondary" size="medium" onClick={onClose}>
                   Back to search
                 </Button>
               </div>

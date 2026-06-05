@@ -6,7 +6,9 @@ interface H6Props {
 }
 
 const H6 = ({ children, className = '' }: H6Props) => (
-  <h6 className={`font-semibold text-sm ${className}`}>{children}</h6>
+  <h6 className={`font-semibold leading-normal text-sm ${className}`}>
+    {children}
+  </h6>
 )
 
 export default H6

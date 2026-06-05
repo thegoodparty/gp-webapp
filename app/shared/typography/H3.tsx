@@ -6,7 +6,9 @@ interface H3Props {
 }
 
 const H3 = ({ children, className = '' }: H3Props) => (
-  <h3 className={`font-medium text-xl ${className}`}>{children}</h3>
+  <h3 className={`font-medium leading-normal text-xl ${className}`}>
+    {children}
+  </h3>
 )
 
 export default H3

@@ -1,8 +1,8 @@
 'use client'
 
 import H1 from '@shared/typography/H1'
-import Button from '@shared/buttons/Button'
-import CircularProgress from '@mui/material/CircularProgress'
+import { Button } from '@styleguide'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import { Alert, AlertDescription, AlertTitle } from '@styleguide'
 import { MdError } from 'react-icons/md'
 import CustomVoterAudienceFilters, {
@@ -247,9 +247,9 @@ export default function AudienceStep({
           Voters selected:
           <span className="font-bold text-black ml-1">
             {loading ? (
-              <CircularProgress
+              <LoaderCircleIcon
                 size={14}
-                className="inline-block align-middle"
+                className="inline-block align-middle animate-spin"
               />
             ) : (
               numberFormatter(count)
@@ -261,9 +261,9 @@ export default function AudienceStep({
               Estimated cost:
               <span className="font-bold text-black ml-1">
                 {loading ? (
-                  <CircularProgress
+                  <LoaderCircleIcon
                     size={14}
-                    className="inline-block align-middle"
+                    className="inline-block align-middle animate-spin"
                   />
                 ) : (
                   `$${numberFormatter(calculateCost(count), 2)}`
@@ -291,7 +291,7 @@ export default function AudienceStep({
           <div className="col-span-6 text-left mt-6">
             <Button
               size="large"
-              color="neutral"
+              variant="secondary"
               onClick={backCallback}
               {...backTrackingAttrs}
             >
@@ -301,7 +301,7 @@ export default function AudienceStep({
           <div className="col-span-6 text-right mt-6">
             <Button
               size="large"
-              color="secondary"
+              variant="secondary"
               onClick={handleOnNext}
               disabled={isNextDisabled}
               loading={loading}

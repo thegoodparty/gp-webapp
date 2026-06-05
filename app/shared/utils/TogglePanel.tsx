@@ -1,14 +1,15 @@
 'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 import H4 from '@shared/typography/H4'
 import Image from 'next/image'
 import { useState, ReactNode, HTMLAttributes } from 'react'
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi'
 
-interface TogglePanelProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+interface TogglePanelProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   icon?: string | ReactNode
   label?: string
   forceExpand?: boolean
@@ -63,13 +64,13 @@ const TogglePanel = ({
         </div>
         <div className="flex items-center">
           {open ? (
-            <PrimaryButton size="medium" ariaLabel="collapse">
+            <Button size="medium" aria-label="collapse">
               <FiChevronUp />
-            </PrimaryButton>
+            </Button>
           ) : (
-            <SecondaryButton size="medium" ariaLabel="expand">
+            <Button variant="secondary" size="medium" aria-label="expand">
               <FiChevronDown />
-            </SecondaryButton>
+            </Button>
           )}
         </div>
       </div>

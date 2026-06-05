@@ -1,13 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { LuArrowLeft } from 'react-icons/lu'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import { useWebsite } from '../../components/WebsiteProvider'
 import H4 from '@shared/typography/H4'
 import ResponsiveModal from '@shared/utils/ResponsiveModal'
 import EditSection from './EditSection'
 import WebsitePreview from './WebsitePreview'
-import { useMediaQuery } from '@mui/material'
 import EditSectionButton, {
   SECTIONS,
   SECTION_KEYS,
@@ -38,7 +38,11 @@ export default function WebsiteEditFlow(): React.JSX.Element {
   const [editSection, setEditSection] = useState<SectionType>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
-  const isLgUp = useMediaQuery('(min-width:1024px)')
+  const [isLgUp, setIsLgUp] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(min-width:1024px)').matches,
+  )
   const { errorSnackbar, successSnackbar } = useSnackbar()
   const [updatedPlace, setUpdatedPlace] = useState<GooglePlace | null>(null)
   const [bioCharCount, setBioCharCount] = useState(() =>
@@ -48,6 +52,13 @@ export default function WebsiteEditFlow(): React.JSX.Element {
   )
   const [aboutErrors, setAboutErrors] = useState<AboutStepErrors>({})
   const [aboutErrorsShown, setAboutErrorsShown] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width:1024px)')
+    const onChange = (e: MediaQueryListEvent) => setIsLgUp(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   useEffect(() => {
     if (isLgUp && editSection === null) {
@@ -206,8 +217,8 @@ export default function WebsiteEditFlow(): React.JSX.Element {
       bioCharCount > 0
         ? bioCharCount
         : website?.content?.about?.bio
-        ? stripHtml(website.content.about.bio).result.trim().length
-        : 0
+          ? stripHtml(website.content.about.bio).result.trim().length
+          : 0
 
     if (effectiveBioCharCount < MIN_BIO_LENGTH) {
       errors.bio = 'Please complete Your Bio'
@@ -344,8 +355,10 @@ export default function WebsiteEditFlow(): React.JSX.Element {
       <div className="flex-1 overflow-auto p-4 py-6 lg:grid lg:grid-cols-2 gap-6">
         <div className="lg:border-r lg:border-black/[0.12]">
           <div className="flex items-center justify-between p-2 pt-0 lg:px-8">
-            <Button variant="text" href="/dashboard/website">
-              <LuArrowLeft size={24} />
+            <Button asChild variant="ghost">
+              <Link href="/dashboard/website">
+                <LuArrowLeft size={24} />
+              </Link>
             </Button>
             <H4>Edit website</H4>
             <EditSettingsMenu />

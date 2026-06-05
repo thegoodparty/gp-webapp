@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useCallback, useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 import { noop } from '@shared/utils/noop'
 
 import {
@@ -242,28 +242,35 @@ export const NavigationProvider = ({
 
   const closeAll = useCallback(() => setOpenStates(INITIAL_OPEN_STATES), [])
 
-  const makeNewOpenStates = (index: number) => [
-    ...openStates.slice(0, index).fill(false),
-    !openStates[index],
-    ...openStates.slice(index + 1).fill(false),
-  ]
+  // Functional update keeps `toggle` referentially stable (no dependency on the
+  // current `openStates`), so the memoized context value below only changes
+  // when `openStates` actually changes.
+  const toggle = useCallback(
+    (index: number) => () => {
+      setOpenStates((prev) => [
+        ...prev.slice(0, index).fill(false),
+        !prev[index],
+        ...prev.slice(index + 1).fill(false),
+      ])
+    },
+    [],
+  )
 
   useEffect(() => {
     closeAll()
   }, [pathname, closeAll])
 
+  const contextValue = useMemo<NavContextValue>(
+    () => ({
+      dropdowns: DROPDOWNS,
+      openStates,
+      toggle,
+      closeAll,
+    }),
+    [openStates, toggle, closeAll],
+  )
+
   return (
-    <NavContext.Provider
-      value={{
-        dropdowns: DROPDOWNS,
-        openStates,
-        toggle: (index) => () => {
-          setOpenStates(makeNewOpenStates(index))
-        },
-        closeAll,
-      }}
-    >
-      {children}
-    </NavContext.Provider>
+    <NavContext.Provider value={contextValue}>{children}</NavContext.Provider>
   )
 }

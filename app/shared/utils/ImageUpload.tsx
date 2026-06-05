@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { RiImageAddFill } from 'react-icons/ri'
-import BlackButtonClient from '@shared/buttons/BlackButtonClient'
+import { Button } from '@styleguide'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { noop } from './noop'
@@ -78,7 +78,7 @@ const ImageUploadWrapper = ({
           />
         </label>
       ) : (
-        <BlackButtonClient className="bg-black text-white py-0 px-6 font-bold">
+        <Button className="bg-black text-white py-0 px-6 font-bold">
           <RiImageAddFill /> &nbsp; Select &nbsp;&nbsp;
           <input
             type="file"
@@ -87,7 +87,7 @@ const ImageUploadWrapper = ({
             accept="image/*"
             id="file-uploader"
           />
-        </BlackButtonClient>
+        </Button>
       )}
       {fileSizeError && (
         <div className="mt-3 text-red-600">

@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, ChangeEvent } from 'react'
+import { useState, useEffect } from 'react'
 import Body2 from '@shared/typography/Body2'
 import H5 from '@shared/typography/H5'
-import { Switch } from '@mui/material'
+import { Switch } from '@styleguide'
 import { useUser } from '@shared/hooks/useUser'
 import Paper from '@shared/utils/Paper'
 import H2 from '@shared/typography/H2'
@@ -87,15 +87,15 @@ const NotificationSection = (): React.JSX.Element => {
 
   const handleChange = (
     key: keyof NotificationSettings,
-    event: ChangeEvent<HTMLInputElement>,
+    checked: boolean,
   ): void => {
     const updatedState = {
       ...state,
-      [key]: event.target.checked,
+      [key]: checked,
     }
     trackEvent(EVENTS.Settings.Notifications.ToggleEmail, {
       email: key,
-      enabled: event.target.checked,
+      enabled: checked,
     })
     setState(updatedState)
     setInitialUpdate(false)
@@ -116,20 +116,8 @@ const NotificationSection = (): React.JSX.Element => {
           </div>
           <div>
             <Switch
-              onChange={(e) => {
-                handleChange(field.key, e)
-              }}
-              //
-              checked={state[field.key]}
-              sx={{
-                '&.MuiSwitch-root .MuiSwitch-switchBase': {
-                  color: '#F9F9F9',
-                },
-
-                '&.MuiSwitch-root .Mui-checked': {
-                  color: '#0D1528',
-                },
-              }}
+              onCheckedChange={(checked) => handleChange(field.key, checked)}
+              checked={state[field.key] ?? false}
             />
           </div>
         </div>

@@ -1,10 +1,11 @@
-import Button, { ButtonColor } from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 
 interface FooterButtonLinkProps {
   link: string
   id: string
   label: string
-  buttonStyle: ButtonColor
+  buttonStyle: 'tertiary' | 'secondary'
   isExternal?: boolean
 }
 
@@ -12,17 +13,31 @@ export const FooterButtonLink = ({
   link,
   id,
   label,
-  buttonStyle,
   isExternal,
-}: FooterButtonLinkProps): React.JSX.Element => (
-  <Button
-    id={id}
-    href={link}
-    color={buttonStyle}
-    className="focus-visible:outline-white/40 !text-base"
-    target={isExternal ? '_blank' : undefined}
-    rel={isExternal ? 'noopener noreferrer nofollow' : undefined}
-  >
-    {label}
-  </Button>
-)
+}: FooterButtonLinkProps): React.JSX.Element => {
+  if (isExternal) {
+    return (
+      <Button
+        asChild
+        variant="secondary"
+        id={id}
+        className="focus-visible:outline-white/40 !text-base"
+      >
+        <a href={link} target="_blank" rel="noopener noreferrer nofollow">
+          {label}
+        </a>
+      </Button>
+    )
+  }
+
+  return (
+    <Button
+      asChild
+      variant="secondary"
+      id={id}
+      className="focus-visible:outline-white/40 !text-base"
+    >
+      <Link href={link}>{label}</Link>
+    </Button>
+  )
+}

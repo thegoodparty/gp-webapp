@@ -51,8 +51,8 @@ vi.mock('@shared/typography/H1', () => ({
   default: ({ children }: { children: ReactNode }) => <h1>{children}</h1>,
 }))
 
-vi.mock('@shared/buttons/Button', () => ({
-  default: ({
+vi.mock('@styleguide', () => ({
+  Button: ({
     children,
     onClick,
     disabled,

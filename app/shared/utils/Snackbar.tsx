@@ -1,78 +1,33 @@
 'use client'
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  ReactNode,
-  forwardRef,
-} from 'react'
-import MuiSnackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import { createContext, useContext, useCallback, ReactNode } from 'react'
+import { toast } from 'sonner'
+import { Toaster } from '@styleguide'
 
 interface SnackbarState {
-  isOpen: boolean
-  message: string
-  isError: boolean
-  autoHideDuration: number
+  autoHideDuration?: number
 }
 
 interface SnackbarContextValue {
   displaySnackbar: (
     message: string,
     isError?: boolean,
-    optionalProps?: Partial<SnackbarState>,
+    optionalProps?: SnackbarState,
   ) => void
-  errorSnackbar: (
-    message: string,
-    optionalProps?: Partial<SnackbarState>,
-  ) => void
-  successSnackbar: (
-    message: string,
-    optionalProps?: Partial<SnackbarState>,
-  ) => void
+  errorSnackbar: (message: string, optionalProps?: SnackbarState) => void
+  successSnackbar: (message: string, optionalProps?: SnackbarState) => void
 }
 
 const SnackbarContext = createContext<SnackbarContextValue | null>(null)
 
-interface SnackbarProviderProps {
-  children: ReactNode
-}
-
-export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
-  const [snackbarState, setSnackbarState] = useState<SnackbarState>({
-    isOpen: false,
-    message: '',
-    isError: false,
-    autoHideDuration: 4000,
-  })
-
+export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   const displaySnackbar = useCallback(
-    (
-      message: string,
-      isError: boolean = false,
-      optionalProps: Partial<SnackbarState> = {},
-    ): void => {
-      setSnackbarState({
-        isOpen: true,
-        message,
-        isError,
-        autoHideDuration: 4000,
-        ...optionalProps,
-      })
-    },
-    [],
-  )
-
-  const handleClose = useCallback(
-    (_event?: React.SyntheticEvent | Event, reason?: string): void => {
-      if (reason === 'clickaway') {
-        return
+    (message: string, isError = false, optionalProps: SnackbarState = {}) => {
+      const options = { duration: optionalProps.autoHideDuration ?? 4000 }
+      if (isError) {
+        toast.error(message, options)
+      } else {
+        toast.success(message, options)
       }
-      setSnackbarState((prev) => ({
-        ...prev,
-        isOpen: false,
-      }))
     },
     [],
   )
@@ -88,56 +43,10 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
   return (
     <SnackbarContext.Provider value={value}>
       {children}
-      <SnackbarComponent
-        open={snackbarState.isOpen}
-        message={snackbarState.message}
-        isError={snackbarState.isError}
-        autoHideDuration={snackbarState.autoHideDuration}
-        onClose={handleClose}
-      />
+      <Toaster position="bottom-center" richColors closeButton />
     </SnackbarContext.Provider>
   )
 }
-
-const Alert = forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
-  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-))
-
-Alert.displayName = 'Alert'
-
-interface SnackbarComponentProps {
-  open: boolean
-  message: string
-  isError: boolean
-  autoHideDuration: number
-  onClose: (_event?: React.SyntheticEvent | Event, reason?: string) => void
-}
-
-const SnackbarComponent = ({
-  open,
-  message,
-  isError,
-  autoHideDuration,
-  onClose,
-}: SnackbarComponentProps) => (
-  <div>
-    <MuiSnackbar
-      open={open}
-      autoHideDuration={autoHideDuration || 4000}
-      onClose={onClose}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      style={{ zIndex: 5000 }}
-    >
-      <Alert
-        onClose={onClose}
-        severity={isError ? 'error' : 'success'}
-        data-cy="snackbar message"
-      >
-        {message}
-      </Alert>
-    </MuiSnackbar>
-  </div>
-)
 
 export const useSnackbar = (): SnackbarContextValue => {
   const context = useContext(SnackbarContext)
@@ -148,5 +57,4 @@ export const useSnackbar = (): SnackbarContextValue => {
 }
 
 const Snackbar = () => null
-
 export default Snackbar

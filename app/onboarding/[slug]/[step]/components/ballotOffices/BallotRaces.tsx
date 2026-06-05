@@ -1,7 +1,7 @@
 'use client'
 import RaceCard from './RaceCard'
 import { useState, ReactNode } from 'react'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 import {
   createCampaignWithOffice,
   onboardingStep,
@@ -60,8 +60,8 @@ const fetchRaces = async (zipcode: string, level?: string): Promise<Race[]> => {
     level === 'Local/Township/City'
       ? 'Local'
       : level === 'County/Regional'
-      ? 'County'
-      : level
+        ? 'County'
+        : level
 
   const payload = {
     zipcode,
@@ -310,7 +310,7 @@ export default function BallotRaces({
     <section className="mb-2">
       {query.isPending ? (
         <div className="mt-6 text-center">
-          <CircularProgress />
+          <LoaderCircleIcon className="inline size-8 animate-spin" />
           <br />
           <br />
           <H3>Loading Races</H3>

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Modal from '@shared/utils/Modal'
 import TextField from '@shared/inputs/TextField'
 import H1 from '@shared/typography/H1'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import { useUser } from '@shared/hooks/useUser'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -132,7 +132,7 @@ const LogTaskModal = ({
             <div className="flex justify-center items-center mt-6">
               <Button
                 size="large"
-                color="secondary"
+                variant="secondary"
                 onClick={handleSubmit}
                 disabled={Number(value) <= 0}
                 {...trackingAttrs}

@@ -7,7 +7,14 @@ import {
   isValidFecCommitteeId,
   getFecCommitteeIdValidation,
 } from 'app/dashboard/profile/texting-compliance/register/components/FecCommitteeIdInput'
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Label,
+} from '@styleguide'
 import { useEffect, useRef, useState, type ComponentProps } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
 import TextingComplianceForm from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceForm'
@@ -19,7 +26,7 @@ import isEmail from 'validator/es/lib/isEmail'
 import isFilled from '@shared/inputs/IsFilled'
 import AddressAutocomplete from '@shared/AddressAutocomplete'
 import TextingComplianceFooter from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceFooter'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 import { urlIncludesPath } from 'helpers/urlIncludesPath'
 import Body2 from '@shared/typography/Body2'
@@ -322,30 +329,32 @@ const TextingComplianceRegistrationForm = ({
             </Body2>
           </StyledAlert>
         )}
-        <FormControl
-          fullWidth
-          required
-          variant="outlined"
-          error={showError('officeLevel')}
-        >
-          <InputLabel>Office Level</InputLabel>
+        <div className="flex flex-col gap-1.5 w-full">
+          <Label>Office Level *</Label>
           <Select
-            label="Office Level"
-            value={officeLevel || ''}
-            onChange={(e) => handleChange({ officeLevel: e.target.value })}
+            value={getStringValue(officeLevel)}
+            onValueChange={(val) => handleChange({ officeLevel: val })}
           >
-            <MenuItem value="federal">Federal</MenuItem>
-            <MenuItem value="state">State</MenuItem>
-            <MenuItem value="local">Local</MenuItem>
+            <SelectTrigger
+              className="w-full"
+              aria-invalid={showError('officeLevel') || undefined}
+            >
+              <SelectValue placeholder="Select an office level" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="federal">Federal</SelectItem>
+              <SelectItem value="state">State</SelectItem>
+              <SelectItem value="local">Local</SelectItem>
+            </SelectContent>
           </Select>
-        </FormControl>
+        </div>
         <TextField
           label="Campaign Committee Name"
           placeholder="Jane for Council"
           fullWidth
           required
           error={showError('campaignCommitteeName')}
-          value={campaignCommitteeName}
+          value={getStringValue(campaignCommitteeName)}
           onChange={(e) =>
             handleChange({ campaignCommitteeName: e.target.value })
           }
@@ -367,25 +376,25 @@ const TextingComplianceRegistrationForm = ({
               onChange={handleFecCommitteeIdChange}
               error={showError('fecCommitteeId')}
             />
-            <FormControl
-              fullWidth
-              required
-              variant="outlined"
-              error={showError('committeeType')}
-            >
-              <InputLabel>Committee Type</InputLabel>
+            <div className="flex flex-col gap-1.5 w-full">
+              <Label>Committee Type *</Label>
               <Select
-                label="Committee Type"
-                value={formData.committeeType || ''}
-                onChange={(e) =>
-                  handleChange({ committeeType: e.target.value })
-                }
+                value={getStringValue(formData.committeeType)}
+                onValueChange={(val) => handleChange({ committeeType: val })}
               >
-                <MenuItem value="HOUSE">House</MenuItem>
-                <MenuItem value="SENATE">Senate</MenuItem>
-                <MenuItem value="PRESIDENTIAL">Presidential</MenuItem>
+                <SelectTrigger
+                  className="w-full"
+                  aria-invalid={showError('committeeType') || undefined}
+                >
+                  <SelectValue placeholder="Select committee type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="HOUSE">House</SelectItem>
+                  <SelectItem value="SENATE">Senate</SelectItem>
+                  <SelectItem value="PRESIDENTIAL">Presidential</SelectItem>
+                </SelectContent>
               </Select>
-            </FormControl>
+            </div>
           </>
         )}
         <StyledAlert severity="warning" className="mb-6">
@@ -403,7 +412,7 @@ const TextingComplianceRegistrationForm = ({
           required
           error={showError('electionFilingLink')}
           endAdornments={[<FilingLinkInfoIcon key="filing-info-icon" />]}
-          value={electionFilingLink}
+          value={getStringValue(electionFilingLink)}
           onChange={(e) => handleChange({ electionFilingLink: e.target.value })}
         />
         <AddressAutocomplete
@@ -427,7 +436,7 @@ const TextingComplianceRegistrationForm = ({
           fullWidth
           required
           error={showError('email')}
-          value={email}
+          value={getStringValue(email)}
           onChange={(e) => handleChange({ email: e.target.value })}
         />
         <TextField
@@ -436,20 +445,17 @@ const TextingComplianceRegistrationForm = ({
           required
           fullWidth
           error={showError('phone')}
-          value={phone}
+          value={getStringValue(phone)}
           onChange={(e) => handleChange({ phone: e.target.value })}
         />
         <div className="h-32"></div>
       </TextingComplianceForm>
       <TextingComplianceFooter>
         <Button
-          {...{
-            color: 'primary',
-            size: 'large',
-            disabled: loading,
-            loading,
-            onClick: handleOnSubmit,
-          }}
+          size="large"
+          disabled={loading}
+          loading={loading}
+          onClick={handleOnSubmit}
         >
           Submit
         </Button>

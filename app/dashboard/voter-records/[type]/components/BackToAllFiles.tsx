@@ -1,7 +1,8 @@
 'use client'
 
-import Button from '@shared/buttons/Button'
-import { FaChevronLeft } from 'react-icons/fa'
+import { Button } from '@styleguide'
+import Link from 'next/link'
+import { ChevronLeftIcon } from '@styleguide/components/ui/icons'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 interface BackToAllFilesProps {
@@ -15,19 +16,19 @@ export default function BackToAllFiles({
 }: BackToAllFilesProps): React.JSX.Element {
   return (
     <>
-      <Button
-        href="/dashboard/voter-records"
-        size="large"
-        className="w-full flex items-center"
-        onClick={() => {
-          trackEvent(EVENTS.VoterData.FileDetail.ClickBack, {
-            type,
-            file: fileName,
-          })
-        }}
-      >
-        <FaChevronLeft />
-        <div className="ml-2">Back to All Voter Files</div>
+      <Button asChild size="large" className="w-full flex items-center">
+        <Link
+          href="/dashboard/voter-records"
+          onClick={() => {
+            trackEvent(EVENTS.VoterData.FileDetail.ClickBack, {
+              type,
+              file: fileName,
+            })
+          }}
+        >
+          <ChevronLeftIcon />
+          <div className="ml-2">Back to All Voter Files</div>
+        </Link>
       </Button>
     </>
   )

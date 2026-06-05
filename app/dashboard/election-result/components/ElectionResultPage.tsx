@@ -101,7 +101,12 @@ export default function ElectionResultPage(): React.JSX.Element {
     try {
       const wonGeneral = selection === RESULT_WON
 
-      await updateCampaign([{ key: 'details.wonGeneral', value: wonGeneral }])
+      const updated = await updateCampaign([
+        { key: 'details.wonGeneral', value: wonGeneral },
+      ])
+      if (!updated) {
+        throw new Error('Failed to save election result')
+      }
 
       if (campaign) {
         queryClient.setQueryData(CAMPAIGN_QUERY_KEY, {

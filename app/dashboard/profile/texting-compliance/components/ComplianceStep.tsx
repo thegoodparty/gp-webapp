@@ -54,8 +54,8 @@ export default function ComplianceStep({
             isCompleted
               ? 'text-gray-500'
               : isActive
-              ? 'text-gray-900'
-              : 'text-gray-900'
+                ? 'text-gray-900'
+                : 'text-gray-900'
           }`}
         >
           {title}

@@ -1,7 +1,6 @@
 import { noop } from '@shared/utils/noop'
 import { useMemo } from 'react'
-import Button from '@shared/buttons/Button'
-import IconButton from '@shared/buttons/IconButton'
+import { Button, IconButton } from '@styleguide'
 import Modal from '@shared/utils/Modal'
 import CustomVoterAudienceFilters, {
   AudienceFiltersState,
@@ -32,7 +31,7 @@ const isAudienceFilterKey = (key: string): key is AudienceFilterKey => {
 }
 import H2 from '@shared/typography/H2'
 import Body1 from '@shared/typography/Body1'
-import { InfoRounded } from '@mui/icons-material'
+import { InfoIcon } from '@styleguide/components/ui/icons'
 import { CustomVoterFile } from 'helpers/types'
 
 interface ViewAudienceFiltersModalProps {
@@ -72,22 +71,22 @@ const ViewAudienceFiltersModal = ({
       {buttonType === 'icon' ? (
         <IconButton
           size={size}
-          color="info"
+          variant="ghost"
           title="View Audience Filters"
           className={`flex items-center ${className}`}
           onClick={onOpen}
         >
-          <InfoRounded />
+          <InfoIcon />
         </IconButton>
       ) : (
         <Button
           size={size}
-          color="neutral"
+          variant="secondary"
           title="View Audience Filters"
           className={`flex gap-2 items-center ${className}`}
           onClick={onOpen}
         >
-          <InfoRounded /> View Audience Filters
+          <InfoIcon /> View Audience Filters
         </Button>
       )}
       <ActualViewAudienceFiltersModal

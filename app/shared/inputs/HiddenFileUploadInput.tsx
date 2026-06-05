@@ -1,11 +1,10 @@
 'use client'
 import React, { forwardRef } from 'react'
 
-interface HiddenFileUploadInputProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    'onChange' | 'type'
-  > {
+interface HiddenFileUploadInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'onChange' | 'type'
+> {
   onChange: (result: string | ArrayBuffer | null, file: File) => void
 }
 

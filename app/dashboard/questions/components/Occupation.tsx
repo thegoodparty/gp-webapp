@@ -1,5 +1,5 @@
 'use client'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import TextField from '@shared/inputs/TextField'
 import H1 from '@shared/typography/H1'
 
@@ -41,9 +41,9 @@ export default function Occupation({
             }}
           />
           <div className="flex justify-center mt-10" onClick={handleSave}>
-            <PrimaryButton className="mt-3" disabled={!canSave()} type="submit">
+            <Button className="mt-3" disabled={!canSave()} type="submit">
               Next
-            </PrimaryButton>
+            </Button>
           </div>
         </div>
       </form>

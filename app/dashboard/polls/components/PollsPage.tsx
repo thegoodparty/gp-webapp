@@ -5,8 +5,8 @@ import Body1 from '@shared/typography/Body1'
 import Paper from '@shared/utils/Paper'
 import { PollsTable } from './PollsTable'
 import PollWelcomePage from 'app/polls/welcome/components/PollWelcomePage'
-import Button from '@shared/buttons/Button'
-import { LuPlus } from 'react-icons/lu'
+import { Button, PlusIcon } from '@styleguide'
+import Link from 'next/link'
 import { Poll } from '../shared/poll-types'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
@@ -30,16 +30,15 @@ export default function PollsPage({ pathname, polls }: PollsPageProps) {
           </div>
           {hasPolls && (
             <Button
-              href="/dashboard/polls/create"
-              variant="contained"
-              color="info"
+              asChild
               onClick={() => {
                 trackEvent(EVENTS.createPoll.createPollClicked)
               }}
             >
-              <span className="flex items-center gap-2">
-                <LuPlus /> Create Poll
-              </span>
+              <Link href="/dashboard/polls/create">
+                <PlusIcon />
+                Create Poll
+              </Link>
             </Button>
           )}
         </div>

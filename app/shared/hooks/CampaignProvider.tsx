@@ -1,5 +1,5 @@
 'use client'
-import { createContext } from 'react'
+import { createContext, useMemo } from 'react'
 import { Campaign } from 'helpers/types'
 import { useQuery } from '@tanstack/react-query'
 import { clientRequest } from 'gpApi/typed-request'
@@ -34,8 +34,14 @@ export const CampaignProvider = ({
     initialData: initCampaign ?? undefined,
   })
 
+  const campaign = query.data ?? null
+  const contextValue = useMemo<CampaignContextValue>(
+    () => [campaign],
+    [campaign],
+  )
+
   return (
-    <CampaignContext.Provider value={[query.data ?? null]}>
+    <CampaignContext.Provider value={contextValue}>
       {children}
     </CampaignContext.Provider>
   )

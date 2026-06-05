@@ -593,7 +593,7 @@ a:hover {
 
   /*
    * Normalize line-height for SVG icons inside inline containers.
-   * Prevents extra spacing around MUI icons when inside spans.
+   * Prevents extra spacing around inline icons when inside spans.
    * Scoped to exclude styleguide components.
    */
   svg:not([data-slot] *) {
@@ -696,22 +696,6 @@ button.inline-flex.items-center:not([data-slot]) {
   color: #0027dc;
 }
 
-.MuiInputLabel-root.Mui-focused {
-  color: #000;
-}
-
-.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #000;
-}
-
-.MuiInputLabel-root.Mui-error {
-  color: #d32f2f !important;
-}
-
-.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
-  border-color: #d32f2f !important;
-}
-
 strong {
   font-weight: 900;
 }
@@ -762,7 +746,8 @@ strong {
 .pac-container {
   z-index: 9999 !important;
   border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 

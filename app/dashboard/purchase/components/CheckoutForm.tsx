@@ -6,7 +6,7 @@ import {
   useCheckout,
   StripeCheckoutValue,
 } from '@stripe/react-stripe-js/checkout'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import { reportErrorToSentry } from 'app/shared/sentry'
 import { useMutation } from '@tanstack/react-query'
@@ -170,7 +170,6 @@ function CheckoutFormContent({
         disabled={!canSubmit || mutation.isPending}
         loading={mutation.isPending}
         className="mt-6 w-full whitespace-nowrap"
-        color="primary"
         size="large"
       >
         Complete Purchase

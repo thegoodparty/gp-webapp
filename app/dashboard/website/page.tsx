@@ -5,7 +5,6 @@ import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { WebsiteProvider } from './components/WebsiteProvider'
 import candidateAccess from '../shared/candidateAccess'
-import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 import type { WebsiteContact } from 'helpers/types'
 
 const meta = pageMetaData({
@@ -28,11 +27,8 @@ export default async function Page(): Promise<React.JSX.Element> {
   const contacts = contactsResp.ok ? contactsResp.data : null
 
   return (
-    <>
-      <HubSpotChatWidgetScript />
-      <WebsiteProvider website={website} contacts={contacts}>
-        <WebsitePage pathname="/dashboard/website" />
-      </WebsiteProvider>
-    </>
+    <WebsiteProvider website={website} contacts={contacts}>
+      <WebsitePage pathname="/dashboard/website" />
+    </WebsiteProvider>
   )
 }

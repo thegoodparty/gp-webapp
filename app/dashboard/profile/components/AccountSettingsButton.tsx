@@ -1,6 +1,6 @@
 import { PaymentPortalButton } from '@shared/PaymentPortalButton'
 import { MdOpenInNew } from 'react-icons/md'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import Link from 'next/link'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
@@ -18,13 +18,14 @@ export const AccountSettingsButton = ({
     </PaymentPortalButton>
   ) : (
     <div>
-      <Link
-        className="underline"
-        href="/dashboard/pro-sign-up"
-        onClick={() => trackEvent(EVENTS.Settings.Account.ClickUpgrade)}
-      >
-        <PrimaryButton>Upgrade Plan</PrimaryButton>
-      </Link>
+      <Button asChild>
+        <Link
+          href="/dashboard/pro-sign-up"
+          onClick={() => trackEvent(EVENTS.Settings.Account.ClickUpgrade)}
+        >
+          Upgrade Plan
+        </Link>
+      </Button>
     </div>
   )
 }

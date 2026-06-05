@@ -258,9 +258,8 @@ const bootstrapTestUser = async (
     cachedUser = result
   }
 
-  client.defaults.headers.common[
-    'x-organization-slug'
-  ] = `campaign-${campaign.id}`
+  client.defaults.headers.common['x-organization-slug'] =
+    `campaign-${campaign.id}`
 
   await client.put('/v1/campaigns/mine', {
     data: { currentStep: 'onboarding-complete' },

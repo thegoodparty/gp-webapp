@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import AlertDialog from '@shared/utils/AlertDialog'
 import { USER_ROLES } from 'helpers/userHelper'
 import { sendSetPasswordEmail } from 'app/admin/shared/sendSetPasswordEmail'
@@ -37,12 +37,7 @@ export default function ResendPasswordEmailAction({
   return (
     <>
       <div className="my-3">
-        <Button
-          onClick={handleClick}
-          size="small"
-          className="w-full"
-          color="info"
-        >
+        <Button onClick={handleClick} size="small" className="w-full">
           <span className="whitespace-nowrap">Resend Password Email</span>
         </Button>
       </div>

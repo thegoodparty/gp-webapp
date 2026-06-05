@@ -141,8 +141,8 @@ export const useOnboarding = (): UseOnboardingReturn => {
       const isSwornIn = !swornInDate
         ? false
         : isBefore(new Date(), swornInDate)
-        ? false
-        : true
+          ? false
+          : true
       updateFormData({
         swornInDate,
         swornIn: isSwornIn,

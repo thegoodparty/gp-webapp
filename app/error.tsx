@@ -1,5 +1,5 @@
 'use client'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { useUser as useClerkUser } from '@clerk/nextjs'
@@ -73,9 +73,9 @@ export default function Error({ error }: ErrorPageProps): React.JSX.Element {
             Something went wrong. Our engineers are blaming the
             two-party-system.
           </Body1>
-          <Link href="/">
-            <PrimaryButton>Back to our homepage</PrimaryButton>
-          </Link>
+          <Button asChild>
+            <Link href="/">Back to our homepage</Link>
+          </Button>
           <div className="text-sm italic mt-12">{error?.message}</div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo, useState, ChangeEvent } from 'react'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { addDays, format, parseISO, startOfDay } from 'date-fns'
 import { Outreach } from 'app/dashboard/outreach/hooks/OutreachContext'
@@ -98,8 +98,8 @@ export default function ScheduleStep({
           {isRobocall
             ? 'Request robocall'
             : isTextMessage
-            ? 'Schedule text message'
-            : 'Schedule campaign'}
+              ? 'Schedule text message'
+              : 'Schedule campaign'}
         </H1>{' '}
         {/* Dynamic header: "Request" for robocall, "Schedule text message" for text, "Schedule campaign" for others */}
         <Body1 className="mt-4 mb-8">
@@ -160,7 +160,7 @@ export default function ScheduleStep({
         </div>
         <div className="mt-4 grid grid-cols-12 gap-4">
           <div className="col-span-6 text-left mt-6">
-            <Button size="large" color="neutral" onClick={backCallback}>
+            <Button size="large" variant="secondary" onClick={backCallback}>
               Back
             </Button>
           </div>
@@ -168,7 +168,7 @@ export default function ScheduleStep({
             <Button
               loading={isLoading}
               size="large"
-              color="secondary"
+              variant="secondary"
               onClick={handleNext}
               disabled={!canSubmit() || isLoading}
               {...trackingAttrs}

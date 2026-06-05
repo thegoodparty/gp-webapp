@@ -1,4 +1,5 @@
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 
 interface NavButtonProps {
   children: React.ReactNode
@@ -17,9 +18,8 @@ const NavButton = ({
   'data-testid': dataTestId,
   onClick,
 }: NavButtonProps): React.JSX.Element => {
-  const buttonProps = {
-    variant: 'text' as const,
-    ...(href ? { href } : {}),
+  const sharedProps = {
+    variant: 'ghost' as const,
     ...(id ? { id } : {}),
     ...(dataTestId ? { 'data-testid': dataTestId } : {}),
     ...(onClick ? { onClick } : {}),
@@ -28,7 +28,15 @@ const NavButton = ({
       className,
   }
 
-  return <Button {...buttonProps}>{children}</Button>
+  if (href) {
+    return (
+      <Button asChild {...sharedProps}>
+        <Link href={href}>{children}</Link>
+      </Button>
+    )
+  }
+
+  return <Button {...sharedProps}>{children}</Button>
 }
 
 export default NavButton

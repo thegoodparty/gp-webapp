@@ -1,4 +1,10 @@
-import { MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide'
 import { CampaignAiContent, AiContentData } from 'helpers/types'
 import { noop } from '@shared/utils/noop'
 
@@ -51,26 +57,20 @@ export const SmsScriptSelect = ({
   selectedKey,
   onSelect = noop,
 }: SmsScriptSelectProps): React.JSX.Element => {
-  const handleOnChange = (e: SelectChangeEvent<string>) => {
-    onSelect(e.target.value)
-  }
   const options = getSmsScriptSelectOptions(aiContent)
 
   return (
-    <Select
-      value={selectedKey || ''}
-      onChange={handleOnChange}
-      displayEmpty
-      fullWidth
-    >
-      <MenuItem disabled value="">
-        Select a script
-      </MenuItem>
-      {options.map((option) => (
-        <MenuItem key={option.key} value={option.key}>
-          {option.name}
-        </MenuItem>
-      ))}
+    <Select value={selectedKey || ''} onValueChange={onSelect}>
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder="Select a script" />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem key={option.key} value={option.key}>
+            {option.name}
+          </SelectItem>
+        ))}
+      </SelectContent>
     </Select>
   )
 }

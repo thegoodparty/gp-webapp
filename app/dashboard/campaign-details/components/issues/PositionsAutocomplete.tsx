@@ -1,12 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
-import Autocomplete from '@mui/material/Autocomplete'
-import TextField from '@shared/inputs/TextField'
-
-import H5 from '@shared/typography/H5'
-import { Paper } from '@mui/material'
-import { RiSearch2Line } from 'react-icons/ri'
+import { Combobox } from '@styleguide'
 
 interface TopIssue {
   name: string
@@ -36,42 +30,18 @@ export default function PositionsAutocomplete({
   positions,
   updateCallback,
 }: PositionsAutocompleteProps): React.JSX.Element {
-  const sorted = positions.sort(comparePositions)
-  const [inputValue, setInputValue] = useState('')
-
-  const addPosition = (position: Position | null) => {
-    updateCallback(position)
-  }
+  const sorted = [...positions].sort(comparePositions)
 
   return (
     <div>
-      <Autocomplete
+      <Combobox
         options={sorted}
-        groupBy={(option) => {
-          return option.topIssue?.name || ''
-        }}
-        getOptionLabel={(option) => option?.name}
-        fullWidth
-        PaperComponent={({ children }) => (
-          <Paper style={{ background: '#242D3D' }}>{children}</Paper>
-        )}
-        popupIcon={<RiSearch2Line className="mr-2" />}
-        inputValue={inputValue}
-        onInputChange={(_, value) => setInputValue(value || '')}
-        renderInput={(params) => <TextField {...params} label="Add Issue" />}
-        renderGroup={(params) => (
-          <div>
-            <div className="bg-primary-dark p-2">
-              <H5 className="text-gray-600">{params.group}</H5>
-            </div>
-            <div className="bg-primary-dark p-2 text-gray-300">
-              {params.children}
-            </div>
-          </div>
-        )}
-        onChange={(_, item) => {
-          addPosition(item)
-        }}
+        value={null}
+        onChange={updateCallback}
+        getOptionLabel={(option) => option.name}
+        groupBy={(option) => option.topIssue?.name || ''}
+        placeholder="Add Issue"
+        clearable
       />
     </div>
   )

@@ -2,6 +2,8 @@
 import {
   Button,
   IconButton,
+  LockIcon,
+  PencilIcon,
   Select,
   SelectContent,
   SelectGroup,
@@ -22,8 +24,6 @@ import {
 } from '../shared/segments.util'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useShowContactProModal } from '../../hooks/ContactProModal'
-import { Lock } from '@mui/icons-material'
-import { LuPencil } from 'react-icons/lu'
 import { type SegmentResponse } from '../shared/contacts-types'
 
 type SheetMode = (typeof SHEET_MODES)[keyof typeof SHEET_MODES]
@@ -86,8 +86,8 @@ export default function SegmentSection() {
 
     const isCustomSegment = !isDefaultSegment(segments, selectedSegment)
     const segmentName = isCustomSegment
-      ? findCustomSegment(customSegments, selectedSegment)?.name ??
-        selectedSegment
+      ? (findCustomSegment(customSegments, selectedSegment)?.name ??
+        selectedSegment)
       : selectedSegment
 
     trackEvent(EVENTS.Contacts.SegmentViewed, {
@@ -157,7 +157,7 @@ export default function SegmentSection() {
         onClick={handleCreateSegment}
         className="font-normal text-sm px-4 w-full mt-4 md:mt-0 mb-4 md:mb-0 md:w-auto md:ml-4"
       >
-        {!canUseProFeatures && <Lock />}
+        {!canUseProFeatures && <LockIcon />}
         Create list
       </Button>
 
@@ -170,7 +170,7 @@ export default function SegmentSection() {
             className="ml-4 font-normal hidden md:flex"
           >
             <div className="w-10 h-10 flex items-center justify-center">
-              <LuPencil />
+              <PencilIcon />
             </div>
           </IconButton>
           <Button

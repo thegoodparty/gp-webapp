@@ -1,5 +1,5 @@
-import { CircularProgress } from '@mui/material'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import { LoaderCircleIcon } from '@styleguide/components/ui/icons'
 
 interface PaginationButtonsProps {
   currentPage: number
@@ -18,11 +18,11 @@ export default function PaginationButtons({
 }: PaginationButtonsProps): React.JSX.Element {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      {loading && <CircularProgress size={20} />}
+      {loading && <LoaderCircleIcon className="size-5 animate-spin" />}
       <Button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        color="neutral"
+        variant="secondary"
         size="small"
       >
         Previous
@@ -33,7 +33,7 @@ export default function PaginationButtons({
       <Button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        color="neutral"
+        variant="secondary"
         size="small"
       >
         Next

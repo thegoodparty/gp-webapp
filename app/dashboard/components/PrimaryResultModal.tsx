@@ -5,7 +5,7 @@ import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import RadioList from '@shared/inputs/RadioList'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import PartyAnimation from '@shared/animations/PartyAnimation'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -152,7 +152,7 @@ export default function PrimaryResultModal({
               disabled={requestState.loading}
               onClick={() => onClose()}
               type="button"
-              color="neutral"
+              variant="secondary"
               size="large"
               className="px-16"
             >

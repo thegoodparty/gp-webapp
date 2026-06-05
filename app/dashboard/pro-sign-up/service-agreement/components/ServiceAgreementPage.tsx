@@ -6,9 +6,9 @@ import { MdFlag, MdPeople, MdPerson } from 'react-icons/md'
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion'
 import { ChangeEvent, useState } from 'react'
 import Body1 from '@shared/typography/Body1'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Button } from '@styleguide'
 import { TermAndTerminationText } from 'app/dashboard/pro-sign-up/service-agreement/components/TermAndTerminationText'
 import { ServiceAgreementSignatureSection } from 'app/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementSignatureSection'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -69,6 +69,7 @@ export const ServiceAgreementPage = ({
   ])
   const allAccepted = acknowledgements.every((ack) => ack.accepted)
   const [campaignStatus] = useCampaignStatus()
+  const router = useRouter()
   const isVerified = campaignStatus?.['isVerified']
 
   const onAcknowledge =
@@ -132,27 +133,30 @@ export const ServiceAgreementPage = ({
             }}
           />
           <div className="flex flex-col justify-between md:flex-row">
-            <Link href={backLink}>
-              <SecondaryButton
-                className="w-full mb-4 md:mb-0 md:w-auto"
+            <Button
+              asChild
+              variant="secondary"
+              className="w-full mb-4 md:mb-0 md:w-auto"
+            >
+              <Link
+                href={backLink}
                 onClick={() => {
                   trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickBack)
                 }}
               >
                 Back
-              </SecondaryButton>
-            </Link>
-            <Link href="/dashboard/pro-sign-up/purchase-redirect">
-              <PrimaryButton
-                className="w-full md:w-auto"
-                disabled={!allAccepted || !signature}
-                onClick={() => {
-                  trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickFinish)
-                }}
-              >
-                Finish
-              </PrimaryButton>
-            </Link>
+              </Link>
+            </Button>
+            <Button
+              className="w-full md:w-auto"
+              disabled={!allAccepted || !signature}
+              onClick={() => {
+                trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickFinish)
+                router.push('/dashboard/pro-sign-up/purchase-redirect')
+              }}
+            >
+              Finish
+            </Button>
           </div>
         </>
       )}

@@ -9,10 +9,10 @@ import {
 import Subtitle2 from '@shared/typography/Subtitle2'
 import { numberFormatter } from 'helpers/numberHelper'
 import { ContactCountsInfoModal } from 'app/dashboard/components/ContactCountsInfoModal'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { RecordVoterContactsModal } from 'app/dashboard/components/RecordVoterContactsModal'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
-import { InfoOutlined } from '@mui/icons-material'
+import { InfoIcon } from '@styleguide/components/ui/icons'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { RaceTargetMetrics } from 'helpers/types'
 
@@ -49,7 +49,7 @@ export const CampaignProgress = ({
       <div className="flex flex-col md:flex-row md:justify-between items-start gap-4 mb-4">
         <H2>Campaign progress</H2>
         <Button
-          color="neutral"
+          variant="secondary"
           size="medium"
           onClick={toggleRecordModal}
           {...recordTrackingAttrs}
@@ -71,7 +71,7 @@ export const CampaignProgress = ({
           {...infoTrackingAttrs}
         >
           {numberFormatter(needed)} voter contacts needed
-          <InfoOutlined className="ml-2 !text-base" />
+          <InfoIcon className="ml-2 !text-base" />
           <ContactCountsInfoModal
             {...{
               raceTargetMetrics,

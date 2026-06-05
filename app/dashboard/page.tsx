@@ -4,7 +4,6 @@ import candidateAccess from './shared/candidateAccess'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 import { fetchUserWebsite } from 'helpers/fetchUserWebsite'
-import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 import { redirect } from 'next/navigation'
 import type { Task } from './components/tasks/TaskItem'
 import type { TcrCompliance } from 'helpers/types'
@@ -52,14 +51,11 @@ export default async function Page(): Promise<React.JSX.Element> {
     : null
 
   return (
-    <>
-      <HubSpotChatWidgetScript />
-      <DashboardContent
-        pathname="/dashboard"
-        tasks={tasks}
-        tcrCompliance={tcrCompliance}
-        hasWebsite={!!website}
-      />
-    </>
+    <DashboardContent
+      pathname="/dashboard"
+      tasks={tasks}
+      tcrCompliance={tcrCompliance}
+      hasWebsite={!!website}
+    />
   )
 }
