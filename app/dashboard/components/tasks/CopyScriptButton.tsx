@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import { CheckIcon, CopyIcon } from '@styleguide/components/ui/icons'
 import { noop } from '@shared/utils/noop'
@@ -31,7 +31,7 @@ export default function CopyScriptButton({
     <CopyToClipboard text={scriptText} onCopy={handleOnCopy}>
       <Button
         size="large"
-        color="secondary"
+        variant="secondary"
         className="flex items-center"
         {...trackingAttrs}
       >

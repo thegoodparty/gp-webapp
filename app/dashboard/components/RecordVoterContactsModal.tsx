@@ -3,7 +3,7 @@ import { useState, useMemo, ChangeEvent } from 'react'
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import TextField from '@shared/inputs/TextField'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import { VoterContactsState } from '@shared/hooks/VoterContactsProvider'
@@ -260,7 +260,7 @@ export const RecordVoterContactsModal = ({
 
         <div className="flex justify-center">
           <Button
-            color="secondary"
+            variant="secondary"
             size="large"
             onClick={handleSubmit}
             className="px-16"
