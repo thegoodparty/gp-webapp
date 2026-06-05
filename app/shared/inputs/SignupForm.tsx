@@ -4,7 +4,7 @@ import { useState } from 'react'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import TextField from '@shared/inputs/TextField'
 import EmailInput from '@shared/inputs/EmailInput'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { Fragment } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
@@ -204,13 +204,13 @@ const SignupForm = ({
               onClick={submitForm}
               className="mt-10 lg:ml-5 whitespace-nowrap"
             >
-              <PrimaryButton
+              <Button
                 id="submit-email"
                 type="submit"
                 className="bg-black w-full text-white font-bold cursor-pointer"
               >
                 {label}
-              </PrimaryButton>
+              </Button>
             </div>
           </div>
 

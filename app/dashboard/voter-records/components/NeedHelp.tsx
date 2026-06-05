@@ -1,13 +1,18 @@
 'use client'
-import { InputLabel, MenuItem, Select } from '@mui/material'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import {
+  Button,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide'
 import TextField from '@shared/inputs/TextField'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
 import { useState } from 'react'
 import NeedHelpSuccess from './NeedHelpSuccess'
-import Button from '@shared/buttons/Button'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
@@ -98,7 +103,7 @@ export default function NeedHelp(): React.JSX.Element {
     <>
       <Button
         size="large"
-        color="neutral"
+        variant="secondary"
         onClick={() => {
           trackEvent(EVENTS.VoterData.ClickNeedHelp)
           setOpen(true)
@@ -116,31 +121,29 @@ export default function NeedHelp(): React.JSX.Element {
               <div className=" text-center">
                 <H1 className="mb-4">Voter File Help</H1>
               </div>
-              <InputLabel id="type">Voter File Type *</InputLabel>
+              <Label htmlFor="type" className="mb-1 block">
+                Voter File Type *
+              </Label>
               <Select
-                fullWidth
-                labelId="type"
                 value={state.type}
-                displayEmpty
                 required
-                onChange={(e) => {
+                onValueChange={(value) => {
                   trackEvent(EVENTS.VoterData.NeedHelp.SelectType, {
-                    type: e.target.value,
+                    type: value,
                   })
-                  handleChange('type', e.target.value)
-                }}
-                renderValue={(selected) => {
-                  if (selected.length === 0) {
-                    return <div>Select</div>
-                  }
-                  return selected
+                  handleChange('type', value)
                 }}
               >
-                {types.map((option) => (
-                  <MenuItem value={option} key={option}>
-                    {option}
-                  </MenuItem>
-                ))}
+                <SelectTrigger id="type" className="w-full">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  {types.map((option) => (
+                    <SelectItem value={option} key={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
               <div className="mt-8">
                 <TextField
@@ -158,14 +161,16 @@ export default function NeedHelp(): React.JSX.Element {
                 />
               </div>
               <div className="flex justify-between mt-12">
-                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                <PrimaryButton
+                <Button variant="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button
                   type="submit"
                   disabled={!canSave()}
                   onClick={handleSubmit}
                 >
                   Submit
-                </PrimaryButton>
+                </Button>
               </div>
             </form>
           )}

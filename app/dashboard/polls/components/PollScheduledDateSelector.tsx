@@ -10,7 +10,11 @@ import {
 } from 'date-fns'
 import { useState } from 'react'
 import { DayProps, Day } from 'react-day-picker'
-import MuiTooltip from '@mui/material/Tooltip'
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@styleguide/components/ui/tooltip'
 
 export const POLLS_SCHEDULING_COPY =
   'All polls are sent at 11am local time. You can schedule at least 2 business days in advance, and no more than 30 days out.'
@@ -52,22 +56,16 @@ const CustomDay = (props: DayProps) => {
   }
 
   return (
-    <MuiTooltip
-      style={{ backgroundColor: 'black', opacity: 100 }}
-      classes={{
-        tooltip: '!bg-black !opacity-100',
-        arrow: '!text-black !opacity-100',
-      }}
-      title={
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Day {...props} />
+      </TooltipTrigger>
+      <TooltipContent side="top" className="bg-black text-white">
         <p className="text-sm text-white text-center my-0.5">
           {disabledState.reason}
         </p>
-      }
-      arrow
-      placement="top"
-    >
-      <Day {...props} />
-    </MuiTooltip>
+      </TooltipContent>
+    </Tooltip>
   )
 }
 

@@ -23,14 +23,14 @@ const ChatHistoryThread = ({
   }
   return (
     <div
-      className="py-2 flex justify-between px-3 pb-3 hover:bg-primary-main rounded-md transition-colors cursor-pointer max-w-xs"
+      className="py-2 flex justify-between px-3 pb-3 hover:bg-muted rounded-md transition-colors cursor-pointer max-w-xs"
       onClick={handleClick}
     >
       <div className="flex">
         <MdAutoAwesome className=" opacity-50 mt-1" size={20} />
         <div className="ml-2">
           <Body1 className="line-clamp-1">{chat.name}</Body1>
-          <Body2 className="mt-2 text-gray-300">
+          <Body2 className="mt-2 text-muted-foreground">
             {dateUsHelper(chat.updatedAt)}
           </Body2>
         </div>

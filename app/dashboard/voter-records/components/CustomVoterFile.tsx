@@ -1,12 +1,17 @@
-import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import {
+  Button,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide'
 import Body2 from '@shared/typography/Body2'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
 import { useState } from 'react'
 import CustomVoterAudience from './CustomVoterAudience'
-import Button from '@shared/buttons/Button'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { TRACKING_KEYS } from './CustomVoterAudienceFilters'
 import { Campaign } from 'helpers/types'
@@ -120,25 +125,27 @@ const CustomVoterFile = ({
               <div className="mt-8 grid grid-cols-12 gap-4">
                 {fields.map((field) => (
                   <div key={field.id} className="col-span-12">
-                    <InputLabel id={field.id}>{field.label}</InputLabel>
+                    <Label htmlFor={field.id} className="mb-1 block">
+                      {field.label}
+                    </Label>
                     <Select
-                      fullWidth
-                      labelId={field.id}
                       value={state[field.id]}
-                      label={field.label}
-                      displayEmpty
                       required
-                      onChange={(e: SelectChangeEvent<string>) => {
-                        field.onSelect(e.target.value)
-                        handleChange(field.id, e.target.value)
+                      onValueChange={(value) => {
+                        field.onSelect(value)
+                        handleChange(field.id, value)
                       }}
                     >
-                      <MenuItem value="">Select</MenuItem>
-                      {field.options.map((option) => (
-                        <MenuItem value={option} key={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
+                      <SelectTrigger id={field.id} className="w-full">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {field.options.map((option) => (
+                          <SelectItem value={option} key={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </div>
                 ))}
@@ -148,8 +155,10 @@ const CustomVoterFile = ({
                 you.
               </div>
               <div className="flex justify-between mt-12">
-                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                <PrimaryButton
+                <Button variant="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button
                   disabled={!canSave()}
                   onClick={() => {
                     trackEvent(EVENTS.VoterData.CustomFile.ClickNext)
@@ -157,7 +166,7 @@ const CustomVoterFile = ({
                   }}
                 >
                   Next
-                </PrimaryButton>
+                </Button>
               </div>
             </div>
           </div>

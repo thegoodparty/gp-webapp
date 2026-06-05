@@ -1,5 +1,4 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 import Body2 from '@shared/typography/Body2'
 import H1 from '@shared/typography/H1'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
@@ -95,14 +94,12 @@ const CustomVoterAudience = ({
       />
 
       <div className="flex justify-between mt-12">
-        <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
-        <PrimaryButton
-          disabled={!canSave()}
-          onClick={handleSubmit}
-          {...trackingAttrs}
-        >
+        <Button variant="secondary" onClick={backCallback}>
+          Back
+        </Button>
+        <Button disabled={!canSave()} onClick={handleSubmit} {...trackingAttrs}>
           Create Voter File
-        </PrimaryButton>
+        </Button>
       </div>
     </div>
   )

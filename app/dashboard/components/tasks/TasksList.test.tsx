@@ -159,7 +159,7 @@ const makeCampaign = (overrides: Partial<Campaign> = {}): Campaign =>
     },
     hasFreeTextsOffer: false,
     ...overrides,
-  } as unknown as Campaign)
+  }) as unknown as Campaign
 
 const makeTcrCompliance = (
   overrides: Partial<TcrCompliance> = {},

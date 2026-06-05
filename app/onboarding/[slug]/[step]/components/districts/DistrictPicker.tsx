@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import DistrictTypeAutocomplete from './DistrictTypeAutocomplete'
 import DistrictNameAutocomplete from './DistrictNameAutocomplete'
 

@@ -1,6 +1,7 @@
 'use client'
 import H1 from '@shared/typography/H1'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import CopyScriptButton from '../CopyScriptButton'
 import {
   FacebookLogo,
@@ -51,44 +52,64 @@ export default function SocialPostStep({
         <div className="mx-auto my-6 h-[1px] w-[35%] bg-black/[0.12]"></div>
         <div className="flex-col md:grid grid-cols-2 gap-x-8 gap-y-4">
           <Button
-            onClick={trackCompletionEvent}
-            href="https://www.instagram.com/"
-            target="_blank"
-            className="flex items-center gap-2 min-w-[190px]"
-            variant="text"
+            asChild
+            variant="ghost"
             size="large"
+            className="flex items-center gap-2 min-w-[190px]"
           >
-            <InstagramLogo /> Instagram
+            <Link
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={trackCompletionEvent}
+            >
+              <InstagramLogo /> Instagram
+            </Link>
           </Button>
           <Button
-            onClick={trackCompletionEvent}
-            href="https://www.facebook.com/"
-            target="_blank"
-            className="flex items-center gap-2 min-w-[190px]"
-            variant="text"
+            asChild
+            variant="ghost"
             size="large"
+            className="flex items-center gap-2 min-w-[190px]"
           >
-            <FacebookLogo /> Facebook
+            <Link
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={trackCompletionEvent}
+            >
+              <FacebookLogo /> Facebook
+            </Link>
           </Button>
           <Button
-            onClick={trackCompletionEvent}
-            href="https://x.com/compose/post"
-            target="_blank"
-            className="flex items-center gap-2 min-w-[190px]"
-            variant="text"
+            asChild
+            variant="ghost"
             size="large"
+            className="flex items-center gap-2 min-w-[190px]"
           >
-            <TwitterLogo /> X
+            <Link
+              href="https://x.com/compose/post"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={trackCompletionEvent}
+            >
+              <TwitterLogo /> X
+            </Link>
           </Button>
           <Button
-            onClick={trackCompletionEvent}
-            href="https://www.nextdoor.com/"
-            target="_blank"
-            className="flex items-center gap-2 min-w-[190px]"
-            variant="text"
+            asChild
+            variant="ghost"
             size="large"
+            className="flex items-center gap-2 min-w-[190px]"
           >
-            <NextdoorLogo /> Nextdoor
+            <Link
+              href="https://www.nextdoor.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={trackCompletionEvent}
+            >
+              <NextdoorLogo /> Nextdoor
+            </Link>
           </Button>
         </div>
       </div>

@@ -291,8 +291,6 @@ export interface PlanData {
 const PLACEHOLDER_MATCH_RATE_CELL = 0.65
 const PLACEHOLDER_MATCH_RATE_LANDLINE = 0.35
 
-const placeholderCity = (city: string): string => city || 'your district'
-
 const buildTimeline = (
   electionDate: Date | null,
   filingDateStart: Date | null,
@@ -350,94 +348,120 @@ const buildTimeline = (
   const sourceNote = (isReal: boolean, baseNote: string): string =>
     isReal ? `Per BallotReady. ${baseNote}` : `Approximate. ${baseNote}`
 
-  const timeline: TimelineRow[] = [
-    {
-      date: formatDate(filing),
-      milestone: 'Nomination papers filed with Town Clerk',
-      notes: filingIsReal
-        ? 'Filing deadline per BallotReady. Bring two backup copies.'
-        : 'Bring two backup copies.',
-    },
-    {
-      date: formatDate(earlyVotingStart),
-      milestone: 'Early voting begins',
-      notes: sourceNote(
-        earlyVotingStartIsReal,
-        'Persuasion contact should be wrapping up.',
-      ),
-    },
-    {
-      date: formatDate(earlyVotingEnd),
-      milestone: 'Early voting ends',
-      notes: sourceNote(
-        earlyVotingEndIsReal,
-        'Last day for in-person early voting in most jurisdictions.',
-      ),
-    },
-    {
-      date: formatDate(requestBallotStart),
-      milestone: 'Absentee ballot request opens',
-      notes: sourceNote(
-        requestBallotStartIsReal,
-        'Plan introduction text and robocall campaigns to land before this date.',
-      ),
-    },
-    // REGISTRATION.OPEN is the only row with no good E-offset fallback —
-    // registration is year-round in most states. Show only when BR has a
-    // real date so we don't render an invented one.
-    ...(voterRegOpen
-      ? [
-          {
-            date: formatDate(voterRegOpen),
-            milestone: 'Voter registration opens',
-            notes: 'Per BallotReady.',
-          },
-        ]
-      : []),
-    {
-      date: formatDate(voterRegDeadline),
-      milestone: 'Voter registration deadline',
-      notes: sourceNote(voterRegDeadlineIsReal, 'Push via robocall campaign.'),
-    },
-    {
-      date: formatDate(requestBallotEnd),
-      milestone: 'Absentee ballot request deadline',
-      notes: sourceNote(requestBallotEndIsReal, 'Push via text campaign.'),
-    },
-    {
-      date: formatDate(electionDate),
-      milestone: 'Election Day, polls open; absentee ballots due',
-      notes: 'All hands on deck; push via GOTV text and robocall campaigns.',
-    },
-  ]
+  const timelineRows: Array<{ date: Date; milestone: string; notes: string }> =
+    [
+      {
+        date: filing,
+        milestone: 'Nomination papers filed with Town Clerk',
+        notes: filingIsReal
+          ? 'Filing deadline per BallotReady. Bring two backup copies.'
+          : 'Bring two backup copies.',
+      },
+      {
+        date: earlyVotingStart,
+        milestone: 'Early voting begins',
+        notes: sourceNote(
+          earlyVotingStartIsReal,
+          'Persuasion contact should be wrapping up.',
+        ),
+      },
+      {
+        date: earlyVotingEnd,
+        milestone: 'Early voting ends',
+        notes: sourceNote(
+          earlyVotingEndIsReal,
+          'Last day for in-person early voting in most jurisdictions.',
+        ),
+      },
+      {
+        date: requestBallotStart,
+        milestone: 'Absentee ballot request opens',
+        notes: sourceNote(
+          requestBallotStartIsReal,
+          'Plan introduction text and robocall campaigns to land before this date.',
+        ),
+      },
+      // REGISTRATION.OPEN is the only row with no good E-offset fallback —
+      // registration is year-round in most states. Show only when BR has a
+      // real date so we don't render an invented one.
+      ...(voterRegOpen
+        ? [
+            {
+              date: voterRegOpen,
+              milestone: 'Voter registration opens',
+              notes: 'Per BallotReady.',
+            },
+          ]
+        : []),
+      {
+        date: voterRegDeadline,
+        milestone: 'Voter registration deadline',
+        notes: sourceNote(
+          voterRegDeadlineIsReal,
+          'Push via robocall campaign.',
+        ),
+      },
+      {
+        date: requestBallotEnd,
+        milestone: 'Absentee ballot request deadline',
+        notes: sourceNote(requestBallotEndIsReal, 'Push via text campaign.'),
+      },
+      {
+        date: electionDate,
+        milestone: 'Election Day, polls open; absentee ballots due',
+        notes: 'All hands on deck; push via GOTV text and robocall campaigns.',
+      },
+    ]
 
-  const keyDates: KeyDate[] = [
+  const timeline: TimelineRow[] = timelineRows
+    .slice()
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .map((r) => ({
+      date: formatDate(r.date),
+      milestone: r.milestone,
+      notes: r.notes,
+    }))
+
+  const keyDateRows: Array<{ date: Date; description: string }> = [
     {
-      date: formatDate(filing),
+      date: filing,
       description: 'Nomination papers filed with Town Clerk.',
     },
     {
-      date: formatDate(requestBallotStart),
+      date: requestBallotStart,
       description:
         'Absentee / mail ballot requests open. First voter contact must land by this date.',
     },
     {
-      date: formatDate(addDays(electionDate, -20)),
-      description: `${eventCount} community events that you should personally attend.`,
+      date: addDays(electionDate, -20),
+      description:
+        eventCount > 0
+          ? `${eventCount} community event${
+              eventCount === 1 ? '' : 's'
+            } that you should personally attend.`
+          : 'Identify community events in your area to attend in person.',
     },
     {
-      date: formatDate(voterRegDeadline),
+      date: voterRegDeadline,
       description: 'Voter registration deadline.',
     },
     {
-      date: formatDate(requestBallotEnd),
+      date: requestBallotEnd,
       description: 'Absentee ballot request deadline.',
     },
     {
-      date: formatDate(electionDate),
+      date: electionDate,
       description: 'Election Day.',
     },
   ]
+
+  const keyDates: KeyDate[] = keyDateRows
+    .slice()
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .map((r) => ({
+      date: formatDate(r.date),
+      description: r.description,
+    }))
 
   return { timeline, keyDates }
 }
@@ -505,49 +529,20 @@ const buildContactSchedule = (electionDate: Date | null): ContactSend[] => {
 }
 
 const buildCivicEvents = (
-  electionDate: Date | null,
-  city: string,
   communityEvents: CommunityEventsData | undefined,
 ): CivicEvent[] => {
-  // Real LLM-sourced events win when present. An empty array is still a
-  // meaningful "ready, found nothing" — pass it through so the renderer
-  // shows the empty state instead of falling back to templated rows.
+  // Only renders real LLM-sourced events. If the endpoint hasn't resolved
+  // or errored, returns []; the renderer shows an empty/skeleton state
+  // rather than templated rows with invented event names and dates.
   // `address` is the venue's physical street address from BR/search,
-  // null when the search data had no address (per ClickUp Section 7
-  // spec — the column expects an address, not a URL).
-  if (communityEvents) {
-    return communityEvents.events.map((e) => ({
-      event: e.title,
-      address: e.address ?? '',
-      date: dateUsHelper(e.date),
-      why: e.description,
-    }))
-  }
-  if (!electionDate) return []
-  const cityLabel = placeholderCity(city)
-  const event1 = addDays(electionDate, -23)
-  const event2 = addDays(electionDate, -15)
-  const event3 = addDays(electionDate, -13)
-  return [
-    {
-      event: `${cityLabel} Community Fall Festival`,
-      address: '{event_address}',
-      date: formatDate(event1),
-      why: 'High family turnout; literature handoffs and name recognition.',
-    },
-    {
-      event: `${cityLabel} Town Council Public Meeting`,
-      address: '{event_address}',
-      date: formatDate(event2),
-      why: "Demonstrate fluency with the council's actual agenda.",
-    },
-    {
-      event: `${cityLabel} Civic Association Meeting`,
-      address: '{event_address}',
-      date: formatDate(event3),
-      why: 'The single highest-density event in the actual target precinct.',
-    },
-  ]
+  // null when the search data had no address.
+  if (!communityEvents) return []
+  return communityEvents.events.map((e) => ({
+    event: e.title,
+    address: e.address ?? '',
+    date: dateUsHelper(e.date),
+    why: e.description,
+  }))
 }
 
 const OUTLET_TYPE_LABEL: Record<ApiPressOutlet['type'], string> = {
@@ -713,7 +708,6 @@ const FUNDRAISING_MIX: FundraisingRow[] = [
 const KEY_ASSUMPTIONS: string[] = [
   'Turnout behaves like recent comparable off-year municipal elections in your area, roughly 18 to 24 percent of registered voters.',
   'Voter preferences distribute across the field without one opponent dominating. A plurality near 40 percent is often sufficient to win, but we plan to the more conservative 50% + 1 threshold.',
-  'Phone match and deliverability rates are consistent with recent cycles. We assume roughly 60% cell deliverability and 35% landline answer rate.',
   'You will execute the contact cadence on schedule. Any slippage materially reduces the probability of hitting the contact goal.',
 ]
 
@@ -801,7 +795,12 @@ const buildPlanAtAGlance = (
   },
   {
     title: 'Show up in person.',
-    body: `${eventCount} high-density community events during your campaign carry more weight per hour than any paid channel.`,
+    body:
+      eventCount > 0
+        ? `${eventCount} high-density community event${
+            eventCount === 1 ? '' : 's'
+          } during your campaign carry more weight per hour than any paid channel.`
+        : 'Attending community events in person carries more weight per hour than any paid channel.',
   },
   {
     title: 'Message discipline.',
@@ -998,18 +997,6 @@ const buildConfidenceEstimates = (
     )}–${winNumberHigh.toLocaleString('en-US')}`,
     notes: 'Moves with the targeted voters.',
   },
-  {
-    estimate: 'Projected text deliverability',
-    pointValue: '~85%',
-    range: '80–90%',
-    notes: 'Industry benchmark.',
-  },
-  {
-    estimate: 'Projected robocall listen rate',
-    pointValue: '~30%',
-    range: '25–35%',
-    notes: 'Industry benchmark.',
-  },
 ]
 
 const resolveElectionType = (partisanType: string): ElectionType => {
@@ -1056,8 +1043,8 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     input.registeredVoters && input.registeredVoters > 0
       ? input.registeredVoters
       : projectedTurnout > 0
-      ? Math.round(projectedTurnout / 0.22)
-      : 0
+        ? Math.round(projectedTurnout / 0.22)
+        : 0
   const registeredVotersLow = Math.max(0, Math.round(registeredVoters * 0.9))
   const registeredVotersHigh = Math.round(registeredVoters * 1.1)
 
@@ -1081,13 +1068,6 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     0,
     Math.round(projectedTurnout * landlineMatchRate * 2),
   )
-  // Total volunteer-canvass hours over the campaign, derived from the
-  // voter contact goal. Assumes CANVASS_SHARE_OF_CONTACTS of contacts come
-  // through door knocking at DOORS_PER_HOUR. Rounded to the nearest 10.
-  const volunteerHourTarget =
-    Math.round(
-      (voterContactGoal * CANVASS_SHARE_OF_CONTACTS) / DOORS_PER_HOUR / 10,
-    ) * 10
   const averageTouchesPerVoter =
     projectedTurnout > 0
       ? Number((voterContactGoal / projectedTurnout).toFixed(1))
@@ -1109,6 +1089,13 @@ export const buildPlanData = (input: PlanInput): PlanData => {
       )
     }
   }
+
+  // Volunteer-only portion of the Section 5 time budget — matches the
+  // "Volunteer time" row of buildTimeBreakdown. Excludes the candidate's
+  // own hours so the figure on the Key Targets table reconciles with the
+  // volunteer line in the Section 5 table.
+  const volunteerHourTarget =
+    VOLUNTEERS_PER_WEEK * VOLUNTEER_HOURS_PER_SHIFT * weeksRemaining
   const totalDoors = Math.round(voterContactGoal * CANVASS_SHARE_OF_CONTACTS)
   const doorsPerWeek = totalDoors / weeksRemaining
   const candidateDoorsPerWeek = CANDIDATE_HOURS_PER_WEEK * DOORS_PER_HOUR
@@ -1127,11 +1114,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
   // keyDates entry can substitute the actual event count instead of a
   // raw `{N}` placeholder. pressOutlets has no such dependency but is
   // grouped here with civicEvents for clarity.
-  const civicEvents = buildCivicEvents(
-    electionDateValid,
-    input.city,
-    input.communityEvents,
-  )
+  const civicEvents = buildCivicEvents(input.communityEvents)
   const pressOutlets = buildPressOutlets(input.pressOutletsFromApi)
   const eventCount = civicEvents.length
   const mediaCount = pressOutlets.length
@@ -1236,7 +1219,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     {
       metric: 'Volunteer-Hour Target',
       target: `${volunteerHourTarget.toLocaleString('en-US')} volunteer hours`,
-      source: 'Benchmark: 1 volunteer hour per ~3 votes needed.',
+      source: `${VOLUNTEERS_PER_WEEK} volunteers × ${VOLUNTEER_HOURS_PER_SHIFT}-hour shift per week × ${weeksRemaining} weeks of campaigning.`,
     },
   ]
 

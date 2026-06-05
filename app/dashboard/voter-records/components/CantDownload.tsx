@@ -1,4 +1,4 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
 import H1 from '@shared/typography/H1'
@@ -33,12 +33,14 @@ export default function CantDownload(
             <Body2 className="mb-4">
               Please contact us to generate your voter file.
             </Body2>
-            <a
-              href="mailto:politics@goodparty.org"
-              rel="noopener noreferrer nofollow"
-            >
-              <PrimaryButton>Contact us</PrimaryButton>
-            </a>
+            <Button asChild>
+              <a
+                href="mailto:politics@goodparty.org"
+                rel="noopener noreferrer nofollow"
+              >
+                Contact us
+              </a>
+            </Button>
           </div>
         </div>
       </div>

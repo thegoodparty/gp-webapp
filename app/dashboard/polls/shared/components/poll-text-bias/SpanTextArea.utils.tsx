@@ -1,5 +1,9 @@
 import React from 'react'
-import Tooltip from '@mui/material/Tooltip'
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@styleguide/components/ui/tooltip'
 
 export interface TextSpan {
   start: number
@@ -13,10 +17,10 @@ interface RenderHighlightedTextOptions {
   spans: TextSpan[]
 }
 
-export function renderHighlightedText({
+export const renderHighlightedText = ({
   value,
   spans,
-}: RenderHighlightedTextOptions): React.ReactNode {
+}: RenderHighlightedTextOptions): React.ReactNode => {
   if (spans.length === 0) {
     return value
   }
@@ -41,34 +45,23 @@ export function renderHighlightedText({
     const spanText = value.substring(span.start, span.end)
 
     parts.push(
-      <Tooltip
-        key={`span-${index}`}
-        title={span.tooltipContent}
-        placement="top"
-        arrow={false}
-        slotProps={{
-          tooltip: {
-            sx: {
-              padding: '12px',
-              bgcolor: 'white',
-              color: 'black',
-              border: '1px solid #ccc',
-              maxWidth: '300px',
-              '& .MuiTooltip-arrow': {
-                color: 'white',
-              },
-            },
-          },
-        }}
-      >
-        <span
-          className={
-            span.underlineClassName ||
-            'underline decoration-1.5 decoration-dashed cursor-help decoration-error text-error'
-          }
+      <Tooltip key={`span-${index}`}>
+        <TooltipTrigger asChild>
+          <span
+            className={
+              span.underlineClassName ||
+              'underline decoration-1.5 decoration-dashed cursor-help decoration-error text-error'
+            }
+          >
+            {spanText}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          className="bg-white text-black border border-border max-w-[300px] p-3"
         >
-          {spanText}
-        </span>
+          {span.tooltipContent}
+        </TooltipContent>
       </Tooltip>,
     )
 

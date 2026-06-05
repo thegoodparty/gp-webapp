@@ -2,7 +2,8 @@ import { memo } from 'react'
 import H1 from '@shared/typography/H1'
 import Paper from '@shared/utils/Paper'
 import StepList from './StepList'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import StatusChip from './StatusChip'
 import { WEBSITE_STATUS } from '../util/website.util'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
@@ -14,12 +15,16 @@ const DraftState = (): React.JSX.Element => {
       <H1 className="mt-2 mb-8">Finish your website</H1>
       <StepList type="draft" />
       <Button
-        href="/dashboard/website/create"
-        color="secondary"
+        asChild
+        variant="secondary"
         className="mt-12 w-full md:w-auto px-10"
-        onClick={() => trackEvent(EVENTS.CandidateWebsite.Continued)}
       >
-        Complete and publish
+        <Link
+          href="/dashboard/website/create"
+          onClick={() => trackEvent(EVENTS.CandidateWebsite.Continued)}
+        >
+          Complete and publish
+        </Link>
       </Button>
     </Paper>
   )

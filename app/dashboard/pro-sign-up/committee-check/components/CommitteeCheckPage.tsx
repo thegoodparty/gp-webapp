@@ -11,9 +11,10 @@ import { AsyncValidationIcon } from 'app/dashboard/shared/AsyncValidationIcon'
 import { EinCheckInput } from 'app/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { AlreadyProUserPrompt } from 'app/dashboard/shared/AlreadyProUserPrompt'
 import { CommitteeSupportingFilesUpload } from 'app/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
+import { checkEinSanity } from '@shared/inputs/EinSanityCheck'
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>
@@ -59,6 +60,7 @@ const CommitteeCheckPage = ({
   )
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false)
   const [validatedEin, setValidatedEin] = useState<boolean | null>(null)
+  const [einSanityError, setEinSanityError] = useState<string | null>(null)
 
   // We need to do this to determine if file was uploaded in the root bucket, or in a subfolder
   const filenameBits =
@@ -86,6 +88,17 @@ const CommitteeCheckPage = ({
 
   const handleNextClick = async () => {
     trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickNext)
+
+    // Catch obviously-bad EINs (placeholder, SSN-shaped, non-IRS prefix) before
+    // the form submits and kicks off the agentic compliance run. On a pass we
+    // submit exactly as before — no new API call, no payload-shape change.
+    const sanity = checkEinSanity(einInputValue)
+    if (!sanity.valid) {
+      setEinSanityError(sanity.message)
+      return
+    }
+    setEinSanityError(null)
+
     const doCampaignUpdate = async () => {
       setLoadingCampaignUpdate(true)
       await updateCampaign([
@@ -156,9 +169,13 @@ const CommitteeCheckPage = ({
           <EinCheckInput
             name="ein-number"
             value={einInputValue}
-            validated={validatedEin}
+            validated={einSanityError ? false : validatedEin}
             setValidated={setValidatedEin}
-            onChange={setEinInputValue}
+            error={Boolean(einSanityError)}
+            onChange={(value) => {
+              setEinSanityError(null)
+              setEinInputValue(value)
+            }}
             helperText={
               <a
                 href="https://sa.www4.irs.gov/applyein/legalStructure"
@@ -170,6 +187,11 @@ const CommitteeCheckPage = ({
               </a>
             }
           />
+          {einSanityError && (
+            <Body2 className="text-error my-4 text-center">
+              {einSanityError}
+            </Body2>
+          )}
           {validatedEin === false && (
             <Body2 className="text-error my-4 text-center">
               The provided EIN does not appear to match the given registered
@@ -189,15 +211,19 @@ const CommitteeCheckPage = ({
 
           <section className="flex flex-col justify-between mt-4 md:mt-8 md:flex-row">
             <Button
-              href="/dashboard/pro-sign-up"
-              onClick={() => {
-                trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickBack)
-              }}
+              asChild
+              variant="secondary"
               size="large"
-              color="neutral"
-              className=" mb-4 md:mb-0"
+              className="mb-4 md:mb-0"
             >
-              Back
+              <Link
+                href="/dashboard/pro-sign-up"
+                onClick={() => {
+                  trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickBack)
+                }}
+              >
+                Back
+              </Link>
             </Button>
             <Button
               onClick={handleNextClick}

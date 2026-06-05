@@ -1,5 +1,5 @@
 import { LuEye } from 'react-icons/lu'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import LogoStep from './LogoStep'
 import ThemeStep from './ThemeStep'
 import HeroStep from './HeroStep'
@@ -121,7 +121,7 @@ export default function EditSection({
           />
         )}
         <Button
-          variant="outlined"
+          variant="outline"
           className="mx-auto flex items-center justify-center gap-2 mt-8"
           onClick={onPreviewOpen}
         >
@@ -137,7 +137,7 @@ export default function EditSection({
       <div className="mt-auto flex justify-between">
         <Button
           className="block lg:hidden"
-          color="neutral"
+          variant="secondary"
           size="large"
           onClick={onClose}
         >
@@ -145,7 +145,6 @@ export default function EditSection({
         </Button>
         <Button
           className="ml-auto"
-          color="primary"
           size="large"
           onClick={onSave}
           loading={saveLoading}

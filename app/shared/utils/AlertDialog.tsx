@@ -1,9 +1,17 @@
 'use client'
-import React, { ReactNode } from 'react'
-import Dialog from '@mui/material/Dialog'
-import H1 from '@shared/typography/H1'
-import Body2 from '@shared/typography/Body2'
-import Button from '@shared/buttons/Button'
+import { ReactNode } from 'react'
+import {
+  AlertDialog as AlertDialogRoot,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@styleguide/components/ui/alert-dialog'
+import { cn } from '@styleguide/lib/utils'
+import { buttonVariants } from '@styleguide/components/ui/button'
 
 interface AlertDialogProps {
   handleClose: () => void
@@ -24,7 +32,6 @@ const AlertDialog = ({
   open,
   title,
   description,
-  ariaLabel,
   redButton = true,
   cancelLabel = 'Cancel',
   proceedLabel = 'Proceed',
@@ -39,39 +46,37 @@ const AlertDialog = ({
   }
 
   return (
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby={title || ariaLabel}
-      open={open}
-      PaperProps={{ sx: { borderRadius: '20px' } }}
-    >
-      <div className="p-16">
-        <div
-          className="text-3xl flex items-center font-black"
-          id="alert-dialog-title"
-        >
-          <H1 className="mb-4 text-center w-full">{title}</H1>
-        </div>
-        <Body2 className="mx-0 mb-8 text-center">{description}</Body2>
-        <div className="flex items-center justify-center">
-          <Button
-            className="mr-2"
-            variant="contained"
-            color="neutral"
-            onClick={handleCancel}
-          >
+    <AlertDialogRoot open={open}>
+      <AlertDialogContent className="rounded-[20px]">
+        <AlertDialogHeader className="items-center">
+          {title && (
+            <AlertDialogTitle className="text-3xl font-black text-center">
+              {title}
+            </AlertDialogTitle>
+          )}
+          {description && (
+            <AlertDialogDescription className="text-center text-base">
+              {description}
+            </AlertDialogDescription>
+          )}
+        </AlertDialogHeader>
+        <AlertDialogFooter className="justify-center sm:justify-center">
+          <AlertDialogCancel onClick={handleCancel}>
             {cancelLabel}
-          </Button>
-          <Button
+          </AlertDialogCancel>
+          <AlertDialogAction
             onClick={handleProceed}
-            color={redButton ? 'error' : 'primary'}
-            variant="contained"
+            className={cn(
+              redButton
+                ? buttonVariants({ variant: 'destructive' })
+                : buttonVariants({ variant: 'default' }),
+            )}
           >
             {proceedLabel}
-          </Button>
-        </div>
-      </div>
-    </Dialog>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialogRoot>
   )
 }
 

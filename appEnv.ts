@@ -7,7 +7,7 @@ export const IS_DEV =
 export const IS_LOCAL =
   Boolean(
     typeof process !== 'undefined' &&
-      process?.env?.NEXT_PUBLIC_API_BASE?.includes('localhost'),
+    process?.env?.NEXT_PUBLIC_API_BASE?.includes('localhost'),
   ) ||
   Boolean(
     typeof window !== 'undefined' && window.location.href.includes('localhost'),

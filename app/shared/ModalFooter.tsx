@@ -1,10 +1,9 @@
 import React, { MouseEvent, ButtonHTMLAttributes } from 'react'
 import { noop } from '@shared/utils/noop'
-import Button, {
-  ButtonSize,
-  ButtonVariant,
-  ButtonColor,
-} from '@shared/buttons/Button'
+import { Button, type ButtonProps } from '@styleguide'
+
+type SgSize = ButtonProps['size']
+type SgVariant = ButtonProps['variant']
 
 interface ModalFooterProps {
   onBack?: (e: MouseEvent<HTMLButtonElement>) => void
@@ -16,18 +15,16 @@ interface ModalFooterProps {
     ButtonHTMLAttributes<HTMLButtonElement>,
     'size' | 'onClick' | 'disabled' | 'children'
   > & {
-    size?: ButtonSize
-    variant?: ButtonVariant
-    color?: ButtonColor
+    size?: SgSize
+    variant?: SgVariant
     loading?: boolean
   }
   backButtonProps?: Omit<
     ButtonHTMLAttributes<HTMLButtonElement>,
     'size' | 'onClick' | 'children'
   > & {
-    size?: ButtonSize
-    variant?: ButtonVariant
-    color?: ButtonColor
+    size?: SgSize
+    variant?: SgVariant
     loading?: boolean
   }
 }
@@ -46,7 +43,7 @@ export const ModalFooter = ({
       <div className="col-span-6 text-left mt-6 flex justify-start">
         <Button
           size="large"
-          color="neutral"
+          variant="secondary"
           onClick={onBack}
           {...backButtonProps}
         >
@@ -56,7 +53,7 @@ export const ModalFooter = ({
       <div className="col-span-6 text-right mt-6 flex justify-end">
         <Button
           size="large"
-          color="secondary"
+          variant="secondary"
           onClick={onNext}
           disabled={disabled}
           {...nextButtonProps}

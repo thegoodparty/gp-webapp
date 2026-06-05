@@ -2,7 +2,7 @@
 
 import { memo, useState } from 'react'
 import StatusChip from './StatusChip'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import H5 from '@shared/typography/H5'
 import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
@@ -57,36 +57,39 @@ function WebsiteCard({
           <div className="flex gap-4 mt-4 md:mt-0 self-start">
             <Button
               className="flex-1 min-w-[150px]"
-              variant="outlined"
+              variant="outline"
               onClick={() => setShareModalOpen(true)}
             >
               Share
             </Button>
             <Button
+              asChild
               className="flex-1 min-w-[150px] flex justify-center items-center"
-              color="neutral"
-              href="/dashboard/website/editor"
+              variant="secondary"
             >
-              Edit website
+              <Link href="/dashboard/website/editor">Edit website</Link>
             </Button>
           </div>
         </div>
         {!isDomainActive(domain ?? undefined) && (
           <Button
+            asChild
             className="mt-4 gap-2 w-full flex justify-center items-center"
-            color="neutral"
-            variant="outlined"
-            href="/dashboard/website/domain"
-            onClick={() =>
-              trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)
-            }
+            variant="outline"
           >
-            <BsGlobe size={20} />
-            {domain?.name ? (
-              <Body1>Continue domain setup for {domain?.name}</Body1>
-            ) : (
-              <Body1>Add a domain</Body1>
-            )}
+            <Link
+              href="/dashboard/website/domain"
+              onClick={() =>
+                trackEvent(EVENTS.CandidateWebsite.StartedDomainSelection)
+              }
+            >
+              <BsGlobe size={20} />
+              {domain?.name ? (
+                <Body1>Continue domain setup for {domain?.name}</Body1>
+              ) : (
+                <Body1>Add a domain</Body1>
+              )}
+            </Link>
           </Button>
         )}
       </Paper>

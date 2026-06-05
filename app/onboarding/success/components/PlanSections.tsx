@@ -187,8 +187,8 @@ const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
     plan.electionType === 'partisan'
       ? 'partisan'
       : plan.electionType === 'nonpartisan'
-      ? 'nonpartisan'
-      : null
+        ? 'nonpartisan'
+        : null
 
   const electionTypeFragment = electionTypeLabel ? (
     <>
@@ -214,9 +214,7 @@ const TheRaceCopy = ({ plan }: { plan: PlanData }): React.JSX.Element => {
         <span className="font-semibold text-foreground">
           {plan.electionDate}
         </span>
-        . Because the electorate is small and no party cue appears on the
-        ballot, the race is decided by name recognition and turnout, not by
-        ideological persuasion.
+        .
       </p>
     )
   }
@@ -680,7 +678,7 @@ const PlanSections = ({
             </span>{' '}
             for voter outreach, compliance and fees, while{' '}
             <span className="font-semibold text-foreground">
-              {plan.totalCampaignHours.toLocaleString('en-US')}
+              {plan.volunteerHourTarget.toLocaleString('en-US')}
             </span>{' '}
             volunteer hours are needed for in-person campaigning, events, and
             volunteers.

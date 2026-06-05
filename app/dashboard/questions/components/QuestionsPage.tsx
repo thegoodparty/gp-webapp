@@ -102,12 +102,12 @@ const QuestionsPage = (props: QuestionsPageProps): React.JSX.Element => {
         stepKey === 'occupation'
           ? Boolean(details?.occupation)
           : stepKey === 'funFact'
-          ? Boolean(details?.funFact)
-          : stepKey === 'pastExperience'
-          ? Boolean(details?.pastExperience)
-          : stepKey === 'website'
-          ? Boolean(details?.website)
-          : false
+            ? Boolean(details?.funFact)
+            : stepKey === 'pastExperience'
+              ? Boolean(details?.pastExperience)
+              : stepKey === 'website'
+                ? Boolean(details?.website)
+                : false
       if (!details || !stepKey || !isStepComplete) {
         break
       }

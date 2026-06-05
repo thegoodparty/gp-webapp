@@ -2,11 +2,8 @@
 
 import React, { useState, useEffect, ChangeEvent, FocusEvent } from 'react'
 import { AsYouType } from 'libphonenumber-js'
-import InputAdornment from '@mui/material/InputAdornment'
-import IconButton from '@mui/material/IconButton'
-import PhoneIcon from '@mui/icons-material/Phone'
+import { PhoneIcon } from '@styleguide'
 import TextField, { TextFieldProps } from '@shared/inputs/TextField'
-import styles from './PhoneInput.module.scss'
 import { noop } from '@shared/utils/noop'
 
 export const isValidPhone = (phone: string): boolean => {
@@ -20,11 +17,10 @@ export const isValidPhone = (phone: string): boolean => {
   )
 }
 
-interface PhoneInputProps
-  extends Omit<
-    TextFieldProps<'outlined'>,
-    'value' | 'onChange' | 'onBlur' | 'name' | 'variant' | 'error'
-  > {
+interface PhoneInputProps extends Omit<
+  TextFieldProps<'outlined'>,
+  'value' | 'onChange' | 'onBlur' | 'name' | 'variant' | 'error'
+> {
   value: string
   onChangeCallback: (value: string, isValid: boolean) => void
   onBlurCallback?: (value: string) => void
@@ -93,7 +89,7 @@ const PhoneInput = ({
 
   return (
     <TextField
-      className={className ? className : styles.input}
+      className={className}
       value={displayValue}
       label={useLabel ? 'Phone' : ''}
       size="medium"
@@ -108,23 +104,13 @@ const PhoneInput = ({
       InputProps={
         !hideIcon
           ? {
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton>
-                    <PhoneIcon />
-                  </IconButton>
-                </InputAdornment>
+              startAdornment: (
+                <PhoneIcon className="size-4 text-muted-foreground" />
               ),
             }
           : {}
       }
-      InputLabelProps={
-        shrink
-          ? {
-              shrink: true,
-            }
-          : {}
-      }
+      InputLabelProps={shrink ? { shrink: true } : {}}
       {...restProps}
     />
   )

@@ -1,5 +1,6 @@
 'use client'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import HighFiveAnimation from '@shared/animations/HighFiveAnimation'
 import MarketingH3 from '@shared/typography/MarketingH3'
 import { AlertBanner } from 'app/dashboard/components/AlertBanner'
@@ -19,8 +20,8 @@ export default function DomainPurchaseSuccess(): React.JSX.Element {
         title="Verify your domain by clicking the link in your email from our hosting provider, Vercel. Allow up to 30 minutes for your site to go live."
         message=""
       />
-      <Button className="mt-12" href="/dashboard/website">
-        Back to website metrics
+      <Button asChild className="mt-12">
+        <Link href="/dashboard/website">Back to website metrics</Link>
       </Button>
     </div>
   )

@@ -3,7 +3,8 @@
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import { FREE_TEXTS_OFFER } from '../outreach/constants'
 import { EVENTS, trackEvent, buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
@@ -194,14 +195,14 @@ export function ProUpgradeModal({
           <Body2 className="mt-4 text-blue !font-bold">{highlight}</Body2>
         )}
         <Button
-          href="/dashboard/upgrade-to-pro"
+          asChild
           size="large"
-          color="secondary"
+          variant="secondary"
           className="mt-8"
           onClick={handleUpgradeLinkClick}
           {...trackingAttrs}
         >
-          {cta}
+          <Link href="/dashboard/upgrade-to-pro">{cta}</Link>
         </Button>
       </div>
     </Modal>

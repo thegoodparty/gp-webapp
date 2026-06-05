@@ -3,7 +3,8 @@
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import { TCR_COMPLIANCE_STATUS } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 import type { TcrComplianceStatus } from 'helpers/types'
 import { useProUpgradeFlag } from '@shared/experiments/proUpgradeFlag'
@@ -95,17 +96,24 @@ export function ComplianceModal({
         <H1 className="m-0 sm:whitespace-nowrap">{title}</H1>
         <Body2 className="my-4">{description}</Body2>
         <div className="flex justify-between gap-4 mt-8">
-          <Button size="large" color="neutral" onClick={onClose}>
+          <Button size="large" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            href={ctaHref}
-            size="large"
-            color="secondary"
-            onClick={ctaHref ? undefined : onClose}
-          >
-            {cta}
-          </Button>
+          {ctaHref ? (
+            ctaHref.startsWith('mailto:') ? (
+              <Button asChild size="large" variant="secondary">
+                <a href={ctaHref}>{cta}</a>
+              </Button>
+            ) : (
+              <Button asChild size="large" variant="secondary">
+                <Link href={ctaHref}>{cta}</Link>
+              </Button>
+            )
+          ) : (
+            <Button size="large" variant="secondary" onClick={onClose}>
+              {cta}
+            </Button>
+          )}
         </div>
       </div>
     </Modal>

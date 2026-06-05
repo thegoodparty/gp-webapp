@@ -1,4 +1,5 @@
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
@@ -37,15 +38,15 @@ export default function DeadlineModal({
         </Body1>
 
         <div className="flex justify-center gap-4">
-          <Button
-            href={`mailto:${SUPPORT_EMAIL}?subject=Last minute ${type} request`}
-            target="_blank"
-            size="large"
-            color="neutral"
-            onClick={onClose}
-            {...trackingAttrs}
-          >
-            Email our team
+          <Button asChild size="large" variant="secondary" {...trackingAttrs}>
+            <Link
+              href={`mailto:${SUPPORT_EMAIL}?subject=Last minute ${type} request`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onClose}
+            >
+              Email our team
+            </Link>
           </Button>
         </div>
       </div>

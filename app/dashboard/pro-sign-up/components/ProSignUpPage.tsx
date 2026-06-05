@@ -7,7 +7,8 @@ import { CampaignOfficeInputFields } from 'app/dashboard/shared/CampaignOfficeIn
 import { CampaignOfficeSelectionModal } from 'app/dashboard/shared/CampaignOfficeSelectionModal'
 import { getCampaign } from 'app/onboarding/shared/ajaxActions'
 import { AlreadyProUserPrompt } from 'app/dashboard/shared/AlreadyProUserPrompt'
-import Button from '@shared/buttons/Button'
+import Link from 'next/link'
+import { Button } from '@styleguide'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 import { Campaign } from 'helpers/types'
@@ -61,9 +62,9 @@ const ProSignUpPage = ({ campaign }: ProSignUpPageProps): React.JSX.Element => {
           </Body2>
           <CampaignOfficeInputFields values={officeFields} gridLayout={false} />
           <Button
-            className="mb-8 w-full"
-            variant="outlined"
+            variant="outline"
             size="large"
+            className="mb-8 w-full"
             onClick={() => {
               trackEvent(EVENTS.ProUpgrade.EditOffice)
               setShowModal(true)
@@ -71,15 +72,15 @@ const ProSignUpPage = ({ campaign }: ProSignUpPageProps): React.JSX.Element => {
           >
             Edit Office
           </Button>
-          <Button
-            href={confirmedLink}
-            onClick={() => {
-              trackEvent(EVENTS.ProUpgrade.ConfirmOffice)
-            }}
-            className="w-full"
-            size="large"
-          >
-            Confirm
+          <Button asChild size="large" className="w-full">
+            <Link
+              href={confirmedLink}
+              onClick={() => {
+                trackEvent(EVENTS.ProUpgrade.ConfirmOffice)
+              }}
+            >
+              Confirm
+            </Link>
           </Button>
           <CampaignOfficeSelectionModal
             campaign={campaignState || undefined}

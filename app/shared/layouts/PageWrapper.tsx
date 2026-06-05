@@ -16,6 +16,7 @@ import { P2pUxEnabledProvider } from 'app/dashboard/components/tasks/flows/hooks
 import { SentryIdentifier } from '@shared/sentry'
 import AmplitudeInit from '@shared/AmplitudeInit'
 import { ImpersonatingTracker } from '@shared/user/ImpersonatingTracker'
+import { GtmButtonClickTracker } from '@shared/GtmButtonClickTracker'
 import { OrganizationProvider } from '@shared/organization-picker'
 import { getCurrentUserOrganizations } from 'helpers/getCurrentUserOrganizations'
 import { ClerkProvider } from '@clerk/nextjs'
@@ -50,6 +51,7 @@ const PageWrapper = async ({
           <FeatureFlagsProvider>
             <AmplitudeInit />
             <ImpersonatingTracker />
+            <GtmButtonClickTracker />
             <OrganizationProvider
               initialOrganizations={organizations}
               initialSlug={initialOrgSlug}

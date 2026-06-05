@@ -1,6 +1,7 @@
 'use client'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
+import Link from 'next/link'
 
 interface DashboardOrContinueProps {
   closeAll: () => void
@@ -24,13 +25,13 @@ const DashboardOrContinue = ({
       : '/onboarding/office-selection'
     return (
       <Button
-        href={href}
-        onClick={closeAll}
+        asChild
+        variant="secondary"
         id="nav-continue-setup"
-        color="secondary"
+        onClick={closeAll}
         className="!py-2 !text-base font-medium border-none ml-2"
       >
-        Continue Setup
+        <Link href={href}>Continue Setup</Link>
       </Button>
     )
   }
@@ -39,26 +40,30 @@ const DashboardOrContinue = ({
     <div className="ml-4">
       {['candidate'].includes(String(status)) ? (
         <Button
-          href="/dashboard"
+          asChild
+          id="nav-dashboard"
           onClick={closeAll}
-          id={'nav-dashboard'}
           className="font-medium !text-base !py-2 border-none"
         >
-          Dashboard
+          <Link href="/dashboard">Dashboard</Link>
         </Button>
       ) : (
         <Button
-          href={
-            slug
-              ? `/onboarding/${slug}/${step || 1}`
-              : '/onboarding/office-selection'
-          }
-          onClick={closeAll}
+          asChild
+          variant="secondary"
           id="nav-continue-onboarding"
-          color="secondary"
+          onClick={closeAll}
           className="!py-2 !text-base font-medium border-none"
         >
-          Continue<span className="hidden lg:inline"> Onboarding</span>
+          <Link
+            href={
+              slug
+                ? `/onboarding/${slug}/${step || 1}`
+                : '/onboarding/office-selection'
+            }
+          >
+            Continue<span className="hidden lg:inline"> Onboarding</span>
+          </Link>
         </Button>
       )}
     </div>

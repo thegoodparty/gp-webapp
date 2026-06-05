@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import H1 from '@shared/typography/H1'
 import CheckoutPayment from 'app/dashboard/purchase/components/CheckoutPayment'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { FREE_TEXTS_OFFER } from '../../../outreach/constants'
 import { useP2pUxEnabled } from 'app/dashboard/components/tasks/flows/hooks/P2pUxEnabledProvider'
@@ -39,7 +39,7 @@ export const OutreachPurchaseForm = ({
   const isFree =
     checkoutSession?.amount === 0 ||
     (hasFreeTextsOffer && contactCount <= FREE_TEXTS_OFFER.COUNT)
-  const totalCost = isFree ? 0 : checkoutSession?.amount ?? 0
+  const totalCost = isFree ? 0 : (checkoutSession?.amount ?? 0)
 
   const handleFreeComplete = async () => {
     if (isRedeemingRef.current) return

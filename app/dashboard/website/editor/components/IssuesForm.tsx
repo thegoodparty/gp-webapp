@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 import TextField from '@shared/inputs/TextField'
 import Label from './Label'
 import { LuPlus, LuPencil } from 'react-icons/lu'
@@ -152,9 +152,8 @@ export default function IssuesForm({
         {currentIssues?.map((issue, index) => (
           <Button
             key={index}
-            variant="outlined"
+            variant="outline"
             size="large"
-            color="neutral"
             className="w-full [&>span]:text-left !p-4 !py-3 !border-[1px] !border-black/[0.12]"
             onClick={() => handleOpenEditDialog(issue, index)}
           >
@@ -168,9 +167,8 @@ export default function IssuesForm({
           </Button>
         ))}
         <Button
-          variant="outlined"
+          variant="outline"
           size="large"
-          color="neutral"
           onClick={handleAddIssue}
           className="flex items-center w-full !p-4 !py-3 !border-[1px] !border-black/[0.12]"
         >
@@ -227,7 +225,7 @@ export default function IssuesForm({
           }
         />
         <div className="flex justify-between mt-4">
-          <Button size="large" variant="text" onClick={handleDeleteIssue}>
+          <Button size="large" variant="ghost" onClick={handleDeleteIssue}>
             Delete
           </Button>
           <Button size="large" onClick={handleSaveIssue}>

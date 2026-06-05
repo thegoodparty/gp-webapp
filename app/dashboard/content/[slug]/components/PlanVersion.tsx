@@ -2,8 +2,7 @@
 import { useState } from 'react'
 import { dateWithTime } from 'helpers/dateHelper'
 import { IoIosArrowDown } from 'react-icons/io'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
-import { Button } from '@mui/material'
+import { Button } from '@styleguide'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 interface Version {
@@ -31,7 +30,7 @@ export default function PlanVersion({
     return null
   }
 
-  function handleVersionClick(version: Version | null) {
+  const handleVersionClick = (version: Version | null) => {
     trackEvent(EVENTS.ContentBuilder.Editor.SelectVersion, {
       name: version?.name,
       key: version?.key,
@@ -41,19 +40,19 @@ export default function PlanVersion({
 
   return (
     <div className="flex justify-center relative">
-      <div
+      <Button
+        variant="secondary"
+        size="medium"
         onClick={() => {
           trackEvent(EVENTS.ContentBuilder.Editor.OpenVersionPicker)
           setShowMenu(!showMenu)
         }}
       >
-        <SecondaryButton size="medium">
-          <div className="flex items-center whitespace-nowrap">
-            Version &nbsp;
-            <IoIosArrowDown className="text-sm" />
-          </div>
-        </SecondaryButton>
-      </div>
+        <div className="flex items-center whitespace-nowrap">
+          Version &nbsp;
+          <IoIosArrowDown className="text-sm" />
+        </div>
+      </Button>
 
       {showMenu && (
         <>
@@ -67,6 +66,8 @@ export default function PlanVersion({
           <div className="absolute flex flex-col z-50 right-0 min-w-[270px] h-auto bg-primary-dark text-gray-300 rounded-xl shadow-md transition">
             <Button
               key="latest"
+              variant="ghost"
+              className="w-full h-auto p-0 rounded-xl border-none"
               onClick={() => {
                 setShowMenu(false)
                 handleVersionClick(latestVersion)
@@ -84,6 +85,8 @@ export default function PlanVersion({
             {versions.map((version) => (
               <Button
                 key={version.date}
+                variant="ghost"
+                className="w-full h-auto p-0 rounded-xl border-none"
                 onClick={() => {
                   setShowMenu(false)
                   handleVersionClick(version)

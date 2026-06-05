@@ -1,6 +1,5 @@
 import { noop } from '@shared/utils/noop'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@styleguide'
 
 interface IssueEditorButtonsProps {
   disableSave?: boolean
@@ -16,13 +15,13 @@ export const IssueEditorButtons = ({
   onCancel = noop,
 }: IssueEditorButtonsProps): React.JSX.Element => (
   <>
-    <PrimaryButton disabled={disableSave} onClick={onSave}>
+    <Button disabled={disableSave} onClick={onSave}>
       {editIssuePosition ? 'Save' : 'Next'}
-    </PrimaryButton>
+    </Button>
     {editIssuePosition && (
-      <SecondaryButton className="ml-2" variant="outlined" onClick={onCancel}>
+      <Button className="ml-2" variant="outline" onClick={onCancel}>
         Cancel
-      </SecondaryButton>
+      </Button>
     )}
   </>
 )

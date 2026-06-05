@@ -1,7 +1,9 @@
 import { ReactNode, HTMLAttributes } from 'react'
 
-interface Subtitle2Props
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'className'> {
+interface Subtitle2Props extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children' | 'className'
+> {
   children?: ReactNode
   className?: string
 }
@@ -11,7 +13,10 @@ const Subtitle2 = ({
   className = '',
   ...restProps
 }: Subtitle2Props) => (
-  <div className={`font-normal text-sm ${className}`} {...restProps}>
+  <div
+    className={`font-normal leading-normal text-sm ${className}`}
+    {...restProps}
+  >
     {children}
   </div>
 )

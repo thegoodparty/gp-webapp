@@ -3,7 +3,6 @@ import pageMetaData from 'helpers/metadataHelper'
 import candidateAccess from '../shared/candidateAccess'
 import UpgradeToProPage from './components/UpdateToProPage'
 import { serverLoadCandidatePosition } from 'app/dashboard/campaign-details/components/issues/serverIssuesUtils'
-import HubSpotChatWidgetScript from '@shared/scripts/HubSpotChatWidgetScript'
 import { CandidatePosition } from 'helpers/types'
 
 const meta = pageMetaData({
@@ -30,10 +29,5 @@ export default async function Page(): Promise<React.JSX.Element> {
     campaign,
     candidatePositions,
   }
-  return (
-    <>
-      <HubSpotChatWidgetScript />
-      <UpgradeToProPage {...childProps} />
-    </>
-  )
+  return <UpgradeToProPage {...childProps} />
 }

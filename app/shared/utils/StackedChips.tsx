@@ -2,8 +2,10 @@ import Chip from '@shared/utils/Chip'
 import { noop } from './noop'
 import React, { HTMLAttributes } from 'react'
 
-interface StackedChipsProps
-  extends Omit<HTMLAttributes<HTMLSpanElement>, 'onClick' | 'className'> {
+interface StackedChipsProps extends Omit<
+  HTMLAttributes<HTMLSpanElement>,
+  'onClick' | 'className'
+> {
   labels: string[]
   className?: string
   onClick?: (labels: string[], e: React.MouseEvent) => void

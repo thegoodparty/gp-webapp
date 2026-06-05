@@ -1,8 +1,13 @@
 import { useMemo, useState, FormEvent } from 'react'
 import TextField from '@shared/inputs/TextField'
-import { Select } from '@mui/material'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@styleguide'
+import { Button } from '@styleguide'
 import { RunningAgainst } from 'helpers/types'
 
 const partyOptions = [
@@ -81,22 +86,22 @@ export default function RunningAgainstForm({
       />
       <div className="mt-6">
         <Select
-          native
           value={state.party}
-          label="Opponent Party affiliation"
-          fullWidth
           required
-          variant="outlined"
-          onChange={(e) => {
-            handleChangeField('party', e.target.value)
+          onValueChange={(val) => {
+            handleChangeField('party', val)
           }}
         >
-          <option value="">Select Opponent Party</option>
-          {partyOptions.map((op) => (
-            <option value={op} key={op}>
-              {op}
-            </option>
-          ))}
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select Opponent Party" />
+          </SelectTrigger>
+          <SelectContent>
+            {partyOptions.map((op) => (
+              <SelectItem value={op} key={op}>
+                {op}
+              </SelectItem>
+            ))}
+          </SelectContent>
         </Select>
       </div>
 
@@ -116,12 +121,17 @@ export default function RunningAgainstForm({
       </div>
 
       <div className="flex gap-2 mt-4">
-        <SecondaryButton size="small" type="button" onClick={handleCancel}>
+        <Button
+          variant="secondary"
+          size="small"
+          type="button"
+          onClick={handleCancel}
+        >
           Cancel
-        </SecondaryButton>
-        <PrimaryButton size="small" type="submit" disabled={!canSave}>
+        </Button>
+        <Button size="small" type="submit" disabled={!canSave}>
           {isNew ? 'Add Opponent' : 'Finish Editing'}
-        </PrimaryButton>
+        </Button>
       </div>
     </form>
   )

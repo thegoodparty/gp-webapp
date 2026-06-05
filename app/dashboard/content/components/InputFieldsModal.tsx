@@ -1,6 +1,6 @@
 'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import H2 from '@shared/typography/H2'
 import Modal from '@shared/utils/Modal'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
@@ -155,9 +155,13 @@ const InputFieldsModal = ({
           }}
         />
         <div className="flex justify-center mt-6">
-          <div onClick={handleCreate} {...trackingAttrs}>
-            <PrimaryButton disabled={!canCreate()}>Create</PrimaryButton>
-          </div>
+          <Button
+            disabled={!canCreate()}
+            onClick={handleCreate}
+            {...trackingAttrs}
+          >
+            Create
+          </Button>
         </div>
       </div>
     </Modal>

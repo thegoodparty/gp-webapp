@@ -223,7 +223,7 @@ const resolveJurisdiction = ({
   city,
   state,
 }: LocalNewsSourcesSectionProps): string =>
-  office ?? jurisdictionLabel ?? (city ? `${city}, ${state}` : state ?? '')
+  office ?? jurisdictionLabel ?? (city ? `${city}, ${state}` : (state ?? ''))
 
 export const LocalNewsSourcesSection = ({
   city,

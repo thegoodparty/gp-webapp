@@ -125,7 +125,7 @@ export const FeatureFlagsProvider = ({
       variant: (key: string, fallback?: Variant): Variant =>
         client
           ? client.variant(key, fallback)
-          : fallback ?? { value: undefined },
+          : (fallback ?? { value: undefined }),
       all: (): Record<string, Variant> => (client ? client.all() : {}),
       exposure: (key: string): void => client?.exposure(key),
       refresh,

@@ -2,7 +2,7 @@
 import AlertDialog from '@shared/utils/AlertDialog'
 import { useState } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
-import Button from '@shared/buttons/Button'
+import { Button } from '@styleguide'
 
 interface DeleteActionProps {
   id: string
@@ -45,7 +45,7 @@ export default function DeleteAction({
             setShowDelete(true)
           }}
           size="small"
-          color="error"
+          variant="destructive"
           className="w-full"
         >
           <span className="whitespace-nowrap">Delete</span>

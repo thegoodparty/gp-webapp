@@ -2,8 +2,8 @@
 import { noop } from '@shared/utils/noop'
 import { useRef, useState } from 'react'
 import TextField from '@shared/inputs/TextField'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import { CircularProgress } from '@mui/material'
+import { Button } from '@styleguide'
+import { LoaderCircleIcon } from '@styleguide'
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
@@ -160,9 +160,9 @@ export const CommitteeSupportingFilesUpload = ({
           ),
         }}
       />
-      <PrimaryButton
-        className="flex items-center justify-center h-[56px] col-span-10 md:col-span-3 md:mt-[5px] md:h-[51px]"
-        variant="outlined"
+      <Button
+        variant="outline"
+        className="flex items-center justify-center h-[56px] col-span-10 md:col-span-3 md:mt-[5px] md:h-[51px] w-full"
         onClick={() => {
           trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickUpload, {
             element: 'button',
@@ -170,13 +170,12 @@ export const CommitteeSupportingFilesUpload = ({
           onFileBrowseClick()
         }}
         disabled={loadingFileUpload}
-        fullWidth
       >
         <span>Upload</span>
         {loadingFileUpload && (
-          <CircularProgress className="text-primary-light ml-2" size={16} />
+          <LoaderCircleIcon className="text-primary-light ml-2 size-4 animate-spin" />
         )}
-      </PrimaryButton>
+      </Button>
       <HiddenFileUploadInput
         ref={fileInputRef}
         onChange={handleFileChoose}

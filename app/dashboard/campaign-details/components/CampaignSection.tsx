@@ -3,9 +3,9 @@
 import H3 from '@shared/typography/H3'
 import RenderInputField from '@shared/inputs/RenderInputField'
 import { useEffect, useState } from 'react'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Button } from '@styleguide'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
-import { CircularProgress } from '@mui/material'
+import { LoaderCircleIcon } from '@styleguide'
 import { isValidUrl } from 'helpers/linkhelper'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { Campaign } from 'helpers/types'
@@ -164,7 +164,7 @@ export default function CampaignSection(
           const value = state[field.key] ?? ''
           return (
             <div key={field.key} className="col-span-12 md:col-span-6">
-              <div className={`${field.type === 'select' ? '' : 'pt-5'}`}>
+              <div className="pt-5">
                 <RenderInputField
                   field={field}
                   value={value}
@@ -183,14 +183,14 @@ export default function CampaignSection(
       </div>
       <div className={`flex justify-end ${carded ? '' : 'mb-6'}`}>
         {saving ? (
-          <PrimaryButton disabled>
+          <Button disabled>
             <div className="px-3">
-              <CircularProgress size={16} />
+              <LoaderCircleIcon size={16} className="animate-spin" />
             </div>
-          </PrimaryButton>
+          </Button>
         ) : (
           <div onClick={handleSave}>
-            <PrimaryButton disabled={!canSave()}>Save</PrimaryButton>
+            <Button disabled={!canSave()}>Save</Button>
           </div>
         )}
       </div>
