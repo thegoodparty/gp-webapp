@@ -49,4 +49,5 @@ beforeEach(() => {
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => router),
+  usePathname: vi.fn(() => '/'),
 }))
