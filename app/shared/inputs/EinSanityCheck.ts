@@ -144,9 +144,12 @@ export const checkEinSanity = (value: string): EinSanityResult => {
     return fail('placeholder')
   }
 
-  // SSN-shaped: a 9-digit value whose first three digits are 000, 666, or 900-999.
+  // SSN-shaped area prefixes the IRS never issues. We deliberately do NOT reject
+  // the whole 900-999 range here: 90-95, 98, and 99 are legitimate IRS-issued
+  // EIN prefixes, and VALID_EIN_PREFIXES below is the authoritative filter that
+  // already excludes the 9x prefixes the IRS does not use (96, 97).
   const areaDigits = digits.slice(0, 3)
-  if (areaDigits === '000' || areaDigits === '666' || digits[0] === '9') {
+  if (areaDigits === '000' || areaDigits === '666') {
     return fail('ssn-shaped')
   }
 

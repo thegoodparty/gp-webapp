@@ -38,11 +38,18 @@ describe('checkEinSanity', () => {
     expectFail(checkEinSanity('00-0000000'), 'placeholder')
   })
 
-  it('rejects SSN-shaped values (first three digits 000, 666, or 900-999)', () => {
-    expectFail(checkEinSanity('00-0123456'), 'ssn-shaped') // 000...
-    expectFail(checkEinSanity('66-6123456'), 'ssn-shaped') // 666... (66 is a valid prefix, so SSN rule must win)
-    expectFail(checkEinSanity('90-0123456'), 'ssn-shaped') // 900... (90 is a valid prefix, so SSN rule must win)
-    expectFail(checkEinSanity('99-9123456'), 'ssn-shaped') // 999...
+  it('rejects values whose area prefix the IRS never issues (000, 666)', () => {
+    expectFail(checkEinSanity('00-0123456'), 'ssn-shaped') // 000... (00 is also not an issued prefix)
+    expectFail(checkEinSanity('66-6123456'), 'ssn-shaped') // 666... but 66 IS a valid prefix, so the area rule must win
+  })
+
+  it('accepts IRS-issued 9x prefixes (the SSN/ITIN area rule must not swallow them)', () => {
+    // 90-95, 98, 99 are real IRS-issued EIN prefixes. They share the leading 9
+    // with the SSN/ITIN 900-999 area, but VALID_EIN_PREFIXES is authoritative.
+    expect(VALID_EIN_PREFIXES.has('90')).toBe(true)
+    expect(VALID_EIN_PREFIXES.has('99')).toBe(true)
+    expect(checkEinSanity('90-1234567')).toEqual({ valid: true })
+    expect(checkEinSanity('99-1234567')).toEqual({ valid: true })
   })
 
   it('rejects EINs whose prefix the IRS does not issue', () => {
