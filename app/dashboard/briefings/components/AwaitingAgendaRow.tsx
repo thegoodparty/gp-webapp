@@ -61,16 +61,19 @@ export default function AwaitingAgendaRow({
 
   const status = summary.userAgendaStatus
   const isProcessing = status === 'processing'
-  const isCompleted = status === 'completed'
   const pill = pillFor(status)
 
-  // Block re-opening the modal while the user's agenda is either processing
-  // OR completed-but-not-yet-rendered. `completed` is a brief race window
-  // between the agent finishing and the briefing row appearing in the list —
-  // re-opening here would let the user submit a second agenda for the same
-  // meeting and double-dispatch the briefing run. `failed` and `null`/awaiting
-  // both open the modal (failed allows a retry).
-  const rowDisabled = isProcessing || isCompleted
+  // Block re-opening the modal only while the user's agenda is actively
+  // processing. The `completed` state used to lock the row too — to defend
+  // against a double-submit during the brief window between the agent
+  // finishing and the briefing row appearing — but if the briefing row
+  // never persists (e.g., S3/publish failure) the row would stay disabled
+  // with a spinner forever, blocking retry. Trade-off accepted: the worst
+  // case of a double-submit in that race window is one redundant agent
+  // run; the worst case of staying disabled forever is a stuck user with
+  // no escape. The row only renders in the awaiting-agenda surface, so a
+  // genuinely-completed briefing replaces this row within seconds anyway.
+  const rowDisabled = isProcessing
 
   return (
     <>

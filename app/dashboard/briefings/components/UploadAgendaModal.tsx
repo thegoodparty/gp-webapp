@@ -90,19 +90,29 @@ export default function UploadAgendaModal({
     const isEmptyMimePdfName =
       chosen.type === '' && chosen.name.toLowerCase().endsWith('.pdf')
     if (!isPdfMime && !isEmptyMimePdfName) {
-      setFile(null)
-      setErrorMessage('That file isn’t a PDF. Please upload a PDF.')
+      rejectChosenFile('That file isn’t a PDF. Please upload a PDF.')
       return
     }
     if (chosen.size > MAX_AGENDA_BYTES) {
-      setFile(null)
-      setErrorMessage(
+      rejectChosenFile(
         `That file is ${sizeMb.toFixed(1)} MB. Max size is ${MAX_MB} MB.`,
       )
       return
     }
     setFile(chosen)
     if (url) setUrl('')
+  }
+
+  // Reject a just-selected file: clear state AND the DOM input value so the
+  // user can re-pick the SAME file path after fixing whatever's wrong
+  // (e.g., compressing the PDF). Without clearing the DOM value, the input's
+  // change event won't fire on re-selecting the same path.
+  const rejectChosenFile = (message: string) => {
+    setFile(null)
+    setErrorMessage(message)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
   }
 
   const openFilePicker = () => fileInputRef.current?.click()
