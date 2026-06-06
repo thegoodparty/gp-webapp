@@ -61,7 +61,7 @@ interface ProUpgradeWizardProps {
 
 const ProUpgradeWizard = ({
   children,
-}: ProUpgradeWizardProps): React.JSX.Element => {
+}: ProUpgradeWizardProps): React.JSX.Element | null => {
   const router = useRouter()
   const pathname = usePathname()
   const { ready, enabled } = useProUpgrade3Flag()
@@ -105,15 +105,19 @@ const ProUpgradeWizard = ({
     [currentStep, goToStep, goToNextStep, goToPreviousStep],
   )
 
-  // Hold the experience until the flag resolves so the off cohort never sees a
-  // flash of the wizard before the redirect fires.
-  if (!ready || !enabled) {
+  // Hold the experience with a spinner only while the flag is resolving.
+  if (!ready) {
     return (
       <FocusedExperienceWrapper>
         <LoadingAnimation />
       </FocusedExperienceWrapper>
     )
   }
+
+  // Off cohort: the redirect to pro-sign-up is already scheduled in the effect
+  // above. Render nothing rather than a spinner so a silently-failed
+  // router.replace can't strand the user on a permanent "loading" screen.
+  if (!enabled) return null
 
   const canGoBack = currentStep !== null && orderIndex !== 0
   // value-prop and the post-payment SUCCESS surface don't show step progress.
