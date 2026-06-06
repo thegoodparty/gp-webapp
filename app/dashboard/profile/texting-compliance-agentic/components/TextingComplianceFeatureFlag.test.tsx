@@ -65,4 +65,17 @@ describe('TextingComplianceFeatureFlag', () => {
     expect(screen.queryByText('pro-upgrade3-surface')).not.toBeInTheDocument()
     expect(screen.queryByText('agentic-surface')).not.toBeInTheDocument()
   })
+
+  it('shows the legacy surface until the flags resolve, even with a cached "on" variant', () => {
+    // useFlagOn returns `on` independently of `ready`, so a cached/early
+    // variant must not flash a flagged surface before Amplitude resolves.
+    mockUseProUpgrade3Flag.mockReturnValue({ ready: false, enabled: true })
+    mockUseProUpgradeFlag.mockReturnValue({ ready: false, enabled: true })
+
+    render(<TextingComplianceFeatureFlag />)
+
+    expect(screen.getByText('legacy-surface')).toBeInTheDocument()
+    expect(screen.queryByText('pro-upgrade3-surface')).not.toBeInTheDocument()
+    expect(screen.queryByText('agentic-surface')).not.toBeInTheDocument()
+  })
 })

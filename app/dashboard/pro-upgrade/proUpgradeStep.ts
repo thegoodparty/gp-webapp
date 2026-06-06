@@ -28,13 +28,18 @@ export const proUpgradeStepPath = (step: ProUpgradeStep): string =>
   `${PRO_UPGRADE_BASE_PATH}/${step}`
 
 // Linear forward-navigation order for the wizard shell's Back/Next controls.
-// `filing-instructions` is intentionally absent: it is a dead-end branch off
-// `status` (the candidate has not yet filed to run), not a resumable step in
-// the linear flow.
+// Every entry is a step `deriveProUpgradeStep` can actually land on, so the
+// progress bar and nav stay in sync with the router.
+//
+// Two steps are intentionally absent:
+// - `filing-instructions`: a dead-end branch off `status` (the candidate has
+//   not yet filed to run), not a resumable step in the linear flow.
+// - `guidance`: an interstitial with no persisted "seen" state, so the router
+//   cannot derive it. TODO(task 09): insert it here once that task defines how
+//   it is reached and advanced past.
 export const PRO_UPGRADE_STEP_ORDER: ProUpgradeStep[] = [
   PRO_UPGRADE_STEP.VALUE_PROP,
   PRO_UPGRADE_STEP.STATUS,
-  PRO_UPGRADE_STEP.GUIDANCE,
   PRO_UPGRADE_STEP.EIN,
   PRO_UPGRADE_STEP.FILING_DETAILS,
   PRO_UPGRADE_STEP.CANDIDATE_PROFILE,

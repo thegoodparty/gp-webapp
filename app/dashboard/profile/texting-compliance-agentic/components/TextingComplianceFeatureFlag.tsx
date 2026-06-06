@@ -11,12 +11,18 @@ import ProUpgrade3Compliance from './ProUpgrade3Compliance'
 export default function TextingComplianceFeatureFlag(
   props: TextingComplianceProps,
 ): React.JSX.Element {
-  const { enabled: proUpgrade3Enabled } = useProUpgrade3Flag()
+  const { ready, enabled: proUpgrade3Enabled } = useProUpgrade3Flag()
   const { enabled: proUpgrade1Enabled } = useProUpgradeFlag()
 
-  // Precedence: pro-upgrade3 > pro-upgrade1 > legacy. Both variants default to
-  // "off" until the Amplitude client resolves, so the legacy surface shows
-  // during load and the flagged surfaces appear only once a variant is known.
+  // Precedence: pro-upgrade3 > pro-upgrade1 > legacy. Gate on `ready` first:
+  // `useFlagOn` does not tie `on` to `ready`, so a cached/early variant could
+  // otherwise flash a flagged surface before Amplitude resolves. Both flags
+  // come from the same client, so one `ready` covers both; until it resolves
+  // (and for the off cohort) the legacy surface renders.
+  if (!ready) {
+    return <TextingCompliance {...props} />
+  }
+
   if (proUpgrade3Enabled) {
     return <ProUpgrade3Compliance />
   }
