@@ -26,7 +26,7 @@ const pillFor = (status: BriefingSummary['userAgendaStatus']): PillVariant => {
       return {
         label: 'Processing your agenda…',
         className: 'bg-primary/10 text-primary',
-        icon: <LoaderCircle className="size-3 animate-spin" aria-hidden />,
+        icon: <LoaderCircleIcon className="size-3 animate-spin" aria-hidden />,
       }
     case 'failed':
       return {
@@ -40,7 +40,7 @@ const pillFor = (status: BriefingSummary['userAgendaStatus']): PillVariant => {
       return {
         label: 'Finishing up…',
         className: 'bg-primary/10 text-primary',
-        icon: <LoaderCircle className="size-3 animate-spin" aria-hidden />,
+        icon: <LoaderCircleIcon className="size-3 animate-spin" aria-hidden />,
       }
     case 'unknown':
     case null:
@@ -105,7 +105,7 @@ export default function AwaitingAgendaRow({
           {pill.label}
         </span>
 
-        <ChevronRight
+        <ChevronRightIcon
           aria-hidden
           className="size-4 shrink-0 text-muted-foreground"
         />

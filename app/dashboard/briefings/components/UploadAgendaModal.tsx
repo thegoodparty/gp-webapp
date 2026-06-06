@@ -3,13 +3,14 @@
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { LinkIcon, UploadIcon } from '@styleguide'
 import {
   Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  Link2Icon,
+  UploadIcon,
 } from '@styleguide'
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
 import {
@@ -146,7 +147,7 @@ export default function UploadAgendaModal({
           </label>
           <div className="relative">
             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-              <LinkIcon className="size-4" aria-hidden />
+              <Link2Icon className="size-4" aria-hidden />
             </span>
             <input
               id="agenda-url"
@@ -174,7 +175,7 @@ export default function UploadAgendaModal({
             disabled={submitMutation.isPending}
             className="h-12 w-full"
           >
-            <Upload className="size-4 shrink-0" aria-hidden />
+            <UploadIcon className="size-4 shrink-0" aria-hidden />
             <span className="truncate">
               {file ? file.name : 'Upload the meeting packet'}
             </span>

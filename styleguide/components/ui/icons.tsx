@@ -51,6 +51,7 @@ export {
   Star as StarIcon,
   Trash2 as Trash2Icon,
   TriangleAlert as TriangleAlertIcon,
+  Upload as UploadIcon,
   User as UserIcon,
   UserCog as UserCogIcon,
   UsersRound as UsersRoundIcon,
