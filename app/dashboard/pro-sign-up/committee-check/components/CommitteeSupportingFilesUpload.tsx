@@ -125,6 +125,7 @@ export const CommitteeSupportingFilesUpload = ({
       )
       onUploadSuccess(file.name)
     } catch (e) {
+      setErrorMessage('Upload failed. Please try again.')
       onUploadError(e instanceof Error ? e : new Error('Unknown error'))
     } finally {
       setLoadingFileUpload(false)

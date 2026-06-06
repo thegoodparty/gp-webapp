@@ -19,7 +19,7 @@ const validInitialState = (
   electionFilingLink: 'https://example.gov/filings/123',
   campaignCommitteeName: 'Jane for Council',
   officeLevel: 'local',
-  ein: '12-3456789',
+  ein: '12-3456780',
   phone: '5555550123',
   address: { formatted_address: '123 Main St', place_id: 'abc' },
   website: 'https://janeforcity.com',
