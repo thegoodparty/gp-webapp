@@ -70,16 +70,20 @@ describe('CommitteeCheckPage EIN sanity gate', () => {
     expect(mockUpdateCampaign).not.toHaveBeenCalled()
   })
 
-  it('shows an error icon (not a green check) on the EIN field for a bad EIN before submit', () => {
+  it('shows an error icon (not a green check) on the EIN field for a bad EIN before submit', async () => {
     const { container } = render(
       <CommitteeCheckPage campaign={seededCampaign} />,
     )
 
     // Fully-formed shape but a placeholder value: the field icon must not show a
-    // green check just because the shape is right.
+    // green check just because the shape is right. `validatedEin` is set inside
+    // the async `doEinCheck` effect, so wait for the icon to settle rather than
+    // racing the state update.
     setEin('00-0000000')
 
-    expect(container.querySelector('.text-error')).toBeInTheDocument()
+    await waitFor(() =>
+      expect(container.querySelector('.text-error')).toBeInTheDocument(),
+    )
   })
 
   it('submits as before for a well-formed, plausible EIN', async () => {
