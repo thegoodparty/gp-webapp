@@ -75,7 +75,7 @@ const getValidationMessage = (
     campaignCommitteeName:
       'Your official committee name (e.g., "Smith for Council")',
     officeLevel: 'Select an option',
-    ein: "Enter your campaign's real EIN (XX-XXXXXXX) — placeholder or SSN-shaped numbers aren't accepted",
+    ein: "Enter your campaign's real EIN (XX-XXXXXXX) — placeholder values aren't accepted",
     phone: 'Valid US phone number as it appears on your election filing',
     address: 'Select a valid address as it appears on your election filing',
     website: 'Valid URL',

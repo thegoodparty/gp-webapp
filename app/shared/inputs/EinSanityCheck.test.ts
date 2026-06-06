@@ -38,25 +38,22 @@ describe('checkEinSanity', () => {
     expectFail(checkEinSanity('00-0000000'), 'placeholder')
   })
 
-  it('rejects values whose area prefix the IRS never issues (000, 666)', () => {
-    expectFail(checkEinSanity('00-0123456'), 'ssn-shaped') // 000... (00 is also not an issued prefix)
-    expectFail(checkEinSanity('66-6123456'), 'ssn-shaped') // 666... but 66 IS a valid prefix, so the area rule must win
-  })
-
-  it('accepts IRS-issued 9x prefixes (the SSN/ITIN area rule must not swallow them)', () => {
-    // 90-95, 98, 99 are real IRS-issued EIN prefixes. They share the leading 9
-    // with the SSN/ITIN 900-999 area, but VALID_EIN_PREFIXES is authoritative.
-    expect(VALID_EIN_PREFIXES.has('90')).toBe(true)
-    expect(VALID_EIN_PREFIXES.has('99')).toBe(true)
-    expect(checkEinSanity('90-1234567')).toEqual({ valid: true })
+  it('does not treat EIN digit sequences as SSN areas (66-6xxxxxx, 9x prefixes pass)', () => {
+    // An EIN is XX-XXXXXXX: the first two digits are the IRS campus prefix and
+    // the rest are a sequential suffix — there is no SSN "area". So values that
+    // merely look SSN-shaped must still pass when the prefix is IRS-issued.
+    expect(checkEinSanity('66-6123456')).toEqual({ valid: true }) // prefix 66 is issued; suffix digit 6 is irrelevant
+    expect(checkEinSanity('90-1234567')).toEqual({ valid: true }) // 9x prefixes (90-95, 98, 99) are issued
     expect(checkEinSanity('99-1234567')).toEqual({ valid: true })
   })
 
   it('rejects EINs whose prefix the IRS does not issue', () => {
-    // 07 is not in the IRS-issued set; digits are not SSN-shaped
+    // VALID_EIN_PREFIXES is the single authoritative filter for the prefix.
     expect(VALID_EIN_PREFIXES.has('07')).toBe(false)
+    expect(VALID_EIN_PREFIXES.has('00')).toBe(false)
     expectFail(checkEinSanity('07-1234567'), 'invalid-prefix')
     expectFail(checkEinSanity('70-1234567'), 'invalid-prefix')
+    expectFail(checkEinSanity('00-0123456'), 'invalid-prefix') // prefix 00 not issued (was previously mis-flagged ssn-shaped)
   })
 })
 
@@ -68,7 +65,7 @@ describe('einIndicatorState', () => {
   it('returns false for a fully-formed EIN that fails sanity (red X)', () => {
     expect(einIndicatorState('00-0000000')).toBe(false) // placeholder
     expect(einIndicatorState('12-3456789')).toBe(false) // placeholder
-    expect(einIndicatorState('00-0123456')).toBe(false) // ssn-shaped
+    expect(einIndicatorState('00-0123456')).toBe(false) // invalid prefix (00)
     expect(einIndicatorState('07-1234567')).toBe(false) // invalid prefix
   })
 

@@ -56,11 +56,11 @@ describe('validateRegistrationForm', () => {
       expect(result.validations.ein).toBe(false)
     })
 
-    it('rejects an SSN-shaped EIN (000 area prefix)', () => {
+    it('accepts an SSN-looking EIN whose prefix the IRS issues (66-6xxxxxx)', () => {
       const result = validateRegistrationForm(
-        baseValidFormData({ ein: '00-0123456' }),
+        baseValidFormData({ ein: '66-6123456' }),
       )
-      expect(result.validations.ein).toBe(false)
+      expect(result.validations.ein).toBe(true)
     })
 
     it('rejects an EIN with a prefix the IRS does not issue', () => {

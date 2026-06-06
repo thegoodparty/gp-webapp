@@ -96,11 +96,7 @@ export const VALID_EIN_PREFIXES: ReadonlySet<string> = new Set([
   '99',
 ])
 
-export type EinSanityFailureReason =
-  | 'format'
-  | 'placeholder'
-  | 'ssn-shaped'
-  | 'invalid-prefix'
+export type EinSanityFailureReason = 'format' | 'placeholder' | 'invalid-prefix'
 
 export type EinSanityResult =
   | { valid: true }
@@ -110,8 +106,6 @@ const FAILURE_MESSAGES: Record<EinSanityFailureReason, string> = {
   format: 'Enter your EIN in the format XX-XXXXXXX.',
   placeholder:
     "That looks like a placeholder, not a real EIN. Please enter your campaign's EIN.",
-  'ssn-shaped':
-    'That looks like a Social Security number, not an EIN. Please enter your campaign EIN.',
   'invalid-prefix':
     "That EIN's prefix isn't one the IRS issues. Please double-check your EIN.",
 }
@@ -123,12 +117,14 @@ const fail = (reason: EinSanityFailureReason): EinSanityResult => ({
 })
 
 /**
- * Client-side sanity check for an EIN. Catches obviously-bad values (placeholder,
- * SSN-shaped, non-IRS prefix) that pass the shape-only `isValidEIN` check today.
- * Returns a specific reason on failure so the UI can explain what's wrong.
+ * Client-side sanity check for an EIN. Catches obviously-bad values (placeholder
+ * or non-IRS prefix) that pass the shape-only `isValidEIN` check today. Returns a
+ * specific reason on failure so the UI can explain what's wrong.
  *
  * This does NOT prove an EIN is real or registered; it only rejects values that
- * cannot be a valid EIN.
+ * cannot be a valid EIN. Note an EIN is XX-XXXXXXX — the first two digits are the
+ * IRS campus prefix and the rest are a sequential suffix; there is no SSN-style
+ * "area" to validate, so `VALID_EIN_PREFIXES` is the authoritative prefix filter.
  */
 export const checkEinSanity = (value: string): EinSanityResult => {
   if (!EIN_PATTERN_FULL.test(value)) {
@@ -144,15 +140,6 @@ export const checkEinSanity = (value: string): EinSanityResult => {
     return fail('placeholder')
   }
 
-  // SSN-shaped area prefixes the IRS never issues. We deliberately do NOT reject
-  // the whole 900-999 range here: 90-95, 98, and 99 are legitimate IRS-issued
-  // EIN prefixes, and VALID_EIN_PREFIXES below is the authoritative filter that
-  // already excludes the 9x prefixes the IRS does not use (96, 97).
-  const areaDigits = digits.slice(0, 3)
-  if (areaDigits === '000' || areaDigits === '666') {
-    return fail('ssn-shaped')
-  }
-
   if (!VALID_EIN_PREFIXES.has(digits.slice(0, 2))) {
     return fail('invalid-prefix')
   }
@@ -163,8 +150,8 @@ export const checkEinSanity = (value: string): EinSanityResult => {
 /**
  * Validation-icon state for an EIN field. Drives `AsyncValidationIcon`:
  *  - `true`  → fully-formed AND sane EIN — green check.
- *  - `false` → fully-formed but fails sanity (placeholder / SSN-shaped / bad
- *              prefix) — red X. Only reached once the value matches XX-XXXXXXX,
+ *  - `false` → fully-formed but fails sanity (placeholder / bad prefix) — red
+ *              X. Only reached once the value matches XX-XXXXXXX,
  *              so a partially-typed EIN never flashes an error.
  *  - `null`  → incomplete or wrong-shaped — neutral help icon (no error while
  *              the user is still typing).

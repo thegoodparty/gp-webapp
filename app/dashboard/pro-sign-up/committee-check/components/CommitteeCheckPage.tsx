@@ -92,7 +92,7 @@ const CommitteeCheckPage = ({
   const handleNextClick = async () => {
     trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickNext)
 
-    // Catch obviously-bad EINs (placeholder, SSN-shaped, non-IRS prefix) before
+    // Catch obviously-bad EINs (placeholder, non-IRS prefix) before
     // the form submits and kicks off the agentic compliance run. On a pass we
     // submit exactly as before — no new API call, no payload-shape change.
     const sanity = checkEinSanity(einInputValue)
