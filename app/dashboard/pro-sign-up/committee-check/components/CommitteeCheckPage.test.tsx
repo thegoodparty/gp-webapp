@@ -70,6 +70,18 @@ describe('CommitteeCheckPage EIN sanity gate', () => {
     expect(mockUpdateCampaign).not.toHaveBeenCalled()
   })
 
+  it('shows an error icon (not a green check) on the EIN field for a bad EIN before submit', () => {
+    const { container } = render(
+      <CommitteeCheckPage campaign={seededCampaign} />,
+    )
+
+    // Fully-formed shape but a placeholder value: the field icon must not show a
+    // green check just because the shape is right.
+    setEin('00-0000000')
+
+    expect(container.querySelector('.text-error')).toBeInTheDocument()
+  })
+
   it('submits as before for a well-formed, plausible EIN', async () => {
     render(<CommitteeCheckPage campaign={seededCampaign} />)
 

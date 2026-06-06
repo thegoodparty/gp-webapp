@@ -19,7 +19,10 @@ import { useEffect, useRef, useState, type ComponentProps } from 'react'
 import { useFormData } from '@shared/hooks/useFormData'
 import TextingComplianceForm from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceForm'
 import { EinCheckInput } from 'app/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
-import { isValidEIN } from '@shared/inputs/IsValidEIN'
+import {
+  checkEinSanity,
+  einIndicatorState,
+} from '@shared/inputs/EinSanityCheck'
 import isURL from 'validator/es/lib/isURL'
 import isMobilePhone from 'validator/es/lib/isMobilePhone'
 import isEmail from 'validator/es/lib/isEmail'
@@ -72,7 +75,7 @@ const getValidationMessage = (
     campaignCommitteeName:
       'Your official committee name (e.g., "Smith for Council")',
     officeLevel: 'Select an option',
-    ein: 'Valid format (XX-XXXXXXX)',
+    ein: "Enter your campaign's real EIN (XX-XXXXXXX) — placeholder or SSN-shaped numbers aren't accepted",
     phone: 'Valid US phone number as it appears on your election filing',
     address: 'Select a valid address as it appears on your election filing',
     website: 'Valid URL',
@@ -163,7 +166,7 @@ export const validateRegistrationForm = (
       urlIncludesPath(electionFilingLinkValue),
     campaignCommitteeName: isFilled(campaignCommitteeNameValue),
     officeLevel: ['federal', 'state', 'local'].includes(officeLevelValue),
-    ein: Boolean(isValidEIN(einValue)),
+    ein: checkEinSanity(einValue).valid,
     phone: isMobilePhone(phoneValue, 'en-US'),
     // TODO: We should do idiomatic "recommended address" validation flow here,
     //  and elsewhere, to have higher degree of confidence that the address
@@ -255,9 +258,11 @@ const TextingComplianceRegistrationForm = ({
 
   // TODO: Move this redundant logic into EinCheckInput and refactor consumer
   //  components to support signature change
-  const [validEin, setValidEin] = useState(isValidEIN(getStringValue(ein)))
+  const [validEin, setValidEin] = useState(
+    einIndicatorState(getStringValue(ein)),
+  )
   const handleEINChange = (value: string) => {
-    setValidEin(isValidEIN(value))
+    setValidEin(einIndicatorState(value))
     handleChange({ ein: value })
   }
 

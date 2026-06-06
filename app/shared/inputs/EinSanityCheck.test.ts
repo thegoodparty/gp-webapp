@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   checkEinSanity,
+  einIndicatorState,
   VALID_EIN_PREFIXES,
   type EinSanityResult,
 } from '@shared/inputs/EinSanityCheck'
@@ -49,5 +50,25 @@ describe('checkEinSanity', () => {
     expect(VALID_EIN_PREFIXES.has('07')).toBe(false)
     expectFail(checkEinSanity('07-1234567'), 'invalid-prefix')
     expectFail(checkEinSanity('70-1234567'), 'invalid-prefix')
+  })
+})
+
+describe('einIndicatorState', () => {
+  it('returns true for a fully-formed, plausibly-real EIN (green check)', () => {
+    expect(einIndicatorState('12-3456780')).toBe(true)
+  })
+
+  it('returns false for a fully-formed EIN that fails sanity (red X)', () => {
+    expect(einIndicatorState('00-0000000')).toBe(false) // placeholder
+    expect(einIndicatorState('12-3456789')).toBe(false) // placeholder
+    expect(einIndicatorState('00-0123456')).toBe(false) // ssn-shaped
+    expect(einIndicatorState('07-1234567')).toBe(false) // invalid prefix
+  })
+
+  it('returns null while the EIN is incomplete or wrong-shaped (no error mid-typing)', () => {
+    expect(einIndicatorState('')).toBe(null)
+    expect(einIndicatorState('12')).toBe(null)
+    expect(einIndicatorState('12-345')).toBe(null)
+    expect(einIndicatorState('123456789')).toBe(null)
   })
 })

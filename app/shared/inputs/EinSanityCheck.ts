@@ -1,4 +1,4 @@
-import { EIN_PATTERN_FULL } from '@shared/inputs/IsValidEIN'
+import { EIN_PATTERN_FULL, isValidEIN } from '@shared/inputs/IsValidEIN'
 
 /**
  * Valid two-digit EIN prefixes (the campus / online assignment codes the IRS
@@ -156,3 +156,15 @@ export const checkEinSanity = (value: string): EinSanityResult => {
 
   return { valid: true }
 }
+
+/**
+ * Validation-icon state for an EIN field. Drives `AsyncValidationIcon`:
+ *  - `true`  → fully-formed AND sane EIN — green check.
+ *  - `false` → fully-formed but fails sanity (placeholder / SSN-shaped / bad
+ *              prefix) — red X. Only reached once the value matches XX-XXXXXXX,
+ *              so a partially-typed EIN never flashes an error.
+ *  - `null`  → incomplete or wrong-shaped — neutral help icon (no error while
+ *              the user is still typing).
+ */
+export const einIndicatorState = (value: string): boolean | null =>
+  isValidEIN(value) ? checkEinSanity(value).valid : null

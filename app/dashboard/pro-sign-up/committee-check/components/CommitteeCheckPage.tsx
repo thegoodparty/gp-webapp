@@ -14,7 +14,10 @@ import { CommitteeSupportingFilesUpload } from 'app/dashboard/pro-sign-up/commit
 import { Button } from '@styleguide'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { isValidEIN } from '@shared/inputs/IsValidEIN'
-import { checkEinSanity } from '@shared/inputs/EinSanityCheck'
+import {
+  checkEinSanity,
+  einIndicatorState,
+} from '@shared/inputs/EinSanityCheck'
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>
@@ -169,7 +172,11 @@ const CommitteeCheckPage = ({
           <EinCheckInput
             name="ein-number"
             value={einInputValue}
-            validated={einSanityError ? false : validatedEin}
+            validated={
+              einSanityError
+                ? false
+                : validatedEin && einIndicatorState(einInputValue)
+            }
             setValidated={setValidatedEin}
             error={Boolean(einSanityError)}
             onChange={(value) => {
