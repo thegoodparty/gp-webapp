@@ -82,7 +82,14 @@ export default function UploadAgendaModal({
     // otherwise the upload button keeps showing the old filename and
     // submit stays enabled with the OLD file while we render an error
     // about the NEW one.
-    if (chosen.type && chosen.type !== 'application/pdf') {
+    // Android Chrome and some other mobile browsers omit MIME on file
+    // selection (chosen.type === ''). Fall back to the filename extension
+    // before declaring the file non-PDF — otherwise users on those clients
+    // can't upload at all. Matches the backend's looksLikePdf check.
+    const isPdfMime = chosen.type === 'application/pdf'
+    const isEmptyMimePdfName =
+      chosen.type === '' && chosen.name.toLowerCase().endsWith('.pdf')
+    if (!isPdfMime && !isEmptyMimePdfName) {
       setFile(null)
       setErrorMessage('That file isn’t a PDF. Please upload a PDF.')
       return
