@@ -865,8 +865,8 @@ const theRaceCopy = (plan: PlanData): string => {
     plan.electionType === 'partisan'
       ? 'a partisan election'
       : plan.electionType === 'nonpartisan'
-      ? 'a nonpartisan election'
-      : 'a race'
+        ? 'a nonpartisan election'
+        : 'a race'
 
   if (plan.opponentCount === 0) {
     return `You are running for ${plan.race}${district}. As of ${plan.planGenerationDate}, the race is uncontested — we'll update this plan as we become aware of candidates entering the race. Election Day is ${plan.electionDate}. Because the electorate is small and no party cue appears on the ballot, the race is decided by name recognition and turnout, not by ideological persuasion.`
@@ -1015,8 +1015,8 @@ export const CampaignPlanPdfDocument = ({
           plan.voterInsightsSource === 'district'
             ? 'The issues below come from district-level survey data on what voters here care about most right now. Personalize your platform around them in Campaign Manager.'
             : plan.voterInsightsSource === 'candidate'
-            ? 'The issues below are the ones you flagged during onboarding. Keep them updated in Campaign Manager as your platform evolves.'
-            : 'These are common top issues in races at this level. Personalize them in Campaign Manager to align your plan with the actual race.'
+              ? 'The issues below are the ones you flagged during onboarding. Keep them updated in Campaign Manager as your platform evolves.'
+              : 'These are common top issues in races at this level. Personalize them in Campaign Manager to align your plan with the actual race.'
         }
         transition="Voter insights sharpen as you fill in your platform and we layer in district-specific survey data. Update your issues in Campaign Manager and this section will re-frame around your priorities."
       >

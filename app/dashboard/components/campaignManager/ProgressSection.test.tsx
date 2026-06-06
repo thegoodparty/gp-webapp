@@ -53,7 +53,7 @@ const makeCampaign = (voterContactGoal = 1000): Campaign =>
       winNumber: 0,
       voterContactGoal,
     },
-  } as unknown as Campaign)
+  }) as unknown as Campaign
 
 const makeVoterContacts = (
   overrides: Partial<VoterContactsState> = {},

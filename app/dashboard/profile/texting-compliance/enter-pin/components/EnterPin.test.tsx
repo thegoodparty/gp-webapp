@@ -12,9 +12,10 @@ const mockGetTcrCompliance = vi.fn<() => Promise<TcrCompliance | null>>()
 vi.mock(
   'app/dashboard/profile/texting-compliance/util/tcrCompliance.util',
   async (importOriginal) => {
-    const actual = await importOriginal<
-      typeof import('app/dashboard/profile/texting-compliance/util/tcrCompliance.util')
-    >()
+    const actual =
+      await importOriginal<
+        typeof import('app/dashboard/profile/texting-compliance/util/tcrCompliance.util')
+      >()
     return {
       ...actual,
       getTcrCompliance: () => mockGetTcrCompliance(),
@@ -38,9 +39,8 @@ vi.mock('@shared/hooks/useUser', () => ({
 
 const mockTrackEvent = vi.fn()
 vi.mock('helpers/analyticsHelper', async (importOriginal) => {
-  const actual = await importOriginal<
-    typeof import('helpers/analyticsHelper')
-  >()
+  const actual =
+    await importOriginal<typeof import('helpers/analyticsHelper')>()
   return {
     ...actual,
     trackEvent: (...args: unknown[]) => mockTrackEvent(...args),

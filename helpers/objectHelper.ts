@@ -30,8 +30,11 @@ export const pick = <T extends Record<string, V>, V, K extends keyof T>(
 
   return keys
     .filter((key) => key in obj)
-    .reduce((obj2, key) => {
-      obj2[key] = obj[key]
-      return obj2
-    }, {} as Pick<T, K>)
+    .reduce(
+      (obj2, key) => {
+        obj2[key] = obj[key]
+        return obj2
+      },
+      {} as Pick<T, K>,
+    )
 }

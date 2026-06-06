@@ -213,8 +213,8 @@ export default function VoterRecordsPage(
                   } ${header === 'AUDIENCE' ? 'hidden lg:block' : ''}
               
               ${header === 'PURPOSE' ? 'hidden md:block' : ''} ${
-                    header === 'CHANNEL' ? 'hidden sm:block' : ''
-                  }`}
+                header === 'CHANNEL' ? 'hidden sm:block' : ''
+              }`}
                   key={index}
                 >
                   <Overline>{header}</Overline>
@@ -230,8 +230,8 @@ export default function VoterRecordsPage(
                       } ${index2 === 2 ? 'col-span-1' : 'col-span-2'}
                   
                   ${index2 === 3 ? 'hidden lg:flex ' : ''} ${
-                        index2 === 2 ? 'hidden md:flex ' : ''
-                      }${index2 === 1 ? 'hidden sm:flex' : ''}`}
+                    index2 === 2 ? 'hidden md:flex ' : ''
+                  }${index2 === 1 ? 'hidden sm:flex' : ''}`}
                     >
                       {index2 === 0 ? (
                         <Link

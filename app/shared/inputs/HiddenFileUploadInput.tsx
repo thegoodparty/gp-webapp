@@ -10,11 +10,10 @@ import React, { forwardRef } from 'react'
  * onChange, but every consumer underscore-discarded that argument (and on
  * binary PDFs the text decode produces garbage). Dropped the read entirely.
  */
-interface HiddenFileUploadInputProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    'onChange' | 'type'
-  > {
+interface HiddenFileUploadInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'onChange' | 'type'
+> {
   onChange: (file: File) => void
 }
 
