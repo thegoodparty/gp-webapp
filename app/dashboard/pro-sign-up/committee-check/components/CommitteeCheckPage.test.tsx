@@ -53,20 +53,18 @@ describe('CommitteeCheckPage EIN sanity gate', () => {
     vi.clearAllMocks()
   })
 
-  it('blocks submission and shows a specific error for a non-IRS-prefix EIN', async () => {
+  it('disables Next and shows a specific error inline for a non-IRS-prefix EIN', async () => {
     render(<CommitteeCheckPage campaign={seededCampaign} />)
 
     // 07 is not an IRS-issued prefix, but the value passes the shape-only check.
     setEin('07-1234567')
 
-    const nextButton = await screen.findByRole('button', { name: 'Next' })
-    await waitFor(() => expect(nextButton).toBeEnabled())
-
-    fireEvent.click(nextButton)
-
+    // The reason is surfaced inline — the button is disabled, so there is no
+    // click to reveal it on submit.
     expect(
       await screen.findByText(/prefix isn't one the IRS issues/i),
     ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled()
     expect(mockUpdateCampaign).not.toHaveBeenCalled()
   })
 

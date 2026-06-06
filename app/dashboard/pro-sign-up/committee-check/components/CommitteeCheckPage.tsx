@@ -13,7 +13,6 @@ import { AlreadyProUserPrompt } from 'app/dashboard/shared/AlreadyProUserPrompt'
 import { CommitteeSupportingFilesUpload } from 'app/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
 import { Button } from '@styleguide'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { isValidEIN } from '@shared/inputs/IsValidEIN'
 import {
   checkEinSanity,
   einIndicatorState,
@@ -63,7 +62,6 @@ const CommitteeCheckPage = ({
   )
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false)
   const [validatedEin, setValidatedEin] = useState<boolean | null>(null)
-  const [einSanityError, setEinSanityError] = useState<string | null>(null)
 
   // We need to do this to determine if file was uploaded in the root bucket, or in a subfolder
   const filenameBits =
@@ -73,14 +71,11 @@ const CommitteeCheckPage = ({
   )
 
   const doEinCheck = useCallback(async () => {
-    const validEINFormat = isValidEIN(einInputValue)
-    const inputsValid = campaignCommittee && validEINFormat
-
-    if (!inputsValid) {
-      setValidatedEin(null)
-    } else {
-      setValidatedEin(validEINFormat)
-    }
+    // `einIndicatorState` is sanity-aware: true only for a complete, plausible
+    // EIN, false for a complete-but-bad one (placeholder / non-IRS prefix), and
+    // null while still typing. Gate on a committee name first so neither field
+    // shows a verdict before there's anything to validate against.
+    setValidatedEin(campaignCommittee ? einIndicatorState(einInputValue) : null)
   }, [einInputValue, campaignCommittee])
 
   useEffect(() => {
@@ -92,15 +87,12 @@ const CommitteeCheckPage = ({
   const handleNextClick = async () => {
     trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickNext)
 
-    // Catch obviously-bad EINs (placeholder, non-IRS prefix) before
-    // the form submits and kicks off the agentic compliance run. On a pass we
-    // submit exactly as before — no new API call, no payload-shape change.
-    const sanity = checkEinSanity(einInputValue)
-    if (!sanity.valid) {
-      setEinSanityError(sanity.message)
+    // Defense-in-depth: the Next button is disabled while the EIN fails sanity
+    // (placeholder, non-IRS prefix), but never submit a bad EIN — and kick off
+    // the agentic compliance run — even if that gate is somehow bypassed.
+    if (!checkEinSanity(einInputValue).valid) {
       return
     }
-    setEinSanityError(null)
 
     const doCampaignUpdate = async () => {
       setLoadingCampaignUpdate(true)
@@ -133,8 +125,14 @@ const CommitteeCheckPage = ({
     setUploadedFilename('')
   }
 
+  // `validatedEin` is now sanity-aware, so this also keeps Next disabled for a
+  // complete-but-bad EIN (consistent with the red field indicator).
   const nextDisabled =
     !(validatedEin && uploadedFilename) || loadingCampaignUpdate
+
+  // When `validatedEin === false` the EIN is complete but failed sanity; surface
+  // the specific reason inline (the disabled button can't be clicked to show it).
+  const einSanity = checkEinSanity(einInputValue)
 
   return (
     <FocusedExperienceWrapper>
@@ -172,17 +170,10 @@ const CommitteeCheckPage = ({
           <EinCheckInput
             name="ein-number"
             value={einInputValue}
-            validated={
-              einSanityError
-                ? false
-                : validatedEin && einIndicatorState(einInputValue)
-            }
+            validated={validatedEin}
             setValidated={setValidatedEin}
-            error={Boolean(einSanityError)}
-            onChange={(value) => {
-              setEinSanityError(null)
-              setEinInputValue(value)
-            }}
+            error={validatedEin === false}
+            onChange={setEinInputValue}
             helperText={
               <a
                 href="https://sa.www4.irs.gov/applyein/legalStructure"
@@ -194,19 +185,9 @@ const CommitteeCheckPage = ({
               </a>
             }
           />
-          {einSanityError && (
+          {validatedEin === false && !einSanity.valid && (
             <Body2 className="text-error my-4 text-center">
-              {einSanityError}
-            </Body2>
-          )}
-          {validatedEin === false && (
-            <Body2 className="text-error my-4 text-center">
-              The provided EIN does not appear to match the given registered
-              committee name. Please check your values and try again or contact{' '}
-              <Link className="text-black underline" href="/contact">
-                Customer Support
-              </Link>
-              .
+              {einSanity.message}
             </Body2>
           )}
 
