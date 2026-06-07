@@ -120,11 +120,15 @@ const ProUpgradeWizard = ({
   if (!enabled) return null
 
   const canGoBack = currentStep !== null && orderIndex !== 0
-  // value-prop and the post-payment SUCCESS surface don't show step progress.
+  // value-prop (index 0) and the post-payment SUCCESS surface (last index)
+  // don't show step progress.
   const showProgress =
     orderIndex > 0 && orderIndex < PRO_UPGRADE_STEP_ORDER.length - 1
+  // The bar spans the visible steps only (index 1 .. last-1). Excluding both
+  // value-prop and SUCCESS from the denominator makes the final visible step
+  // (PAYMENT) read 100% instead of capping short.
   const progressValue = showProgress
-    ? (orderIndex / (PRO_UPGRADE_STEP_ORDER.length - 1)) * 100
+    ? (orderIndex / (PRO_UPGRADE_STEP_ORDER.length - 2)) * 100
     : 0
 
   return (
