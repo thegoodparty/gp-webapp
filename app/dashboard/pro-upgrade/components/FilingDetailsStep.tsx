@@ -43,24 +43,24 @@ import { useProUpgradeWizard } from './ProUpgradeWizard'
 // The backend createAgentic endpoint validates officeLevel against the
 // federal/state/local enum, and the federal branch additionally requires FEC
 // fields. The candidate already chose an office in onboarding, so we derive the
-// level from `details.ballotLevel` rather than re-asking. Onboarding persists
-// exactly the four option strings below (OfficeStepForm); anything else
-// (including a missing value on a pre-structured-office campaign) falls back to
-// `local`, which is the safest default for our overwhelmingly down-ballot
-// audience and keeps the candidate from stalling on a hidden field.
+// level from `details.ballotLevel` rather than re-asking. That value comes from
+// two paths with different casing: BallotReady search stores lowercase
+// `local` / `state` / `federal` (per `position.level`), while manual entry
+// stores the capitalized labels `Federal` / `State` / `County/Regional` /
+// `Local/Township/City` (OfficeStepForm). Match case-insensitively on the only
+// two levels that change behavior; everything else — county/city/township,
+// regional, and any missing value on a pre-structured-office campaign — maps to
+// `local`, the safe default for our overwhelmingly down-ballot audience that
+// keeps the candidate from stalling on a hidden field.
 type OfficeLevel = 'federal' | 'state' | 'local'
 
 export const ballotLevelToOfficeLevel = (
   ballotLevel: string | null | undefined,
 ): OfficeLevel => {
-  switch (ballotLevel) {
-    case 'Federal':
-      return 'federal'
-    case 'State':
-      return 'state'
-    default:
-      return 'local'
-  }
+  const normalized = ballotLevel?.trim().toLowerCase()
+  if (normalized === 'federal') return 'federal'
+  if (normalized === 'state') return 'state'
+  return 'local'
 }
 
 // EIN and committee come from `campaign.details` (the EIN was collected and
@@ -140,13 +140,24 @@ const FilingDetailsForm = ({
     handleChange({ fecCommitteeId: value })
   }
 
+  // Synchronous double-submit guard. `loading` is a parent prop that only
+  // reflects the submission after a re-render, so a second click in the same
+  // render cycle would slip past `if (loading)` and create a second TCR
+  // registration. A ref flips immediately. Mirrors the shared
+  // TextingComplianceRegistrationForm.
+  const submittingRef = useRef(false)
+  useEffect(() => {
+    if (!loading) submittingRef.current = false
+  }, [loading])
+
   const handleContinue = () => {
     if (!isValid) {
       setAttemptedSubmit(true)
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
-    if (loading) return
+    if (submittingRef.current || loading) return
+    submittingRef.current = true
     // Non-federal committees submit as CANDIDATE and must not carry an FEC id
     // (the backend rejects a stray fecCommitteeId on non-federal). Federal keeps
     // the entered FEC id + committee type as-is. Mirrors the shared
