@@ -24,7 +24,7 @@ import {
 // Wizard index: derives the resume step from canonical state and redirects to
 // it. There is no server-side wizard session (tech doc v2), so every entry
 // re-derives, landing a returning candidate on the first incomplete step.
-const ProUpgradeEntry = (): React.JSX.Element => {
+const ProUpgradeEntry = (): React.JSX.Element | null => {
   const router = useRouter()
   const [campaign] = useCampaign()
 
@@ -63,7 +63,12 @@ const ProUpgradeEntry = (): React.JSX.Element => {
     router.replace(proUpgradeStepPath(step))
   }, [ready, campaign, website, tcrCompliance, router])
 
-  return <LoadingAnimation />
+  // Spinner only while the canonical-state queries are pending. Once ready, the
+  // redirect is already scheduled in the effect above, so return null — a
+  // silently-failed router.replace can't strand the user on a permanent spinner.
+  if (!ready) return <LoadingAnimation />
+
+  return null
 }
 
 export default ProUpgradeEntry
