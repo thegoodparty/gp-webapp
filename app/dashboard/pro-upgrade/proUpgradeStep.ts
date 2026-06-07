@@ -35,8 +35,10 @@ export const proUpgradeStepPath = (step: ProUpgradeStep): string =>
 // - `filing-instructions`: a dead-end branch off `status` (the candidate has
 //   not yet filed to run), not a resumable step in the linear flow.
 // - `guidance`: an interstitial with no persisted "seen" state, so the router
-//   cannot derive it. TODO(task 09): insert it here once that task defines how
-//   it is reached and advanced past.
+//   cannot derive it. It is reached only by explicit navigation from the
+//   filing-status step ("yes, already filed" → guidance) and advances by
+//   explicit navigation to the EIN step (task 09), so it stays out of the
+//   linear order by design rather than being inserted here.
 export const PRO_UPGRADE_STEP_ORDER: ProUpgradeStep[] = [
   PRO_UPGRADE_STEP.VALUE_PROP,
   PRO_UPGRADE_STEP.STATUS,
