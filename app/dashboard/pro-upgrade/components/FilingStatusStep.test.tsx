@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
-import { render } from 'helpers/test-utils/render'
+import { render, testQueryClient } from 'helpers/test-utils/render'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { updateCampaign } from 'app/onboarding/shared/ajaxActions'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import FilingStatusStep from './FilingStatusStep'
@@ -72,6 +73,10 @@ describe('FilingStatusStep', () => {
     expect(mockUpdateCampaign).toHaveBeenCalledWith([
       { key: 'details.hasFiledForRace', value: true },
     ])
+    // The cache write is load-bearing: ProUpgradeEntry derives the resume step
+    // from the campaign in this cache, so without it a returning candidate is
+    // re-asked the question they just answered.
+    expect(testQueryClient.getQueryData(CAMPAIGN_QUERY_KEY)).toEqual({ id: 1 })
     expect(trackEvent).toHaveBeenCalledWith(
       EVENTS.ProUpgrade.Compliance.FilingStatusAlreadyFiled,
     )
@@ -89,6 +94,7 @@ describe('FilingStatusStep', () => {
     expect(mockUpdateCampaign).toHaveBeenCalledWith([
       { key: 'details.hasFiledForRace', value: false },
     ])
+    expect(testQueryClient.getQueryData(CAMPAIGN_QUERY_KEY)).toEqual({ id: 1 })
     expect(trackEvent).toHaveBeenCalledWith(
       EVENTS.ProUpgrade.Compliance.FilingStatusNotFiled,
     )
@@ -106,5 +112,6 @@ describe('FilingStatusStep', () => {
 
     await waitFor(() => expect(errorSnackbar).toHaveBeenCalled())
     expect(goToStep).not.toHaveBeenCalled()
+    expect(testQueryClient.getQueryData(CAMPAIGN_QUERY_KEY)).toBeUndefined()
   })
 })
