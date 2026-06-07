@@ -185,14 +185,18 @@ describe('CandidateProfile — deleting a policy priority persists (ENG-10270)',
   })
 })
 
-describe('CandidateProfile — funnel view event (ENG-10294)', () => {
-  it('fires Candidate Profile Viewed when the step renders', async () => {
+describe('CandidateProfile — funnel view event scoping (ENG-10332)', () => {
+  it('does not fire the Pro-upgrade Candidate Profile Viewed event from the standalone editor', async () => {
+    // The Pro-upgrade funnel "viewed" event is opt-in (trackViewEvent), and the
+    // standalone profile editor — independently routable for editing — does not
+    // opt in. Only the wizard step (CandidateProfileStep) emits it, so the
+    // funnel isn't inflated by non-funnel profile edits.
     getUserWebsite.mockResolvedValue(websiteWith('', 0))
     render(<CandidateProfile />)
-    await waitFor(() => {
-      expect(mockTrackEvent).toHaveBeenCalledWith(
-        EVENTS.ProUpgrade.Compliance.CandidateProfileViewed,
-      )
-    })
+    // Let the seeding + any mount effects settle before asserting the negative.
+    await screen.findByTestId('rich-editor')
+    expect(mockTrackEvent).not.toHaveBeenCalledWith(
+      EVENTS.ProUpgrade.Compliance.CandidateProfileViewed,
+    )
   })
 })

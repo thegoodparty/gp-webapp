@@ -16,7 +16,10 @@ import { useProUpgradeWizard } from './ProUpgradeWizard'
 // is never asked of the candidate (ENG-10332 product decision).
 const CandidateProfileStep = (): React.JSX.Element => {
   const { goToNextStep } = useProUpgradeWizard()
-  const form = useCandidateProfileForm({ onSaved: goToNextStep })
+  const form = useCandidateProfileForm({
+    onSaved: goToNextStep,
+    trackViewEvent: true,
+  })
 
   return (
     <div>

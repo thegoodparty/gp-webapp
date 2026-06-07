@@ -39,6 +39,11 @@ interface UseCandidateProfileFormArgs {
   // a callback so the bio/issues state, seeding, and validation live in one
   // place and neither surface forks the form.
   onSaved: () => void | Promise<void>
+  // Opt in to the Pro-upgrade funnel "viewed" event. Only the wizard step sets
+  // this: the standalone profile editor is an independently-routable settings
+  // surface, so firing the funnel event on every visit there would inflate the
+  // funnel with non-funnel traffic. Defaults to off.
+  trackViewEvent?: boolean
 }
 
 /**
@@ -50,6 +55,7 @@ interface UseCandidateProfileFormArgs {
  */
 export const useCandidateProfileForm = ({
   onSaved,
+  trackViewEvent = false,
 }: UseCandidateProfileFormArgs): CandidateProfileForm => {
   const queryClient = useQueryClient()
   const { errorSnackbar } = useSnackbar()
@@ -95,9 +101,12 @@ export const useCandidateProfileForm = ({
 
   // Funnel "viewed" event for the agentic compliance flow (ENG-10294). The
   // matching "submitted" signal is the existing SubmitSuccess event below.
+  // Only the opted-in wizard step fires it; the standalone profile editor is
+  // not a funnel surface (see trackViewEvent).
   useEffect(() => {
+    if (!trackViewEvent) return
     trackEvent(EVENTS.ProUpgrade.Compliance.CandidateProfileViewed)
-  }, [])
+  }, [trackViewEvent])
 
   const bioError = getBioError(bioPlainLength)
   const prioritiesError = getPolicyPrioritiesError(issues.length)
