@@ -22,7 +22,7 @@ const queryResult = (
     isPending: overrides.isPending ?? false,
     isError: overrides.isError ?? false,
     refetch: vi.fn(),
-  } as unknown as ReturnType<typeof useQuery>)
+  }) as unknown as ReturnType<typeof useQuery>
 
 describe('ProUpgradeEntry', () => {
   beforeEach(() => {
