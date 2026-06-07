@@ -1,12 +1,7 @@
-import ProUpgradeStepPlaceholder from '../components/ProUpgradeStepPlaceholder'
+import EinStep from '../components/EinStep'
 
 export const dynamic = 'force-dynamic'
 
 export default function Page(): React.JSX.Element {
-  return (
-    <ProUpgradeStepPlaceholder
-      title="Your EIN"
-      taskNote="EIN step — ships in task 10"
-    />
-  )
+  return <EinStep />
 }

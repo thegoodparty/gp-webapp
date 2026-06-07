@@ -349,6 +349,8 @@ export const EVENTS = {
         'Pro Upgrade - Filing Instructions: Click continue to dashboard',
       GuidanceViewed: 'Pro Upgrade - Guidance Viewed',
       GuidanceContinue: "Pro Upgrade - Guidance: Click let's go",
+      EinViewed: 'Pro Upgrade - EIN Viewed',
+      EinContinue: 'Pro Upgrade - EIN: Click continue',
       CandidateProfileViewed: 'Pro Upgrade - Candidate Profile Viewed',
       FilingDetailsViewed: 'Pro Upgrade - Filing Details Viewed',
       PinEntryViewed: 'Pro Upgrade - PIN Entry Viewed',
