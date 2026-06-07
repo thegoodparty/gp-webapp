@@ -34,6 +34,7 @@ export {
   LoaderCircle as LoaderCircleIcon,
   LogOut as LogOutIcon,
   Mail as MailIcon,
+  MapPin as MapPinIcon,
   Menu as MenuIcon,
   MessageSquare as MessageSquareIcon,
   Mic as MicIcon,
