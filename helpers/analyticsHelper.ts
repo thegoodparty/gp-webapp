@@ -351,6 +351,7 @@ export const EVENTS = {
       GuidanceContinue: "Pro Upgrade - Guidance: Click let's go",
       EinViewed: 'Pro Upgrade - EIN Viewed',
       EinContinue: 'Pro Upgrade - EIN: Click continue',
+      EinHoverHelp: 'Pro Upgrade - EIN: Hover help',
       CandidateProfileViewed: 'Pro Upgrade - Candidate Profile Viewed',
       FilingDetailsViewed: 'Pro Upgrade - Filing Details Viewed',
       PinEntryViewed: 'Pro Upgrade - PIN Entry Viewed',

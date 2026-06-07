@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@styleguide'
 import H2 from '@shared/typography/H2'
@@ -28,35 +28,53 @@ const EinStep = (): React.JSX.Element => {
   const queryClient = useQueryClient()
   const { errorSnackbar } = useSnackbar()
 
-  // Prefill from the persisted EIN so a returning candidate sees their value and
-  // the step is treated complete (the icon settles to a green check on mount).
   const persistedEin = campaign?.details?.einNumber ?? ''
   const [einInputValue, setEinInputValue] = useState(persistedEin)
+  // Initialize to the sanity-aware verdict, but only surface a green check for a
+  // prefilled value that passes — a complete-but-bad prefilled EIN (e.g. a
+  // legacy save predating the sanity rules) stays neutral until the candidate
+  // edits it, so we never flash a red error on a field they haven't touched.
   const [validatedEin, setValidatedEin] = useState<boolean | null>(() =>
-    einIndicatorState(persistedEin),
+    einIndicatorState(persistedEin) === true ? true : null,
   )
   const [submitting, setSubmitting] = useState(false)
+  // Once the candidate edits the field we stop syncing from the persisted value
+  // and start surfacing the full sanity verdict (including the red error).
+  const hasInteracted = useRef(false)
 
   useEffect(() => {
     trackEvent(EVENTS.ProUpgrade.Compliance.EinViewed)
   }, [])
 
-  // `einIndicatorState` is sanity-aware: true only for a complete, plausible
-  // EIN, false for a complete-but-bad one (placeholder / non-IRS prefix), and
-  // null while still typing — so a partial EIN never flashes an error.
-  const doEinCheck = useCallback(() => {
-    setValidatedEin(einIndicatorState(einInputValue))
+  // Sync the field from the persisted EIN until the candidate edits it. This
+  // also covers a campaign query that resolves *after* first render (no SSR
+  // initialData), which a one-time useState initializer would miss — leaving a
+  // returning candidate's saved EIN unpopulated.
+  useEffect(() => {
+    if (hasInteracted.current) return
+    setEinInputValue(persistedEin)
+  }, [persistedEin])
+
+  // Recompute the verdict whenever the value changes. `einIndicatorState` is
+  // sanity-aware: true for a complete, plausible EIN, false for a
+  // complete-but-bad one (placeholder / non-IRS prefix), null while still
+  // typing. Before the candidate interacts we suppress the `false` verdict so a
+  // prefilled bad EIN shows neutral rather than an error on mount.
+  useEffect(() => {
+    const indicator = einIndicatorState(einInputValue)
+    setValidatedEin(
+      !hasInteracted.current && indicator === false ? null : indicator,
+    )
   }, [einInputValue])
 
-  useEffect(() => {
-    doEinCheck()
-  }, [doEinCheck])
+  const onEinChange = (value: string): void => {
+    hasInteracted.current = true
+    setEinInputValue(value)
+  }
 
   const handleNextClick = async (): Promise<void> => {
     // Guard against a double-tap firing two updates / navigations.
     if (submitting) return
-
-    trackEvent(EVENTS.ProUpgrade.Compliance.EinContinue)
 
     // Defense-in-depth: the button is disabled while the EIN fails sanity
     // (placeholder, non-IRS prefix), but never persist a bad EIN even if that
@@ -78,6 +96,9 @@ const EinStep = (): React.JSX.Element => {
       return
     }
 
+    // Track only after the write commits, so a failed persist isn't counted as
+    // a continue (matching the wizard's other steps).
+    trackEvent(EVENTS.ProUpgrade.Compliance.EinContinue)
     // The cache write is load-bearing: ProUpgradeEntry derives the resume step
     // from the campaign in this cache, so without it a returning candidate is
     // re-asked for the EIN they just entered.
@@ -109,7 +130,10 @@ const EinStep = (): React.JSX.Element => {
         validated={validatedEin}
         setValidated={setValidatedEin}
         error={validatedEin === false}
-        onChange={setEinInputValue}
+        onChange={onEinChange}
+        onTooltipOpen={() =>
+          trackEvent(EVENTS.ProUpgrade.Compliance.EinHoverHelp)
+        }
         helperText={
           <a
             href="https://sa.www4.irs.gov/applyein/legalStructure"
