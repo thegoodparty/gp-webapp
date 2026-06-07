@@ -335,6 +335,9 @@ export const EVENTS = {
     // Outreach.DlcCompliance.RegistrationSubmitted / PinVerificationCompleted,
     // ProUpgrade.ClickGoToStripe); the "viewed" steps below were the gap.
     Compliance: {
+      ValuePropViewed: 'Pro Upgrade - Value Prop Viewed',
+      ValuePropGetPro: 'Pro Upgrade - Value Prop: Click Get Pro',
+      ValuePropMaybeLater: 'Pro Upgrade - Value Prop: Click Maybe later',
       CandidateProfileViewed: 'Pro Upgrade - Candidate Profile Viewed',
       FilingDetailsViewed: 'Pro Upgrade - Filing Details Viewed',
       PinEntryViewed: 'Pro Upgrade - PIN Entry Viewed',
