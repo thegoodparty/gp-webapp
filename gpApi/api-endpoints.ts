@@ -140,6 +140,16 @@ export type APIEndpoints = {
     Response: CampaignVersions
   }
 
+  // Emails the caller their own race's filing instructions (window, fee,
+  // requirements, office contact). No body: gp-api scopes the send to the
+  // authenticated user's campaign + email via @UseCampaign()/@ReqUser().
+  'POST /v1/campaigns/mine/filing-instructions/email': {
+    Request: {}
+    Response: {
+      success: boolean
+    }
+  }
+
   'POST /v1/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin': {
     Request: {
       pin: string

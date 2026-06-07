@@ -342,6 +342,11 @@ export const EVENTS = {
       FilingStatusAlreadyFiled:
         'Pro Upgrade - Filing Status: Click already filed',
       FilingStatusNotFiled: 'Pro Upgrade - Filing Status: Click not yet filed',
+      FilingInstructionsViewed: 'Pro Upgrade - Filing Instructions Viewed',
+      FilingInstructionsEmail:
+        'Pro Upgrade - Filing Instructions: Click email this to me',
+      FilingInstructionsExit:
+        'Pro Upgrade - Filing Instructions: Click continue to dashboard',
       CandidateProfileViewed: 'Pro Upgrade - Candidate Profile Viewed',
       FilingDetailsViewed: 'Pro Upgrade - Filing Details Viewed',
       PinEntryViewed: 'Pro Upgrade - PIN Entry Viewed',

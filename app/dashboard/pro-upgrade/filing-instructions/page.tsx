@@ -1,12 +1,7 @@
-import ProUpgradeStepPlaceholder from '../components/ProUpgradeStepPlaceholder'
+import FilingInstructionsStep from '../components/FilingInstructionsStep'
 
 export const dynamic = 'force-dynamic'
 
 export default function Page(): React.JSX.Element {
-  return (
-    <ProUpgradeStepPlaceholder
-      title="How to file to run for office"
-      taskNote="Filing-instructions screen — ships in task 08"
-    />
-  )
+  return <FilingInstructionsStep />
 }
