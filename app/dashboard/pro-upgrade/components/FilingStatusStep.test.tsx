@@ -22,9 +22,8 @@ vi.mock('helpers/useSnackbar', () => ({
 
 // Keep EVENTS real; stub trackEvent so we don't hit analytics in tests.
 vi.mock('helpers/analyticsHelper', async (importOriginal) => {
-  const actual = await importOriginal<
-    typeof import('helpers/analyticsHelper')
-  >()
+  const actual =
+    await importOriginal<typeof import('helpers/analyticsHelper')>()
   return { ...actual, trackEvent: vi.fn() }
 })
 
