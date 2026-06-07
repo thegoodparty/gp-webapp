@@ -6,7 +6,10 @@ import { useQuery } from '@tanstack/react-query'
 import { Button } from '@styleguide'
 import H2 from '@shared/typography/H2'
 import Body2 from '@shared/typography/Body2'
-import { useCampaign } from '@shared/hooks/useCampaign'
+import {
+  CAMPAIGN_QUERY_KEY,
+  fetchCampaign,
+} from '@shared/hooks/CampaignProvider'
 import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import {
   USER_WEBSITE_QUERY_KEY,
@@ -29,8 +32,21 @@ import {
 // re-derives, landing a returning candidate on the first incomplete step.
 const ProUpgradeEntry = (): React.JSX.Element | null => {
   const router = useRouter()
-  const [campaign] = useCampaign()
 
+  // Observe the shared campaign query (same key as CampaignProvider, deduped)
+  // so step derivation waits for it. Reading campaign from context instead
+  // would let `ready` flip true while the campaign is still loading (when the
+  // SSR fetch returned null on token/API failure, so initialData is undefined),
+  // mis-deriving a returning candidate and producing a double-redirect.
+  const {
+    data: campaign,
+    isPending: campaignPending,
+    isError: campaignError,
+    refetch: refetchCampaign,
+  } = useQuery({
+    queryKey: CAMPAIGN_QUERY_KEY,
+    queryFn: fetchCampaign,
+  })
   const {
     data: website,
     isPending: websitePending,
@@ -50,8 +66,8 @@ const ProUpgradeEntry = (): React.JSX.Element | null => {
     queryFn: getTcrCompliance,
   })
 
-  const ready = !websitePending && !tcrPending
-  const hasError = websiteError || tcrError
+  const ready = !campaignPending && !websitePending && !tcrPending
+  const hasError = campaignError || websiteError || tcrError
 
   useEffect(() => {
     // Don't derive a step from partial state: a failed fetch leaves data
@@ -88,6 +104,7 @@ const ProUpgradeEntry = (): React.JSX.Element | null => {
         </Body2>
         <Button
           onClick={() => {
+            void refetchCampaign()
             void refetchWebsite()
             void refetchTcr()
           }}

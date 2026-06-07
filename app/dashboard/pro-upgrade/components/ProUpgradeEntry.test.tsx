@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import { render } from 'helpers/test-utils/render'
 import { router } from 'helpers/test-utils/router-mocking'
 import { useQuery } from '@tanstack/react-query'
-import { useCampaign } from '@shared/hooks/useCampaign'
+import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import type { Campaign } from 'helpers/types'
 import ProUpgradeEntry from './ProUpgradeEntry'
 
@@ -14,34 +14,41 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
   return { ...actual, useQuery: vi.fn() }
 })
 
-// Mock useCampaign so we can drive the persisted filing-status answer the
-// entry maps into the step derivation.
-vi.mock('@shared/hooks/useCampaign', () => ({
-  useCampaign: vi.fn(),
-}))
-
 const mockUseQuery = vi.mocked(useQuery)
-const mockUseCampaign = vi.mocked(useCampaign)
 
 const queryResult = (
-  overrides: { isPending?: boolean; isError?: boolean } = {},
+  overrides: { data?: unknown; isPending?: boolean; isError?: boolean } = {},
 ): ReturnType<typeof useQuery> =>
   ({
-    data: null,
+    data: overrides.data ?? null,
     isPending: overrides.isPending ?? false,
     isError: overrides.isError ?? false,
     refetch: vi.fn(),
   }) as unknown as ReturnType<typeof useQuery>
 
+// The entry runs three queries (campaign, website, TCR). Drive the campaign
+// query independently from the other two so we can exercise its loading state.
+const setQueries = (
+  campaign: ReturnType<typeof useQuery>,
+  other: ReturnType<typeof useQuery>,
+): void => {
+  mockUseQuery.mockImplementation((options) =>
+    (options as { queryKey: unknown }).queryKey === CAMPAIGN_QUERY_KEY
+      ? campaign
+      : other,
+  )
+}
+
 describe('ProUpgradeEntry', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Default to no campaign; individual cases override.
-    mockUseCampaign.mockReturnValue([null])
   })
 
   it('renders a spinner and does not redirect while the queries are pending', () => {
-    mockUseQuery.mockReturnValue(queryResult({ isPending: true }))
+    setQueries(
+      queryResult({ isPending: true }),
+      queryResult({ isPending: true }),
+    )
 
     render(<ProUpgradeEntry />)
 
@@ -50,8 +57,20 @@ describe('ProUpgradeEntry', () => {
     expect(router.replace).not.toHaveBeenCalled()
   })
 
+  it('holds on the spinner until the campaign query resolves, even if website/TCR are ready', () => {
+    // The campaign feeds isPro / EIN / filing-status derivation. Deriving while
+    // it is still loading (campaign null) would mis-route a returning candidate
+    // and produce a double-redirect when it later resolves.
+    setQueries(queryResult({ isPending: true }), queryResult())
+
+    render(<ProUpgradeEntry />)
+
+    expect(screen.getByText(/powered by/i)).toBeInTheDocument()
+    expect(router.replace).not.toHaveBeenCalled()
+  })
+
   it('renders nothing once the queries resolve and schedules the redirect', () => {
-    mockUseQuery.mockReturnValue(queryResult())
+    setQueries(queryResult(), queryResult())
 
     const { container } = render(<ProUpgradeEntry />)
 
@@ -67,10 +86,10 @@ describe('ProUpgradeEntry', () => {
     // A returning candidate who answered "yes" maps to has-filed, so the
     // router skips the status step. With no EIN yet, the first incomplete step
     // is EIN — never the value-prop intro or a re-ask of the filing question.
-    mockUseQuery.mockReturnValue(queryResult())
-    mockUseCampaign.mockReturnValue([
-      { details: { hasFiledForRace: true } } as Campaign,
-    ])
+    setQueries(
+      queryResult({ data: { details: { hasFiledForRace: true } } as Campaign }),
+      queryResult(),
+    )
 
     render(<ProUpgradeEntry />)
 
@@ -80,7 +99,7 @@ describe('ProUpgradeEntry', () => {
   it('shows a recoverable error and does not redirect when a query fails', () => {
     // A failed fetch leaves data undefined; redirecting would mis-derive a
     // returning candidate back to the intro as if they had zero progress.
-    mockUseQuery.mockReturnValue(queryResult({ isError: true }))
+    setQueries(queryResult({ isError: true }), queryResult())
 
     render(<ProUpgradeEntry />)
 

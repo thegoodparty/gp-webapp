@@ -75,6 +75,10 @@ const FilingStatusStep = (): React.JSX.Element => {
     trackEvent(option.event)
     queryClient.setQueryData(CAMPAIGN_QUERY_KEY, updated)
     goToStep(option.nextStep)
+    // On a successful navigation this component unmounts and the update is
+    // discarded; if router.push fails silently the buttons re-enable so the
+    // candidate can retry instead of being stuck on a disabled screen.
+    setSubmitting(false)
   }
 
   return (
