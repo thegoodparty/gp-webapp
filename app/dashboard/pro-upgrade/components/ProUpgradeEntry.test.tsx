@@ -14,8 +14,15 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
 
 const mockUseQuery = vi.mocked(useQuery)
 
-const queryResult = (isPending: boolean): ReturnType<typeof useQuery> =>
-  ({ data: null, isPending } as unknown as ReturnType<typeof useQuery>)
+const queryResult = (
+  overrides: { isPending?: boolean; isError?: boolean } = {},
+): ReturnType<typeof useQuery> =>
+  ({
+    data: null,
+    isPending: overrides.isPending ?? false,
+    isError: overrides.isError ?? false,
+    refetch: vi.fn(),
+  } as unknown as ReturnType<typeof useQuery>)
 
 describe('ProUpgradeEntry', () => {
   beforeEach(() => {
@@ -23,7 +30,7 @@ describe('ProUpgradeEntry', () => {
   })
 
   it('renders a spinner and does not redirect while the queries are pending', () => {
-    mockUseQuery.mockReturnValue(queryResult(true))
+    mockUseQuery.mockReturnValue(queryResult({ isPending: true }))
 
     render(<ProUpgradeEntry />)
 
@@ -33,7 +40,7 @@ describe('ProUpgradeEntry', () => {
   })
 
   it('renders nothing once the queries resolve and schedules the redirect', () => {
-    mockUseQuery.mockReturnValue(queryResult(false))
+    mockUseQuery.mockReturnValue(queryResult())
 
     const { container } = render(<ProUpgradeEntry />)
 
@@ -43,5 +50,19 @@ describe('ProUpgradeEntry', () => {
     expect(router.replace).toHaveBeenCalledWith(
       '/dashboard/pro-upgrade/value-prop',
     )
+  })
+
+  it('shows a recoverable error and does not redirect when a query fails', () => {
+    // A failed fetch leaves data undefined; redirecting would mis-derive a
+    // returning candidate back to the intro as if they had zero progress.
+    mockUseQuery.mockReturnValue(queryResult({ isError: true }))
+
+    render(<ProUpgradeEntry />)
+
+    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /try again/i }),
+    ).toBeInTheDocument()
+    expect(router.replace).not.toHaveBeenCalled()
   })
 })

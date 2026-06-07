@@ -70,4 +70,19 @@ describe('ProUpgradeWizard', () => {
     expect(screen.getByText('step-content')).toBeInTheDocument()
     expect(router.replace).not.toHaveBeenCalled()
   })
+
+  it('does not show a Back control on the post-payment success surface', () => {
+    mockUseProUpgrade3Flag.mockReturnValue({ ready: true, enabled: true })
+    mockUsePathname.mockReturnValue('/dashboard/pro-upgrade/success')
+
+    render(
+      <ProUpgradeWizard>
+        <div>step-content</div>
+      </ProUpgradeWizard>,
+    )
+
+    expect(
+      screen.queryByRole('button', { name: /go back/i }),
+    ).not.toBeInTheDocument()
+  })
 })
