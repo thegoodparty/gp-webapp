@@ -56,7 +56,6 @@ const FilingStatusStep = (): React.JSX.Element => {
     // Guard against a double-tap firing two updates / navigations.
     if (submitting) return
     setSubmitting(true)
-    trackEvent(option.event)
 
     const updated = await updateCampaign([
       { key: 'details.hasFiledForRace', value: option.hasFiled },
@@ -71,6 +70,9 @@ const FilingStatusStep = (): React.JSX.Element => {
       return
     }
 
+    // Track the selection only after the write commits, so analytics don't
+    // over-count selections that failed to persist.
+    trackEvent(option.event)
     queryClient.setQueryData(CAMPAIGN_QUERY_KEY, updated)
     goToStep(option.nextStep)
   }
@@ -90,7 +92,7 @@ const FilingStatusStep = (): React.JSX.Element => {
             type="button"
             onClick={() => void handleSelect(option)}
             disabled={submitting}
-            className="flex w-full items-center justify-between gap-4 rounded-xl border border-gray-200 p-4 text-left transition-colors hover:border-primary hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-60"
+            className="flex w-full items-center justify-between gap-4 rounded-xl border border-gray-200 p-4 text-left transition-colors hover:border-primary hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-60"
           >
             <span>
               <span className="block font-medium">{option.title}</span>

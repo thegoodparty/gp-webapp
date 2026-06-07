@@ -112,5 +112,9 @@ describe('FilingStatusStep', () => {
     await waitFor(() => expect(errorSnackbar).toHaveBeenCalled())
     expect(goToStep).not.toHaveBeenCalled()
     expect(testQueryClient.getQueryData(CAMPAIGN_QUERY_KEY)).toBeUndefined()
+    // The selection event must not fire for a write that never committed.
+    expect(trackEvent).not.toHaveBeenCalledWith(
+      EVENTS.ProUpgrade.Compliance.FilingStatusAlreadyFiled,
+    )
   })
 })
