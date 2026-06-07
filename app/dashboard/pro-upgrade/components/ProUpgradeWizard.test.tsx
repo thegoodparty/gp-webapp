@@ -85,4 +85,19 @@ describe('ProUpgradeWizard', () => {
       screen.queryByRole('button', { name: /go back/i }),
     ).not.toBeInTheDocument()
   })
+
+  it('shows a Back control on the filing-instructions dead-end (off-order route)', () => {
+    mockUseProUpgrade3Flag.mockReturnValue({ ready: true, enabled: true })
+    mockUsePathname.mockReturnValue(
+      '/dashboard/pro-upgrade/filing-instructions',
+    )
+
+    render(
+      <ProUpgradeWizard>
+        <div>step-content</div>
+      </ProUpgradeWizard>,
+    )
+
+    expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument()
+  })
 })

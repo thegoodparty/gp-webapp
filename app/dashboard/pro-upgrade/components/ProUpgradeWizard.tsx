@@ -119,12 +119,15 @@ const ProUpgradeWizard = ({
   // router.replace can't strand the user on a permanent "loading" screen.
   if (!enabled) return null
 
-  // No Back on value-prop (index 0, nothing before it) or the post-payment
-  // SUCCESS surface (last index — must not navigate back to PAYMENT).
+  // Show Back on the middle linear steps and on off-order routes
+  // (filing-instructions dead-end and the guidance interstitial, orderIndex -1,
+  // where goToPreviousStep falls back to router.back()). No Back on value-prop
+  // (index 0, nothing before it) or the post-payment SUCCESS surface (last
+  // index — must not navigate back to PAYMENT).
   const canGoBack =
     currentStep !== null &&
-    orderIndex > 0 &&
-    orderIndex < PRO_UPGRADE_STEP_ORDER.length - 1
+    (orderIndex === -1 ||
+      (orderIndex > 0 && orderIndex < PRO_UPGRADE_STEP_ORDER.length - 1))
   // value-prop (index 0) and the post-payment SUCCESS surface (last index)
   // don't show step progress.
   const showProgress =
