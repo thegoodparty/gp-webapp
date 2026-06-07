@@ -148,6 +148,7 @@ export interface CampaignDetails {
   tier?: string
   einNumber?: string | null
   einSupportingDocument?: string | null
+  hasFiledForRace?: boolean | null
   wonGeneral?: boolean
   launchStatus?: string
   filedStatement?: string

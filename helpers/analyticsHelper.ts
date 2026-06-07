@@ -338,6 +338,10 @@ export const EVENTS = {
       ValuePropViewed: 'Pro Upgrade - Value Prop Viewed',
       ValuePropGetPro: 'Pro Upgrade - Value Prop: Click Get Pro',
       ValuePropMaybeLater: 'Pro Upgrade - Value Prop: Click Maybe later',
+      FilingStatusViewed: 'Pro Upgrade - Filing Status Viewed',
+      FilingStatusAlreadyFiled:
+        'Pro Upgrade - Filing Status: Click already filed',
+      FilingStatusNotFiled: 'Pro Upgrade - Filing Status: Click not yet filed',
       CandidateProfileViewed: 'Pro Upgrade - Candidate Profile Viewed',
       FilingDetailsViewed: 'Pro Upgrade - Filing Details Viewed',
       PinEntryViewed: 'Pro Upgrade - PIN Entry Viewed',

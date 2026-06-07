@@ -20,8 +20,8 @@ import {
 import { isCandidateProfileComplete } from 'app/dashboard/profile/texting-compliance/candidate-profile/candidateProfile.utils'
 import {
   deriveProUpgradeStep,
+  filingStatusFromDetails,
   proUpgradeStepPath,
-  type FilingStatus,
 } from '../proUpgradeStep'
 
 // Wizard index: derives the resume step from canonical state and redirects to
@@ -62,15 +62,9 @@ const ProUpgradeEntry = (): React.JSX.Element | null => {
     const { filingComplete, pinComplete } =
       getTcrComplianceStatusCompletions(tcrCompliance)
 
-    // TODO(task 07): map the candidate's persisted filing-status answer here
-    // once its campaign.details key is decided. Until then it is unanswered,
-    // so a candidate is held at the filing-status step rather than skipped past
-    // it.
-    const filingStatus: FilingStatus = 'unanswered'
-
     const step = deriveProUpgradeStep({
       isPro: Boolean(campaign?.isPro),
-      filingStatus,
+      filingStatus: filingStatusFromDetails(campaign?.details?.hasFiledForRace),
       hasEin: Boolean(campaign?.details?.einNumber),
       filingComplete,
       profileComplete: isCandidateProfileComplete(website),

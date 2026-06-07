@@ -48,11 +48,21 @@ export const PRO_UPGRADE_STEP_ORDER: ProUpgradeStep[] = [
 ]
 
 // The candidate's answer to "have you already filed to run for this office?".
-// Task 07 owns where/how this is persisted (a campaign.details key decided
-// there); the router only needs the normalized tri-state, so its caller maps
-// the stored value into this. `unanswered` means the question has not been
-// answered yet.
+// The router only needs the normalized tri-state; its caller maps the stored
+// value into this. `unanswered` means the question has not been answered yet.
 export type FilingStatus = 'unanswered' | 'has-filed' | 'not-filed'
+
+// The answer is persisted as `campaign.details.hasFiledForRace` (task 07).
+// This is the single mapping the wizard index (read) and the filing-status
+// step (write) share, so a candidate who answered "yes" is never re-asked on
+// return. An unset value (never answered) is `unanswered`.
+export const filingStatusFromDetails = (
+  hasFiledForRace: boolean | null | undefined,
+): FilingStatus => {
+  if (hasFiledForRace === true) return 'has-filed'
+  if (hasFiledForRace === false) return 'not-filed'
+  return 'unanswered'
+}
 
 export interface ProUpgradeStepInputs {
   isPro: boolean

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   deriveProUpgradeStep,
+  filingStatusFromDetails,
   PRO_UPGRADE_STEP,
   type FilingStatus,
   type ProUpgradeStepInputs,
@@ -168,5 +169,25 @@ describe('deriveProUpgradeStep', () => {
         deriveProUpgradeStep({ ...allComplete, filingStatus }),
       ).not.toThrow()
     }
+  })
+})
+
+describe('filingStatusFromDetails', () => {
+  // The persisted answer is a tri-state boolean on campaign.details: the
+  // candidate has answered yes (true), answered no (false), or not answered
+  // (undefined/null). This is the single mapping both the wizard index (read)
+  // and the filing-status step (write) share, so a "yes" candidate is never
+  // re-asked on return.
+  it('maps a true (already filed) answer to has-filed', () => {
+    expect(filingStatusFromDetails(true)).toBe('has-filed')
+  })
+
+  it('maps a false (not yet filed) answer to not-filed', () => {
+    expect(filingStatusFromDetails(false)).toBe('not-filed')
+  })
+
+  it('treats an unset answer as unanswered', () => {
+    expect(filingStatusFromDetails(undefined)).toBe('unanswered')
+    expect(filingStatusFromDetails(null)).toBe('unanswered')
   })
 })

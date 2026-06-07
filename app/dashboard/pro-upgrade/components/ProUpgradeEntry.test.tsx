@@ -3,6 +3,8 @@ import { screen } from '@testing-library/react'
 import { render } from 'helpers/test-utils/render'
 import { router } from 'helpers/test-utils/router-mocking'
 import { useQuery } from '@tanstack/react-query'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import type { Campaign } from 'helpers/types'
 import ProUpgradeEntry from './ProUpgradeEntry'
 
 // Mock only useQuery so we control pending vs resolved; keep the real
@@ -12,7 +14,14 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
   return { ...actual, useQuery: vi.fn() }
 })
 
+// Mock useCampaign so we can drive the persisted filing-status answer the
+// entry maps into the step derivation.
+vi.mock('@shared/hooks/useCampaign', () => ({
+  useCampaign: vi.fn(),
+}))
+
 const mockUseQuery = vi.mocked(useQuery)
+const mockUseCampaign = vi.mocked(useCampaign)
 
 const queryResult = (
   overrides: { isPending?: boolean; isError?: boolean } = {},
@@ -22,11 +31,13 @@ const queryResult = (
     isPending: overrides.isPending ?? false,
     isError: overrides.isError ?? false,
     refetch: vi.fn(),
-  }) as unknown as ReturnType<typeof useQuery>
+  } as unknown as ReturnType<typeof useQuery>)
 
 describe('ProUpgradeEntry', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Default to no campaign; individual cases override.
+    mockUseCampaign.mockReturnValue([null])
   })
 
   it('renders a spinner and does not redirect while the queries are pending', () => {
@@ -50,6 +61,20 @@ describe('ProUpgradeEntry', () => {
     expect(router.replace).toHaveBeenCalledWith(
       '/dashboard/pro-upgrade/value-prop',
     )
+  })
+
+  it('respects a persisted "already filed" answer and does not redirect back to the filing-status step', () => {
+    // A returning candidate who answered "yes" maps to has-filed, so the
+    // router skips the status step. With no EIN yet, the first incomplete step
+    // is EIN — never the value-prop intro or a re-ask of the filing question.
+    mockUseQuery.mockReturnValue(queryResult())
+    mockUseCampaign.mockReturnValue([
+      { details: { hasFiledForRace: true } } as Campaign,
+    ])
+
+    render(<ProUpgradeEntry />)
+
+    expect(router.replace).toHaveBeenCalledWith('/dashboard/pro-upgrade/ein')
   })
 
   it('shows a recoverable error and does not redirect when a query fails', () => {
