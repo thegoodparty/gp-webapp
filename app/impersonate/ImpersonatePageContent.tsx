@@ -4,12 +4,22 @@ import { useEffect, useState } from 'react'
 import { useClerk } from '@clerk/nextjs'
 import { useSearchParams } from 'next/navigation'
 
-const isSafeReturnTo = (s: string | null): boolean => {
+const isSafeRelativePath = (s: string | null): s is string => {
   if (typeof s !== 'string') return false
   if (!s.startsWith('/')) return false
-  if (s.startsWith('//') || s.startsWith('/\\')) return false
-  return s.startsWith('/dashboard/')
+  // Block protocol-relative ("//host") and backslash ("/\host") open redirects.
+  return !(s.startsWith('//') || s.startsWith('/\\'))
 }
+
+// returnTo is a gp-webapp path, so restrict it to the dashboard.
+const isSafeReturnTo = (s: string | null): s is string =>
+  isSafeRelativePath(s) && s.startsWith('/dashboard/')
+
+// adminReturnTo is a gp-admin portal path (handed to GP_ADMIN_URL on stop), so
+// it must NOT be held to gp-webapp's /dashboard/ allowlist — any safe relative
+// path is valid there.
+const isSafeAdminReturnTo = (s: string | null): s is string =>
+  isSafeRelativePath(s)
 
 export default function ImpersonatePageContent() {
   const { client, setActive, signOut, loaded } = useClerk()
@@ -50,11 +60,11 @@ export default function ImpersonatePageContent() {
         }
 
         await setActive({ session: result.createdSessionId })
-        if (isSafeReturnTo(adminReturnTo)) {
-          sessionStorage.setItem('gp_admin_return_to', adminReturnTo!)
+        if (isSafeAdminReturnTo(adminReturnTo)) {
+          sessionStorage.setItem('gp_admin_return_to', adminReturnTo)
         }
         window.location.href = isSafeReturnTo(returnTo)
-          ? returnTo!
+          ? returnTo
           : '/dashboard'
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err)
