@@ -296,15 +296,14 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const communityEventsCount = events.data?.events?.length ?? 0
   const strategyReady = strategy.data !== undefined
 
-  // Requested — fire once on mount, when the success page is first waiting on
-  // each resource (the queries are enabled immediately). Wait for a resolved
-  // campaignId so the once-fire isn't spent on an undefined id while the
-  // invalidated campaign query is still refetching.
+  // Requested — Strategic Landscape and Community Events are prewarmed at the
+  // office step (see OnboardingFlow), so those `Requested` events fire there,
+  // not here. Media's request fires from this page's first poll. Wait for a
+  // resolved campaignId so the once-fire isn't spent on an undefined id while
+  // the invalidated campaign query is still refetching.
   useEffect(() => {
     if (campaignId === undefined) return
     fireOnce(EVENTS.OnboardingV2.MediaRequested, { campaignId })
-    fireOnce(EVENTS.OnboardingV2.CommunityEventsRequested, { campaignId })
-    fireOnce(EVENTS.OnboardingV2.StrategicLandscapeRequested, { campaignId })
   }, [campaignId])
 
   // Results Received — fire once when each resource's status first hits ready.

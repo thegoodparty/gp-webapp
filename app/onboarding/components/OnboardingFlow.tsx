@@ -453,6 +453,10 @@ export default function OnboardingFlow({
   // navigation re-fires. manual-office-entry has no V2 event.
   const viewedStepsFiredRef = useRef<Set<OnboardingStepId>>(new Set())
   useEffect(() => {
+    // Wait for the user, then attach email directly. SegmentIdentify sets the
+    // shared email global, but it mounts after the page content (PageWrapper),
+    // so an on-mount event races ahead of it and would otherwise be email-less.
+    if (!user) return
     const viewedEventByStep: Partial<Record<OnboardingStepId, string>> = {
       welcome: EVENTS.OnboardingV2.WelcomeViewed,
       'ballot-status': EVENTS.OnboardingV2.BallotStatusViewed,
@@ -466,12 +470,15 @@ export default function OnboardingFlow({
     const viewedEvent = viewedEventByStep[activeStepId]
     if (viewedEvent && !viewedStepsFiredRef.current.has(activeStepId)) {
       viewedStepsFiredRef.current.add(activeStepId)
-      trackEvent(viewedEvent, { campaignId: campaign?.id })
+      trackEvent(viewedEvent, {
+        campaignId: campaign?.id,
+        email: user.email,
+      })
     }
     // campaign?.id intentionally omitted from deps: the seen-set guards the
     // single fire, and the id resolving mid-step must not re-trigger it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStepId])
+  }, [activeStepId, user])
 
   useEffect(() => {
     if (activeStepId !== 'office-selection') setIsHydratingOffice(false)
@@ -874,9 +881,6 @@ export default function OnboardingFlow({
 
   const runGoNext = async () => {
     if (activeStep.id === 'welcome') {
-      trackEvent(EVENTS.Onboarding.WelcomeCompleted, {
-        campaignId: campaign?.id,
-      })
       trackEvent(EVENTS.OnboardingV2.WelcomeCompleted, {
         campaignId: campaign?.id,
       })
@@ -958,6 +962,16 @@ export default function OnboardingFlow({
         // calls if the user will be routed straight to /dashboard
         // post-pledge.
         if (campaignStrategyEnabled) {
+          // These prewarm calls are the real first request for the strategic
+          // landscape and community events, so the `Requested` events fire
+          // here (not on the success page, which only re-polls afterward).
+          const planCampaignId = liveCampaign?.id ?? campaign?.id
+          trackEvent(EVENTS.OnboardingV2.StrategicLandscapeRequested, {
+            campaignId: planCampaignId,
+          })
+          trackEvent(EVENTS.OnboardingV2.CommunityEventsRequested, {
+            campaignId: planCampaignId,
+          })
           void prewarmStrategicLandscape()
           void prewarmCommunityEvents()
         }
