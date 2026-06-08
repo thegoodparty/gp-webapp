@@ -145,6 +145,21 @@ describe('TopVoterIssuesSection', () => {
     expect(screen.queryByText('Beverly Hills issue')).not.toBeInTheDocument()
   })
 
+  it('renders issues as a numbered ranking without score bars or percentages', async () => {
+    api.mock('GET /v1/onboarding/voter-issues', {
+      status: 200,
+      data: { issues },
+    })
+
+    render(<TopVoterIssuesSection office="Mayor" />)
+
+    expect(await screen.findByText('Public Safety')).toBeInTheDocument()
+    expect(screen.getByText('1')).toBeInTheDocument()
+    expect(screen.getByText('2')).toBeInTheDocument()
+    expect(screen.getByText('3')).toBeInTheDocument()
+    expect(screen.queryByText(/voters care/i)).not.toBeInTheDocument()
+  })
+
   it('collapses to the first three issues and expands on demand', async () => {
     api.mock('GET /v1/onboarding/voter-issues', {
       status: 200,
