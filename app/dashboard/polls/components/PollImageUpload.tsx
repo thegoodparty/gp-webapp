@@ -120,7 +120,7 @@ export const PollImageUpload: React.FC<{
 
       <HiddenFileUploadInput
         ref={fileInputRef}
-        onChange={(_, file) => handleFileChoose(file)}
+        onChange={handleFileChoose}
         accept={ACCEPTED_FORMATS.join(',')}
       />
     </div>

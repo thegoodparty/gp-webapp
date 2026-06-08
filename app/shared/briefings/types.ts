@@ -89,6 +89,17 @@ export interface BriefingSummary {
   scheduledAt: string
   location: string
   status: 'briefing_ready' | 'awaiting_agenda'
+  /**
+   * State of a user-supplied agenda run for this meeting (URL or file
+   * upload). `null` (or absent) means the user has not yet submitted one.
+   *
+   * - `processing` — agenda accepted; briefing job is running
+   * - `failed` — agenda submission or run failed; user can retry
+   * - `completed` — briefing produced (the `status` will usually flip to
+   *   `briefing_ready` in the same payload, but this remains as a hint)
+   * - `unknown` — server doesn't know what state the run is in
+   */
+  userAgendaStatus?: 'processing' | 'failed' | 'completed' | 'unknown' | null
 }
 
 // ---------------------------------------------------------------------------

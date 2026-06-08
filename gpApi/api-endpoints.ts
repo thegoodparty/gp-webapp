@@ -32,6 +32,36 @@ export interface MeetingsListItemDto {
   meetingName: string
   location: string
   hasBriefing: boolean
+  /**
+   * Status of an in-progress "user-uploaded agenda" briefing run for this
+   * meeting. `null` when the user has never submitted an agenda. Mirrors
+   * gp-api's MeetingsListItemDto.userAgendaStatus.
+   */
+  userAgendaStatus?: UserAgendaStatus | null
+}
+
+export type UserAgendaStatus = 'processing' | 'failed' | 'completed' | 'unknown'
+
+/** Request/response shapes for the user-agenda-upload flow. */
+export type UserAgendaSubmitRequest =
+  | { source: 'URL'; sourceUrl: string }
+  | { source: 'UPLOAD'; uploadId: string }
+
+export interface UserAgendaSubmitResponse {
+  experimentRunId: string
+  status: 'processing'
+}
+
+export interface UserAgendaPresignRequest {
+  contentType: 'application/pdf'
+  byteSize: number
+}
+
+export interface UserAgendaPresignResponse {
+  uploadId: string
+  uploadKey: string
+  uploadUrl: string
+  expiresAt: string
 }
 
 export interface MeetingsListResponseDto {
@@ -333,6 +363,19 @@ export type APIEndpoints = {
   'GET /v1/meetings/:date/briefing': {
     Request: { date: string }
     Response: MeetingBriefingOutput | MeetingBriefingAwaitingDto
+  }
+
+  // User-uploaded agenda flow. Either submit a URL directly, or first call
+  // `/presign` to get a signed S3 PUT URL, upload bytes, then submit the
+  // returned uploadId/uploadKey. gp-api enqueues an experiment run and
+  // surfaces status via MeetingsListItemDto.userAgendaStatus.
+  'POST /v1/meetings/:date/briefing/agenda/presign': {
+    Request: { date: string } & UserAgendaPresignRequest
+    Response: UserAgendaPresignResponse
+  }
+  'POST /v1/meetings/:date/briefing/agenda': {
+    Request: { date: string } & UserAgendaSubmitRequest
+    Response: UserAgendaSubmitResponse
   }
 
   'POST /v1/speech/synthesize': {
