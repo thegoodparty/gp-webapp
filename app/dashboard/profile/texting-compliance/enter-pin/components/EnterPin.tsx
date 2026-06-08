@@ -1,15 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { FetchError } from 'ofetch'
+import { useQuery } from '@tanstack/react-query'
 import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
-import { clientRequest } from 'gpApi/typed-request'
-import { useUser } from '@shared/hooks/useUser'
-import { useSnackbar } from 'helpers/useSnackbar'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import TextingComplianceHeader from 'app/dashboard/profile/texting-compliance/shared/TextingComplianceHeader'
 import {
@@ -18,6 +14,7 @@ import {
   getTcrCompliance,
 } from 'app/dashboard/profile/texting-compliance/util/tcrCompliance.util'
 import { getPinChannels } from 'app/dashboard/profile/texting-compliance/shared/pinChannels'
+import { useSubmitCvPin } from 'app/dashboard/profile/texting-compliance/shared/useSubmitCvPin'
 import PinForm from 'app/dashboard/profile/texting-compliance/shared/PinForm'
 
 const PROFILE_ROUTE = '/dashboard/profile'
@@ -27,22 +24,17 @@ const REDIRECT_STATUSES: ReadonlyArray<string> = [
   TCR_COMPLIANCE_STATUS.APPROVED,
 ]
 
-const isPinMismatch = (e: unknown): boolean =>
-  e instanceof FetchError && (e.status === 400 || e.status === 422)
-
 export default function EnterPin(): React.JSX.Element {
   const router = useRouter()
-  const queryClient = useQueryClient()
-  const { successSnackbar } = useSnackbar()
-  const [user] = useUser()
 
   const { data: tcrCompliance, isPending } = useQuery({
     queryKey: TCR_COMPLIANCE_QUERY_KEY,
     queryFn: getTcrCompliance,
   })
 
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { submit, submitting, error } = useSubmitCvPin(tcrCompliance, {
+    onSuccess: () => router.push(PROFILE_ROUTE),
+  })
 
   const status = tcrCompliance?.status ?? null
   const isAwaitingPin = status === TCR_COMPLIANCE_STATUS.SUBMITTED
@@ -57,46 +49,14 @@ export default function EnterPin(): React.JSX.Element {
   // Funnel "viewed" event for the agentic compliance flow (ENG-10294). Fire
   // only once the PIN entry UI is actually shown — this page redirects away for
   // PENDING/APPROVED, so a bare mount event would count users who never see it.
-  // The matching "submitted" signal is the existing PinVerificationCompleted
-  // event in handleSubmit below.
+  // The matching "submitted" signal is the PinVerificationCompleted event
+  // fired by useSubmitCvPin.
   const pinViewTrackedRef = useRef(false)
   useEffect(() => {
     if (isPending || !isAwaitingPin || pinViewTrackedRef.current) return
     pinViewTrackedRef.current = true
     trackEvent(EVENTS.ProUpgrade.Compliance.PinEntryViewed)
   }, [isPending, isAwaitingPin])
-
-  const handleSubmit = async (pin: string): Promise<void> => {
-    if (!tcrCompliance) return
-    setSubmitting(true)
-    setError(null)
-    try {
-      // tcrComplianceId is a path param — typed-request strips it from the
-      // body before sending; only `pin` lands in the POST body.
-      await clientRequest(
-        'POST /v1/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin',
-        { tcrComplianceId: tcrCompliance.id, pin },
-      )
-
-      trackEvent(EVENTS.Outreach.DlcCompliance.PinVerificationCompleted, {
-        email: user?.email,
-        dlcComplianceStatus: 'Yes',
-      })
-
-      successSnackbar('PIN submitted — your application is in review.')
-      await queryClient.invalidateQueries({
-        queryKey: TCR_COMPLIANCE_QUERY_KEY,
-      })
-      router.push(PROFILE_ROUTE)
-    } catch (e) {
-      setError(
-        isPinMismatch(e)
-          ? 'That PIN didn’t match. Double-check and try again.'
-          : 'We couldn’t verify that PIN. Please try again.',
-      )
-      setSubmitting(false)
-    }
-  }
 
   return (
     <div className="bg-white pt-2 md:pt-0">
@@ -114,7 +74,7 @@ export default function EnterPin(): React.JSX.Element {
         ) : (
           <PinForm
             channels={getPinChannels(tcrCompliance)}
-            onSubmit={handleSubmit}
+            onSubmit={submit}
             loading={submitting}
             error={error}
           />
