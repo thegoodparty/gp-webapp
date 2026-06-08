@@ -95,7 +95,12 @@ const TasksList = ({
 }: TasksListProps): React.JSX.Element => {
   const router = useRouter()
   const { p2pUxEnabled } = useP2pUxEnabled()
-  const { enabled: proUpgrade3Enabled } = useProUpgrade3Flag()
+  const { ready: proUpgrade3Ready, enabled: proUpgrade3Enabled } =
+    useProUpgrade3Flag()
+  // Match the banner / wizard-layout gate: only treat the cohort as active
+  // once the flag has resolved, so a click during the not-ready window keeps
+  // the legacy behavior instead of routing inconsistently.
+  const proUpgrade3Active = proUpgrade3Ready && proUpgrade3Enabled
   const [tasks, setTasks] = useState<Task[]>(tasksProp)
 
   useEffect(() => {
@@ -459,7 +464,7 @@ const TasksList = ({
     const opensUpgradeModal =
       (resolvedFlowType === TASK_TYPES.text && !isPro) ||
       Boolean(proRequired && !isPro)
-    if (proUpgrade3Enabled && opensUpgradeModal) {
+    if (proUpgrade3Active && opensUpgradeModal) {
       trackEvent(EVENTS.ProUpgrade.Compliance.LockedItemClicked, {
         type: resolvedFlowType,
       })

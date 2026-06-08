@@ -1631,4 +1631,44 @@ describe('TasksList - pro-upgrade3 locked-item routing', () => {
 
     expect(mockPush).not.toHaveBeenCalledWith('/dashboard/pro-upgrade')
   })
+
+  it('routes a non-text Pro-gated action (robocall) into the wizard for the flag-on cohort', async () => {
+    const user = userEvent.setup()
+    mockUseProUpgrade3Flag.mockReturnValue({ ready: true, enabled: true })
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: false })}
+        tasks={[makeTask({ flowType: TASK_TYPES.robocall, proRequired: true })]}
+        isLegacyList={false}
+        tcrCompliance={null}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /Test Task/i }))
+
+    expect(mockPush).toHaveBeenCalledWith('/dashboard/pro-upgrade')
+    expect(trackEvent).toHaveBeenCalledWith(
+      EVENTS.ProUpgrade.Compliance.LockedItemClicked,
+      { type: TASK_TYPES.robocall },
+    )
+  })
+
+  it('does NOT route while the flag is still resolving (not ready)', async () => {
+    const user = userEvent.setup()
+    mockUseProUpgrade3Flag.mockReturnValue({ ready: false, enabled: true })
+
+    render(
+      <TasksList
+        campaign={makeCampaign({ isPro: false })}
+        tasks={[makeTask({ flowType: TASK_TYPES.robocall, proRequired: true })]}
+        isLegacyList={false}
+        tcrCompliance={null}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /Test Task/i }))
+
+    expect(mockPush).not.toHaveBeenCalledWith('/dashboard/pro-upgrade')
+  })
 })
