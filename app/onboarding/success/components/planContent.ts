@@ -368,6 +368,12 @@ const buildTimeline = (
       : 'approximate'
   const voterRegTierNote = curated?.registration.tierNote ?? null
 
+  // States with same-day registration through Election Day (ND, VT, NH,
+  // etc.) have no fixed deadline — the curated table sets `date: null`.
+  // Drop the milestone rather than fabricate one from the E-offset
+  // fallback. North Dakota in particular has no voter registration at all.
+  const voterRegOmitted = curated != null && curated.registration.date === null
+
   // Universal VBM states (CA, CO, etc.) have no real request deadline —
   // ballots auto-mail to all active voters. Drop the milestone entirely
   // for those rather than render a misleading row.
@@ -447,15 +453,19 @@ const buildTimeline = (
             },
           ]
         : []),
-      {
-        date: voterRegDeadline,
-        milestone: 'Voter registration deadline',
-        notes: curatedNote(
-          voterRegSource,
-          voterRegTierNote,
-          'Push via robocall campaign.',
-        ),
-      },
+      ...(voterRegOmitted
+        ? []
+        : [
+            {
+              date: voterRegDeadline,
+              milestone: 'Voter registration deadline',
+              notes: curatedNote(
+                voterRegSource,
+                voterRegTierNote,
+                'Push via robocall campaign.',
+              ),
+            },
+          ]),
       ...(absenteeOmitted
         ? []
         : [
@@ -504,10 +514,14 @@ const buildTimeline = (
             } that you should personally attend.`
           : 'Identify community events in your area to attend in person.',
     },
-    {
-      date: voterRegDeadline,
-      description: 'Voter registration deadline.',
-    },
+    ...(voterRegOmitted
+      ? []
+      : [
+          {
+            date: voterRegDeadline,
+            description: 'Voter registration deadline.',
+          },
+        ]),
     ...(absenteeOmitted
       ? []
       : [
