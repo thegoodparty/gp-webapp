@@ -608,6 +608,10 @@ export const EVENTS = {
       'Onboarding V2 - Strategic Landscape Results Received',
     StrategicLandscapeDisplayed:
       'Onboarding V2 - Strategic Landscape Displayed',
+    VotesNeededCalculated: 'Onboarding V2 - Votes Needed Calculated',
+    VotesNeededFailed: 'Onboarding V2 - Votes Needed Failed',
+    OfficeNextClicked: 'Onboarding V2 - Office Next Clicked',
+    PledgeSubmitClicked: 'Onboarding V2 - Pledge Submit Clicked',
   },
 } as const
 
