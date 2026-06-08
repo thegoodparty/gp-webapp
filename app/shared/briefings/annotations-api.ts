@@ -44,6 +44,13 @@ function apiInput(input: CreateAnnotationInput): ApiCreateAnnotationInput {
       payload: { description: input.payload.description },
     }
   }
+  if (input.kind === 'review') {
+    return {
+      kind: 'review',
+      anchor: apiAnchor(input.anchor),
+      payload: { body: input.payload.body },
+    }
+  }
   // Chat kind is rejected by the API; surface a clear error instead of
   // sending a request the server will refuse.
   throw new Error('chat_annotations_not_supported_yet')
@@ -94,14 +101,26 @@ function fromApi(row: ApiAnnotation): Annotation {
       createdAt: row.chat.created_at,
     }
   }
+  if (row.review) {
+    result.review = {
+      id: row.review.id,
+      body: row.review.body,
+      reviewer_email: row.review.reviewer_email,
+      created_at: row.review.created_at,
+      updated_at: row.review.updated_at,
+    }
+  }
   return result
 }
 
 export const annotationsApi: AnnotationsClient = {
-  async list(meetingDate) {
+  async list(meetingDate, kinds) {
     const res = await clientRequest(
       'GET /v1/meetings/:date/briefing/annotations',
-      { date: meetingDate },
+      {
+        date: meetingDate,
+        ...(kinds && kinds.length > 0 ? { kinds: kinds.join(',') } : {}),
+      },
     )
     return res.data.annotations.map(fromApi)
   },
@@ -119,6 +138,14 @@ export const annotationsApi: AnnotationsClient = {
       annotationId,
       body,
     })
+    return fromApi(res.data)
+  },
+
+  async updateReview(annotationId, body) {
+    const res = await clientRequest(
+      'PUT /v1/annotations/:annotationId/review',
+      { annotationId, body },
+    )
     return fromApi(res.data)
   },
 

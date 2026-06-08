@@ -28,6 +28,9 @@ export async function generateMetadata({ params }: PageProps) {
 
 export const dynamic = 'force-dynamic'
 
+export const DISCLOSURE =
+  'This briefing was generated with AI assistance and may contain errors.'
+
 /**
  * Briefing detail page.
  *
@@ -69,6 +72,13 @@ export default async function Page({
           />
         )
       })}
+
+      <p className="text-xs text-muted-foreground">
+        Briefings are AI-generated and still in beta, so double-check anything
+        you&apos;ll act on against the sources. Your feedback shapes how we can
+        improve our product moving forward, and we enjoy hearing from all our
+        users.
+      </p>
     </>
   )
 }

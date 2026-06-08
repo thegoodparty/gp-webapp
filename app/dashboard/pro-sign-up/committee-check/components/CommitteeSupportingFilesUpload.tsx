@@ -83,10 +83,7 @@ export const CommitteeSupportingFilesUpload = ({
     fileInputRef.current?.click()
   }
 
-  const handleFileChoose = async (
-    _fileData: string | ArrayBuffer | null,
-    file: File,
-  ) => {
+  const handleFileChoose = async (file: File) => {
     setErrorMessage(``)
     const fileSizeMb = file?.size / 1e6
     if (fileSizeMb > FILE_LIMIT_MB) {
@@ -125,6 +122,7 @@ export const CommitteeSupportingFilesUpload = ({
       )
       onUploadSuccess(file.name)
     } catch (e) {
+      setErrorMessage('Upload failed. Please try again.')
       onUploadError(e instanceof Error ? e : new Error('Unknown error'))
     } finally {
       setLoadingFileUpload(false)

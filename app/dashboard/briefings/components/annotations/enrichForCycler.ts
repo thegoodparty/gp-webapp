@@ -2,7 +2,7 @@ import type { Annotation } from '@shared/briefings/types'
 import { resolveAnnotationHighlight } from '@shared/briefings/anchorResolver'
 import { compareForCycler } from './annotationSort'
 
-const ANCHOR_ATTR = 'data-briefing-json-path'
+const ANCHOR_ATTR = 'data-anchor-json-path'
 
 export interface EnrichedAnnotation extends Annotation {
   docOrderIndex: number | null

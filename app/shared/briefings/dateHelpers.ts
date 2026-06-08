@@ -41,9 +41,24 @@ export function countdownLabel(
 }
 
 /**
- * Short weekday + time for list rows, e.g. "Mon 6:00 PM".
+ * A bare `yyyy-MM-dd` with no time component. `buildScheduledAt` emits this
+ * when the meeting time is unknown (e.g. a user-supplied agenda for an
+ * off-platform meeting); the formatters below render the date and omit the
+ * time rather than fabricating midnight or producing "Invalid Date".
+ */
+const isDateOnly = (iso: string): boolean => /^\d{4}-\d{2}-\d{2}$/.test(iso)
+
+/**
+ * Short weekday + time for list rows, e.g. "Mon 6:00 PM". When no time is
+ * known (date-only input) the weekday is returned alone, e.g. "Mon".
  */
 export function formatDayTime(targetIso: string): string {
+  if (isDateOnly(targetIso)) {
+    return new Date(`${targetIso}T00:00:00Z`).toLocaleDateString('en-US', {
+      weekday: 'short',
+      timeZone: 'UTC',
+    })
+  }
   const d = new Date(targetIso)
   const day = d.toLocaleDateString('en-US', { weekday: 'short' })
   const time = d.toLocaleTimeString('en-US', {
@@ -57,6 +72,13 @@ export function formatDayTime(targetIso: string): string {
  * Short date for list rows, e.g. "Jun 1".
  */
 export function formatShortDate(targetIso: string): string {
+  if (isDateOnly(targetIso)) {
+    return new Date(`${targetIso}T00:00:00Z`).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    })
+  }
   return new Date(targetIso).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',

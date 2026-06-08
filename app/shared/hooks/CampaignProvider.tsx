@@ -16,21 +16,26 @@ interface CampaignProviderProps {
 
 export const CAMPAIGN_QUERY_KEY = ['campaign']
 
+// Shared so consumers can observe the same campaign query (deduped by key)
+// rather than redefining the fetch. A 404 means "no campaign yet" (null);
+// other errors propagate so callers can show a recoverable error state.
+export const fetchCampaign = async (): Promise<Campaign | null> => {
+  try {
+    const res = await clientRequest('GET /v1/campaigns/mine', {})
+    return res.data
+  } catch (e) {
+    if (e instanceof FetchError && e.status === 404) return null
+    throw e
+  }
+}
+
 export const CampaignProvider = ({
   children,
   campaign: initCampaign,
 }: CampaignProviderProps): React.JSX.Element => {
   const query = useQuery({
     queryKey: CAMPAIGN_QUERY_KEY,
-    queryFn: async () => {
-      try {
-        const res = await clientRequest('GET /v1/campaigns/mine', {})
-        return res.data
-      } catch (e) {
-        if (e instanceof FetchError && e.status === 404) return null
-        throw e
-      }
-    },
+    queryFn: fetchCampaign,
     initialData: initCampaign ?? undefined,
   })
 

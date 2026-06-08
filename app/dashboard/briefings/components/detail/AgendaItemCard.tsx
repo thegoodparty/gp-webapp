@@ -168,7 +168,7 @@ const formatSentimentLine = (meanScore: number): string => {
  * Summary, Budget Impact, Constituent Sentiment, Recent News, Talking Points,
  * Sources collapsible, feedback row.
  *
- * Every string rendered as body text carries a `data-briefing-json-path`
+ * Every string rendered as body text carries a `data-anchor-json-path`
  * attribute so phase 4's selection toolbar can build an anchor that maps to
  * the v2 artifact shape.
  */
@@ -226,7 +226,7 @@ const AgendaItemCard = ({
       // Card-level notes use this exact path as their jsonPath; without
       // an element carrying it, `enrichForCycler` couldn't place them in
       // document order and dropped them to the end of the list.
-      data-briefing-json-path={base}
+      data-anchor-json-path={base}
       aria-current={isActive ? 'true' : undefined}
       className={`flex scroll-mt-[104px] cursor-pointer flex-col gap-4 rounded-2xl border bg-card p-6 transition-colors lg:scroll-mt-3 ${
         isActive
@@ -243,7 +243,7 @@ const AgendaItemCard = ({
               opens that thread directly. */}
           <h3
             className="w-fit cursor-pointer text-lg font-semibold text-foreground"
-            data-briefing-json-path={titlePath}
+            data-anchor-json-path={titlePath}
             onClick={(e) => {
               if (titleChat) {
                 e.stopPropagation()
@@ -262,7 +262,7 @@ const AgendaItemCard = ({
         <SectionLabel>What to expect</SectionLabel>
         <p
           className="text-sm leading-6 text-foreground"
-          data-briefing-json-path={`${base}/display/summary`}
+          data-anchor-json-path={`${base}/display/summary`}
         >
           {display.summary}
         </p>
@@ -275,7 +275,7 @@ const AgendaItemCard = ({
               <SectionLabel>Budget impact</SectionLabel>
               <p
                 className="text-sm leading-6 text-foreground"
-                data-briefing-json-path={`${base}/display/budget_impact/summary`}
+                data-anchor-json-path={`${base}/display/budget_impact/summary`}
               >
                 {budget.summary}
               </p>
@@ -303,14 +303,14 @@ const AgendaItemCard = ({
               )}
               <p
                 className="text-sm leading-6 text-foreground"
-                data-briefing-json-path={`${base}/display/constituent_sentiment/summary`}
+                data-anchor-json-path={`${base}/display/constituent_sentiment/summary`}
               >
                 {sentiment.summary}
               </p>
               {sentiment.detail ? (
                 <p
                   className="text-sm leading-6 text-foreground"
-                  data-briefing-json-path={`${base}/display/constituent_sentiment/detail`}
+                  data-anchor-json-path={`${base}/display/constituent_sentiment/detail`}
                 >
                   {sentiment.detail}
                 </p>

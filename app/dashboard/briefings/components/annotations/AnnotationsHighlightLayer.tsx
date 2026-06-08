@@ -7,7 +7,7 @@ import {
   findAnchorEl,
   pointToOffset,
 } from '@shared/briefings/anchorResolver'
-import type { Annotation, AnnotationKind } from '@shared/briefings/types'
+import type { Annotation } from '@shared/briefings/types'
 
 type Props = {
   annotations: Annotation[]
@@ -18,7 +18,7 @@ type ResolvedRange = {
   range: Range
 }
 
-const HIGHLIGHT_NAMES: Record<AnnotationKind, string> = {
+const HIGHLIGHT_NAMES: Record<MarkerKind, string> = {
   note: 'briefing-annotation-note',
   chat: 'briefing-annotation-chat',
   bug_report: 'briefing-annotation-bug',
@@ -50,7 +50,7 @@ const STYLE_RULES = `
    selection. We still allow selection itself — the toolbar reads the
    live selection — and the callout suppression is iOS-specific, which
    is where the conflict is most visible. */
-[data-briefing-json-path] {
+[data-anchor-json-path] {
   -webkit-touch-callout: none;
 }
 ::highlight(${HIGHLIGHT_NAMES.note}) {
@@ -221,7 +221,7 @@ export default function AnnotationsHighlightLayer({
 
     removeAllMarkers()
 
-    const rangesByKind: Record<AnnotationKind, Range[]> = {
+    const rangesByKind: Record<MarkerKind, Range[]> = {
       note: [],
       chat: [],
       bug_report: [],
@@ -229,6 +229,9 @@ export default function AnnotationsHighlightLayer({
     const resolved: ResolvedRange[] = []
 
     for (const a of annotations) {
+      // Review annotations are painted by the admin-review layer, not this
+      // candidate-facing one — skip them here.
+      if (a.kind === 'review') continue
       if (!a.jsonPath || a.start === null || a.end === null) continue
       const el = findAnchorEl(a.jsonPath)
       if (!el) continue
@@ -246,7 +249,7 @@ export default function AnnotationsHighlightLayer({
 
     resolvedRef.current = resolved
 
-    const kinds: AnnotationKind[] = ['note', 'chat', 'bug_report']
+    const kinds: MarkerKind[] = ['note', 'chat', 'bug_report']
     for (const k of kinds) {
       const ranges = rangesByKind[k]
       const name = HIGHLIGHT_NAMES[k]

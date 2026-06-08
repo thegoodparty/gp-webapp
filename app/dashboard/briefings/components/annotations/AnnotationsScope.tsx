@@ -101,7 +101,7 @@ export type ActiveCard = {
    * card-level chat from the header — the new chat is anchored to the
    * title (jsonPath + start=0 + end=title.length) just as if the user
    * had highlighted the title themselves. There must be a DOM element
-   * carrying this path under `data-briefing-json-path` so the anchor
+   * carrying this path under `data-anchor-json-path` so the anchor
    * resolves back to a quote.
    */
   titleJsonPath: string
@@ -109,7 +109,7 @@ export type ActiveCard = {
   title: string
 }
 
-type Ctx = {
+export type Ctx = {
   meetingDate: string
   /**
    * Id of the user's existing top-level chat annotation on this briefing,
@@ -161,7 +161,7 @@ type Ctx = {
   }) => void
 }
 
-const AnnotationsCtx = createContext<Ctx | null>(null)
+export const AnnotationsCtx = createContext<Ctx | null>(null)
 
 export function useAnnotationsCtx(): Ctx {
   const ctx = useContext(AnnotationsCtx)
@@ -218,8 +218,10 @@ export default function AnnotationsScope({
 }: Props): React.JSX.Element {
   const liveAnchor = useSelection()
   const queryClient = useQueryClient()
-  const { annotations, create, updateNote, remove } =
-    useAnnotations(meetingDate)
+  const { annotations, create, updateNote, remove } = useAnnotations({
+    resourceType: 'briefing',
+    resourceId: meetingDate,
+  })
   const [overlay, setOverlay] = useState<OverlayState>({ kind: 'closed' })
   const [activeCard, setActiveCard] = useState<ActiveCard | null>(
     initialActiveCard ?? null,
@@ -484,7 +486,7 @@ export default function AnnotationsScope({
     if (typeof window === 'undefined') return
     function onContextMenu(e: MouseEvent) {
       if (!(e.target instanceof HTMLElement)) return
-      if (e.target.closest('[data-briefing-json-path]')) {
+      if (e.target.closest('[data-anchor-json-path]')) {
         e.preventDefault()
       }
     }
