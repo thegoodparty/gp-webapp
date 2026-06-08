@@ -422,7 +422,7 @@ export default function OnboardingFlow({
         if (officeIdentityKey) {
           setResolvedP2vOfficeKey(officeIdentityKey)
         }
-        trackEvent(EVENTS.Onboarding.PathToVictoryUpdated, {
+        trackEvent(EVENTS.OnboardingV2.VotesNeededCalculated, {
           campaignId,
           projectedTurnout: result.projectedTurnout,
           winNumber: result.winNumber,
@@ -435,7 +435,7 @@ export default function OnboardingFlow({
           void identifyUser(user.id, { hasWinNumber: true })
         }
       } else {
-        trackEvent(EVENTS.Onboarding.PathToVictoryErrored, {
+        trackEvent(EVENTS.OnboardingV2.VotesNeededFailed, {
           campaignId,
           reason: result.reason,
         })
@@ -633,16 +633,6 @@ export default function OnboardingFlow({
         ...trackingProperties,
         officeType: office.level,
       })
-      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
-        ...trackingProperties,
-        officeManuallyInput: false,
-      })
-      trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
-        zipCode: answers.officeZip,
-        officeType: office.level,
-        officeName: office.positionName,
-        campaignId: campaign.id,
-      })
       trackEvent(EVENTS.OnboardingV2.OfficeCompleted, {
         campaignId: campaign.id,
         officeName: office.positionName,
@@ -676,16 +666,6 @@ export default function OnboardingFlow({
     await identifyUser(user?.id, {
       ...trackingProperties,
       officeType: office.level,
-    })
-    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
-      ...trackingProperties,
-      officeManuallyInput: false,
-    })
-    trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
-      zipCode: answers.officeZip,
-      officeType: office.level,
-      officeName: office.positionName,
-      campaignId: newCampaign.id,
     })
     trackEvent(EVENTS.OnboardingV2.OfficeCompleted, {
       campaignId: newCampaign.id,
@@ -745,16 +725,6 @@ export default function OnboardingFlow({
         ...trackingProperties,
         officeType: 'manual',
       })
-      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
-        ...trackingProperties,
-        officeManuallyInput: true,
-      })
-      trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
-        zipCode: answers.officeZip,
-        officeType: 'manual',
-        officeName: form.office,
-        campaignId: campaign.id,
-      })
       return true
     }
 
@@ -777,16 +747,6 @@ export default function OnboardingFlow({
       ...trackingProperties,
       officeType: 'manual',
     })
-    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, {
-      ...trackingProperties,
-      officeManuallyInput: true,
-    })
-    trackEvent(EVENTS.Onboarding.OfficeSelectionCompleted, {
-      zipCode: answers.officeZip,
-      officeType: 'manual',
-      officeName: form.office,
-      campaignId: newCampaign.id,
-    })
     return true
   }
 
@@ -800,11 +760,6 @@ export default function OnboardingFlow({
       ])
       if (updated === false) return false
     }
-    trackEvent(EVENTS.Onboarding.PartyStep.Completed, { affiliation: party })
-    trackEvent(EVENTS.Onboarding.PartySelectionCompleted, {
-      party,
-      campaignId: campaign?.id,
-    })
     trackEvent(EVENTS.OnboardingV2.PartyDesignationCompleted, {
       campaignId: campaign?.id,
       partyAffiliation: affiliation,
@@ -817,7 +772,9 @@ export default function OnboardingFlow({
 
   const persistPledgeAndComplete = async (): Promise<boolean> => {
     const effectiveCampaignId = liveCampaign?.id ?? campaign?.id
-    trackEvent(EVENTS.Onboarding.PledgeStep.ClickSubmit)
+    trackEvent(EVENTS.OnboardingV2.PledgeSubmitClicked, {
+      campaignId: effectiveCampaignId,
+    })
     const updated = await updateCampaign([
       { key: 'details.pledged', value: true },
       { key: 'data.currentStep', value: ONBOARDING_STEP_COMPLETE },
@@ -851,11 +808,6 @@ export default function OnboardingFlow({
     // campaign instead of serving the stale (or missing-metrics) entry that
     // was cached earlier in this session.
     void queryClient.invalidateQueries({ queryKey: CAMPAIGN_QUERY_KEY })
-    trackEvent(EVENTS.Onboarding.PledgeStep.Completed)
-    trackEvent(EVENTS.Onboarding.PledgeCompleted, {
-      pledgeVersion: PLEDGE_VERSION,
-      campaignId: effectiveCampaignId,
-    })
     trackEvent(EVENTS.OnboardingV2.PledgeCompleted, {
       campaignId: effectiveCampaignId,
       pledgeVersion: PLEDGE_VERSION,
@@ -887,19 +839,12 @@ export default function OnboardingFlow({
     }
     if (activeStep.id === 'path-to-victory' && (liveCampaign || campaign)) {
       const trackedCampaign = liveCampaign ?? campaign
-      trackEvent(EVENTS.Onboarding.PathToVictoryCompleted, {
-        campaignId: trackedCampaign?.id,
-        winNumber: trackedCampaign?.raceTargetMetrics?.winNumber ?? 0,
-      })
       trackEvent(EVENTS.OnboardingV2.VotesNeededCompleted, {
         campaignId: trackedCampaign?.id,
         winNumber: trackedCampaign?.raceTargetMetrics?.winNumber ?? 0,
       })
     }
     if (activeStep.id === 'voter-demographics') {
-      trackEvent(EVENTS.Onboarding.KnowYourVotersCompleted, {
-        campaignId: campaign?.id,
-      })
       trackEvent(EVENTS.OnboardingV2.VoterInsightsCompleted, {
         campaignId: campaign?.id,
       })
@@ -947,7 +892,9 @@ export default function OnboardingFlow({
     ) {
       setIsSavingOffice(true)
       try {
-        trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext)
+        trackEvent(EVENTS.OnboardingV2.OfficeNextClicked, {
+          campaignId: liveCampaign?.id ?? campaign?.id,
+        })
         const ok = await persistStructuredOffice(answers.structuredOffice)
         if (!ok) return
         // Pre-warm the success-page LLM sections now that raceId +
@@ -987,7 +934,9 @@ export default function OnboardingFlow({
     ) {
       setIsSavingOffice(true)
       try {
-        trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext)
+        trackEvent(EVENTS.OnboardingV2.OfficeNextClicked, {
+          campaignId: liveCampaign?.id ?? campaign?.id,
+        })
         const ok = await persistManualOffice(answers.manualOfficeForm)
         if (!ok) return
         router.refresh()
@@ -1003,10 +952,6 @@ export default function OnboardingFlow({
         if (updated === false) return
       }
       const candidateStage = ballotStatusToCandidateStage[answers.ballotStatus]
-      trackEvent(EVENTS.Onboarding.BallotStatusCompleted, {
-        candidateStage,
-        campaignId: campaign?.id,
-      })
       trackEvent(EVENTS.OnboardingV2.BallotStatusCompleted, {
         campaignId: campaign?.id,
         ballotStatus: answers.ballotStatus,
