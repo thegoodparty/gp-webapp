@@ -8,7 +8,9 @@ describe('WebsiteSunsetBanner', () => {
   it('shows the discontinuation notice and a Transfer link to the HubSpot form when the candidate has a website', () => {
     render(<WebsiteSunsetBanner hasWebsite />)
 
-    expect(screen.getByText('Website discontinued')).toBeInTheDocument()
+    expect(
+      screen.getByText('Our build your own website feature is being discontinued'),
+    ).toBeInTheDocument()
     expect(
       screen.getByText(
         'Please transfer your domain to a provider of your choice.',
@@ -25,6 +27,10 @@ describe('WebsiteSunsetBanner', () => {
     const { container } = render(<WebsiteSunsetBanner hasWebsite={false} />)
 
     expect(container).toBeEmptyDOMElement()
-    expect(screen.queryByText('Website discontinued')).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(
+        'Our build your own website feature is being discontinued',
+      ),
+    ).not.toBeInTheDocument()
   })
 })
