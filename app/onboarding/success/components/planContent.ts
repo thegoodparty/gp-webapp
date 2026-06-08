@@ -354,7 +354,16 @@ const buildTimeline = (
   // request deadline" rendered even though CA is universal vote-by-mail
   // and there is no request). Falls back to BR / E-offset only when the
   // state isn't in the curated table.
-  const curated = VOTER_DEADLINES_2026[stateCode.toUpperCase()]
+  //
+  // Year guard: the curated table is for the 2026 cycle only. For any
+  // other election year (special elections, 2027 primaries, future
+  // cycles) fall through to BR — better to show BR's date than to claim
+  // SOS authority for the wrong year's deadlines. Update by regenerating
+  // the data file for the next cycle.
+  const curated =
+    electionDate.getFullYear() === 2026
+      ? VOTER_DEADLINES_2026[stateCode.toUpperCase()]
+      : undefined
 
   const voterRegDeadline =
     parseDateIso(curated?.registration.date ?? null) ??
@@ -378,6 +387,21 @@ const buildTimeline = (
     curated != null && curated.registration.date === null
   const NO_DEADLINE_COPY =
     'There is no registration deadline as there is same day voting.'
+  // NH (and any other no-deadline state with a non-trivial tier note)
+  // has locally-set pre-registration windows that supplement the
+  // same-day-voting option. Append them so the candidate still sees the
+  // pre-registration context; skip when tier note is null (ND) or just
+  // restates "Election Day" for all methods (VT). The split-by-"; "
+  // check matches the format `tier_note` emits in the generated data.
+  const tierNoteAddsInfo =
+    voterRegTierNote !== null &&
+    !voterRegTierNote
+      .split('; ')
+      .every((part) => /\bElection Day\b/i.test(part))
+  const noDeadlineNotes =
+    voterRegHasNoDeadline && tierNoteAddsInfo
+      ? `${NO_DEADLINE_COPY} Local pre-registration: ${voterRegTierNote}.`
+      : NO_DEADLINE_COPY
 
   // Universal VBM states (CA, CO, etc.) have no real request deadline —
   // ballots auto-mail to all active voters. Drop the milestone entirely
@@ -462,7 +486,7 @@ const buildTimeline = (
         ? {
             date: electionDate,
             milestone: 'Voter registration',
-            notes: NO_DEADLINE_COPY,
+            notes: noDeadlineNotes,
           }
         : {
             date: voterRegDeadline,
@@ -524,7 +548,7 @@ const buildTimeline = (
     voterRegHasNoDeadline
       ? {
           date: electionDate,
-          description: NO_DEADLINE_COPY,
+          description: noDeadlineNotes,
         }
       : {
           date: voterRegDeadline,

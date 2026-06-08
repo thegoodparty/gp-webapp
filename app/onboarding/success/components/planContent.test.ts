@@ -63,7 +63,7 @@ describe('buildPlanData voter-registration deadline — no-deadline states', () 
     )
   })
 
-  it('renders the no-deadline copy for VT (same-day registration through ED)', () => {
+  it('renders the no-deadline copy for VT (same-day registration through ED) and also suppresses the absentee row (VT is universal VBM)', () => {
     const plan = buildPlanData(makeInput({ state: 'VT' }))
 
     expect(
@@ -75,10 +75,42 @@ describe('buildPlanData voter-registration deadline — no-deadline states', () 
       (row) => row.milestone === 'Voter registration',
     )
     expect(regRow).toBeDefined()
+    // VT's tier note is "Online ED; Mail ED; In-person ED" — redundant
+    // with the same-day-voting sentence, so it should NOT be appended.
     expect(regRow?.notes).toBe(NO_DEADLINE_COPY)
     expect(plan.keyDates.some((d) => d.description === NO_DEADLINE_COPY)).toBe(
       true,
     )
+
+    // VT is the only state that hits BOTH `voterRegHasNoDeadline` and
+    // `absenteeOmitted` (universal VBM). Without this assertion a
+    // regression on the absentee suppression branch for VT-shaped data
+    // would slip through unnoticed.
+    expect(
+      plan.timeline.some(
+        (row) => row.milestone === 'Absentee ballot request deadline',
+      ),
+    ).toBe(false)
+    expect(
+      plan.keyDates.some((d) =>
+        d.description.startsWith('Absentee ballot request deadline'),
+      ),
+    ).toBe(false)
+  })
+
+  it('appends the local pre-registration tier note for NH', () => {
+    const plan = buildPlanData(makeInput({ state: 'NH' }))
+
+    const regRow = plan.timeline.find(
+      (row) => row.milestone === 'Voter registration',
+    )
+    expect(regRow).toBeDefined()
+    // NH has a meaningful tier note (locally-set deadlines) — the
+    // pre-registration context should be surfaced after the
+    // same-day-voting sentence rather than silently dropped.
+    expect(regRow?.notes).toContain(NO_DEADLINE_COPY)
+    expect(regRow?.notes).toContain('Local pre-registration')
+    expect(regRow?.notes).toContain('Set locally')
   })
 })
 
@@ -98,15 +130,30 @@ describe('buildPlanData absentee-request deadline omission', () => {
     ).toBe(false)
   })
 
-  it('still renders the voter registration deadline for CA (using curated Oct 19 date)', () => {
-    const plan = buildPlanData(makeInput({ state: 'CA' }))
+  it('uses the curated CA voter registration date (Oct 19) and ignores a conflicting BR milestone (Nov 2)', () => {
+    // The real-world regression this guards: BR returned Nov 2 for CA
+    // registration; the curated table has the correct Oct 19. Passing
+    // the wrong BR value here proves the curated lookup wins — without
+    // the conflicting BR value the E-offset fallback (electionDate-15 =
+    // Oct 19) would produce the same date and the test would be
+    // tautological.
+    const plan = buildPlanData(
+      makeInput({
+        state: 'CA',
+        milestones: {
+          voter_registration: { start: null, end: '2026-11-02' },
+          early_voting: null,
+          request_ballot: null,
+        },
+      }),
+    )
 
     const regRow = plan.timeline.find(
       (row) => row.milestone === 'Voter registration deadline',
     )
     expect(regRow).toBeDefined()
-    // Curated date is 2026-10-19. dateUsHelper formats as "Oct 19, 2026".
     expect(regRow?.date).toContain('Oct 19, 2026')
+    expect(regRow?.date).not.toContain('Nov 2, 2026')
     expect(regRow?.notes).toContain('Per state SOS data')
   })
 })
