@@ -9,7 +9,9 @@ describe('WebsiteSunsetBanner', () => {
     render(<WebsiteSunsetBanner hasWebsite />)
 
     expect(
-      screen.getByText('Our build your own website feature is being discontinued'),
+      screen.getByText(
+        'Our build your own website feature is being discontinued',
+      ),
     ).toBeInTheDocument()
     expect(
       screen.getByText(
