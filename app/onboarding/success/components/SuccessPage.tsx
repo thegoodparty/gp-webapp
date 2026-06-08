@@ -348,6 +348,13 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
             }}
           />
         </div>
+
+        <p className="mt-12 text-sm text-muted-foreground">
+          Campaign plans are AI-generated and still in beta, so double-check
+          anything you&apos;ll act on against the sources. Your feedback shapes
+          how we can improve our product moving forward, and we enjoy hearing
+          from all our users.
+        </p>
       </main>
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-base-border bg-base-surface">

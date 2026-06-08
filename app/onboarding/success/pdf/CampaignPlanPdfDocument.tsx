@@ -1374,6 +1374,12 @@ export const CampaignPlanPdfDocument = ({
             </View>
           ))}
         </View>
+        <Text style={styles.transition}>
+          Campaign plans are AI-generated and still in beta, so double-check
+          anything you&apos;ll act on against the sources. Your feedback shapes
+          how we can improve our product moving forward, and we enjoy hearing
+          from all our users.
+        </Text>
       </SectionPage>
     </Document>
   )
