@@ -25,7 +25,9 @@ export function WebsiteSunsetBanner({
       className="mb-4 flex items-center gap-3 rounded-lg border border-neutral-400 bg-card px-4 py-3 text-card-foreground"
     >
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold">Website discontinued</p>
+        <p className="text-sm font-semibold">
+          Our build your own website feature is being discontinued
+        </p>
         <p className="text-sm">
           Please transfer your domain to a provider of your choice.
         </p>
