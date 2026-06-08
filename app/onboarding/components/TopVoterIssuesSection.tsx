@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { Card, CardContent, Badge } from '@styleguide'
+import { Card, CardContent } from '@styleguide'
 import { clientRequest } from 'gpApi/typed-request'
 import { reportErrorToSentry } from '@shared/sentry'
 
@@ -18,12 +18,6 @@ const VOTER_ISSUES_ROUTE = 'GET /v1/onboarding/voter-issues'
 const SENTRY_CONTEXT_FETCH_ISSUES = 'onboarding.voterIssues.fetch'
 const SKELETON_PLACEHOLDER_COUNT = 3
 const COLLAPSED_ISSUES_VISIBLE = 3
-
-const PRIORITY_LABEL: Record<'high' | 'medium' | 'low', string> = {
-  high: 'High priority',
-  medium: 'Medium priority',
-  low: 'Low priority',
-}
 
 // Endpoint derives district from the org cookie, so the request takes no
 // params. We still key the cache by office identity so navigating back and
@@ -123,30 +117,14 @@ export const TopVoterIssuesSection = ({
       ) : (
         <Card className="rounded-2xl shadow-none">
           <CardContent className="flex flex-col gap-3 px-4 py-3">
-            {visibleIssues.map((issue) => (
-              <div key={issue.label} className="space-y-2">
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-base font-semibold text-foreground">
-                    {issue.label}
-                  </h3>
-                  {issue.priority === 'high' ? (
-                    <Badge variant="soft">
-                      {PRIORITY_LABEL[issue.priority]}
-                    </Badge>
-                  ) : null}
-                </div>
-
-                <div className="space-y-1">
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
-                    <div
-                      className="h-full rounded-full bg-blue-600"
-                      style={{ width: `${Math.round(issue.score)}%` }}
-                    />
-                  </div>
-                  <p className="text-right text-xs text-slate-500">
-                    {Math.round(issue.score)}% voters care
-                  </p>
-                </div>
+            {visibleIssues.map((issue, index) => (
+              <div key={issue.label} className="flex items-center gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
+                  {index + 1}
+                </span>
+                <h3 className="text-base font-semibold text-foreground">
+                  {issue.label}
+                </h3>
               </div>
             ))}
             {additionalCount > 0 ? (

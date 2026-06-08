@@ -851,12 +851,10 @@ const PRIORITY_PHRASE: Record<'high' | 'medium' | 'low', string> = {
   low: 'lower-priority',
 }
 
-const describeApiIssue = (issue: ApiVoterIssue): string => {
-  const score = Math.round(issue.score)
-  return `Ranks as a ${
+const describeApiIssue = (issue: ApiVoterIssue): string =>
+  `Ranks as a ${
     PRIORITY_PHRASE[issue.priority]
-  } concern for voters in this district — about ${score}% identify it among their top issues.`
-}
+  } concern for voters in this district.`
 
 const buildVoterInsights = (
   customIssues: PlanIssueInput[],
