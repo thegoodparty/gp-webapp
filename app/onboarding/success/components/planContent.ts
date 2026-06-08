@@ -19,6 +19,7 @@ import {
   CONTACTS_PER_VOLUNTEER_HOUR,
   resolveWeeksRemaining,
 } from '../../components/volunteerHours'
+import { VOTER_DEADLINES_2026 } from '../data/voterDeadlines2026'
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
@@ -305,6 +306,7 @@ const buildTimeline = (
   filingDateEnd: Date | null,
   milestones: RaceMilestones | null,
   eventCount: number,
+  stateCode: string,
 ): {
   timeline: TimelineRow[]
   keyDates: KeyDate[]
@@ -344,17 +346,112 @@ const buildTimeline = (
   const voterRegOpen = parseDateIso(
     milestones?.voter_registration?.start ?? null,
   )
+
+  // Voter registration deadline + absentee request deadline pull from a
+  // curated SOS-verified table per state (see voterDeadlines2026.ts) rather
+  // than BallotReady. BR's data for these two has been wrong on enough
+  // states (CA registration showed Nov 2 vs actual Oct 19; CA "absentee
+  // request deadline" rendered even though CA is universal vote-by-mail
+  // and there is no request). Falls back to BR / E-offset only when the
+  // state isn't in the curated table.
+  //
+  // Year-and-month guard: the curated table covers the Nov 3, 2026
+  // general election only. Every `date` in there is in Oct/Nov 2026 (or
+  // null for SDR states). A 2026 primary (e.g. CA's June primary) would
+  // also have year === 2026 but render the general-election deadlines —
+  // off by months and labeled as authoritative SOS data. Restrict to
+  // the Oct/Nov 2026 window so primaries fall through to BR / E-offset
+  // like every other non-2026-general election.
+  //
+  // Known limitation: `isUniversalVbm` is a state characteristic, not a
+  // year-tied date — for CA/CO/etc. in 2027+ elections this guard makes
+  // the curated lookup miss and the absentee-request row reappears. The
+  // test in planContent.test.ts documents that behavior; resolving it
+  // properly means separating year-agnostic state facts from the dated
+  // deadline data, which is a larger refactor.
+  const isCuratedWindow =
+    electionDate.getFullYear() === 2026 && electionDate.getMonth() >= 9
+  const curated = isCuratedWindow
+    ? VOTER_DEADLINES_2026[stateCode.toUpperCase()]
+    : undefined
+
   const voterRegDeadline =
+    parseDateIso(curated?.registration.date ?? null) ??
     parseDateIso(milestones?.voter_registration?.end ?? null) ??
     addDays(electionDate, -15)
-  const voterRegDeadlineIsReal = milestones?.voter_registration?.end != null
+  const voterRegSource: 'curated' | 'ballotReady' | 'approximate' = curated
+    ?.registration.date
+    ? 'curated'
+    : milestones?.voter_registration?.end != null
+      ? 'ballotReady'
+      : 'approximate'
+  const voterRegTierNote = curated?.registration.tierNote ?? null
+
+  // States with no fixed registration cutoff (VT, NH = same-day reg
+  // through Election Day; ND = no registration system at all) have
+  // `registration.date: null` in the curated table. Render the milestone
+  // with an explanatory note keyed to Election Day rather than falling
+  // through to the E-offset fallback (which would invent a
+  // electionDate-15-days row that doesn't apply).
+  const voterRegHasNoDeadline =
+    curated != null && curated.registration.date === null
+  // The legal basis differs: VT/NH allow same-day registration at the
+  // polls; ND has no voter-registration requirement at all (eligible
+  // residents just vote). Same outcome — no deadline — but the
+  // explanation has to be accurate.
+  const NO_DEADLINE_COPY =
+    stateCode.toUpperCase() === 'ND'
+      ? 'There is no registration deadline as North Dakota has no voter registration requirement.'
+      : 'There is no registration deadline as there is same day voting.'
+  // NH (and any other no-deadline state with a non-trivial tier note)
+  // has locally-set pre-registration windows that supplement the
+  // same-day-voting option. Append them so the candidate still sees the
+  // pre-registration context; skip when tier note is null (ND) or just
+  // restates "Election Day" for all methods (VT). The split-by-"; "
+  // check matches the format `tier_note` emits in the generated data.
+  const tierNoteAddsInfo =
+    voterRegTierNote !== null &&
+    !voterRegTierNote
+      .split('; ')
+      .every((part) => /\bElection Day\b/i.test(part))
+  const noDeadlineNotes =
+    voterRegHasNoDeadline && tierNoteAddsInfo
+      ? `${NO_DEADLINE_COPY} Local pre-registration: ${voterRegTierNote}.`
+      : NO_DEADLINE_COPY
+
+  // Universal VBM states (CA, CO, etc.) have no real request deadline —
+  // ballots auto-mail to all active voters. Drop the milestone entirely
+  // for those rather than render a misleading row.
+  const absenteeOmitted = curated?.absentee.isUniversalVbm === true
   const requestBallotEnd =
+    parseDateIso(curated?.absentee.date ?? null) ??
     parseDateIso(milestones?.request_ballot?.end ?? null) ??
     addDays(electionDate, -7)
-  const requestBallotEndIsReal = milestones?.request_ballot?.end != null
+  const requestBallotEndSource: 'curated' | 'ballotReady' | 'approximate' =
+    curated?.absentee.date
+      ? 'curated'
+      : milestones?.request_ballot?.end != null
+        ? 'ballotReady'
+        : 'approximate'
+  const requestBallotTierNote = curated?.absentee.tierNote ?? null
 
   const sourceNote = (isReal: boolean, baseNote: string): string =>
     isReal ? `Per BallotReady. ${baseNote}` : `Approximate. ${baseNote}`
+
+  // For deadlines pulled from the curated table, attribute to SOS data and
+  // append the tier breakdown when methods differ (e.g. ID online vs mail).
+  const curatedNote = (
+    source: 'curated' | 'ballotReady' | 'approximate',
+    tierNote: string | null,
+    baseNote: string,
+  ): string => {
+    if (source === 'curated') {
+      const prefix = 'Per state SOS data.'
+      const tiers = tierNote ? ` Method differences — ${tierNote}.` : ''
+      return `${prefix}${tiers} ${baseNote}`
+    }
+    return sourceNote(source === 'ballotReady', baseNote)
+  }
 
   const timelineRows: Array<{ date: Date; milestone: string; notes: string }> =
     [
@@ -401,19 +498,34 @@ const buildTimeline = (
             },
           ]
         : []),
-      {
-        date: voterRegDeadline,
-        milestone: 'Voter registration deadline',
-        notes: sourceNote(
-          voterRegDeadlineIsReal,
-          'Push via robocall campaign.',
-        ),
-      },
-      {
-        date: requestBallotEnd,
-        milestone: 'Absentee ballot request deadline',
-        notes: sourceNote(requestBallotEndIsReal, 'Push via text campaign.'),
-      },
+      voterRegHasNoDeadline
+        ? {
+            date: electionDate,
+            milestone: 'Voter registration',
+            notes: noDeadlineNotes,
+          }
+        : {
+            date: voterRegDeadline,
+            milestone: 'Voter registration deadline',
+            notes: curatedNote(
+              voterRegSource,
+              voterRegTierNote,
+              'Push via robocall campaign.',
+            ),
+          },
+      ...(absenteeOmitted
+        ? []
+        : [
+            {
+              date: requestBallotEnd,
+              milestone: 'Absentee ballot request deadline',
+              notes: curatedNote(
+                requestBallotEndSource,
+                requestBallotTierNote,
+                'Push via text campaign.',
+              ),
+            },
+          ]),
       {
         date: electionDate,
         milestone: 'Election Day, polls open; absentee ballots due',
@@ -449,14 +561,23 @@ const buildTimeline = (
             } that you should personally attend.`
           : 'Identify community events in your area to attend in person.',
     },
-    {
-      date: voterRegDeadline,
-      description: 'Voter registration deadline.',
-    },
-    {
-      date: requestBallotEnd,
-      description: 'Absentee ballot request deadline.',
-    },
+    voterRegHasNoDeadline
+      ? {
+          date: electionDate,
+          description: noDeadlineNotes,
+        }
+      : {
+          date: voterRegDeadline,
+          description: 'Voter registration deadline.',
+        },
+    ...(absenteeOmitted
+      ? []
+      : [
+          {
+            date: requestBallotEnd,
+            description: 'Absentee ballot request deadline.',
+          },
+        ]),
     {
       date: electionDate,
       description: 'Election Day.',
@@ -1076,6 +1197,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     filingDateEnd,
     input.milestones,
     eventCount,
+    input.state,
   )
   const contactSchedule = buildContactSchedule(electionDateValid)
 
