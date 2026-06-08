@@ -16,15 +16,24 @@ import { LoadingAnimation } from '@shared/utils/LoadingAnimation'
 import PromoCodeSection, { usePromoCode } from './PromoCodeSection'
 
 interface CheckoutFormProps {
-  onSuccess: (sessionId: string) => void
+  // Fired after a successful confirm when there is a Stripe session id to act
+  // on (one-time purchases call completeCheckoutSession with it).
+  onSuccess?: (sessionId: string) => void
+  // Fired after a successful confirm when there is no session id (the Pro
+  // subscription flow, where gp-api returns only a clientSecret and fulfillment
+  // happens via the Stripe webhook).
+  onConfirmed?: () => void | Promise<void>
   onError?: (error: string) => void
   sessionId?: string
+  submitLabel?: string
 }
 
 export default function CheckoutForm({
   onSuccess,
+  onConfirmed,
   onError,
   sessionId,
+  submitLabel,
 }: CheckoutFormProps): React.JSX.Element {
   const { setError } = useCheckoutSession()
   const checkoutResult = useCheckout()
@@ -65,6 +74,8 @@ export default function CheckoutForm({
       checkout={checkout}
       sessionId={sessionId}
       onSuccess={onSuccess}
+      onConfirmed={onConfirmed}
+      submitLabel={submitLabel}
       onError={(error) => {
         let msg: string
         if (error instanceof Error) {
@@ -91,11 +102,15 @@ function CheckoutFormContent({
   checkout,
   sessionId,
   onSuccess,
+  onConfirmed,
+  submitLabel = 'Complete Purchase',
   onError,
 }: {
   checkout: StripeCheckoutValue
   sessionId?: string
-  onSuccess: (sessionId: string) => void
+  onSuccess?: (sessionId: string) => void
+  onConfirmed?: () => void | Promise<void>
+  submitLabel?: string
   onError: (error: Error | StripeError) => void
 }): React.JSX.Element {
   const promo = usePromoCode(checkout)
@@ -103,7 +118,11 @@ function CheckoutFormContent({
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!sessionId) {
+      // One-time purchases complete via `onSuccess(sessionId)`. Without a
+      // session id and without an `onConfirmed` fallback we'd charge the card
+      // and then silently skip fulfillment, so fail before confirming. (The
+      // subscription path passes `onConfirmed` and no session id.)
+      if (!sessionId && !onConfirmed) {
         throw new Error('Missing checkout session ID')
       }
 
@@ -117,9 +136,14 @@ function CheckoutFormContent({
         setHasConfirmedPayment(true)
       }
 
-      await onSuccess(sessionId)
-
-      return sessionId
+      // One-time purchases complete via the session id; the Pro subscription
+      // has no session id client-side and finalizes through the webhook, so it
+      // just signals confirmation.
+      if (sessionId) {
+        await onSuccess?.(sessionId)
+      } else {
+        await onConfirmed?.()
+      }
     },
     onError,
   })
@@ -172,7 +196,7 @@ function CheckoutFormContent({
         className="mt-6 w-full whitespace-nowrap"
         size="large"
       >
-        Complete Purchase
+        {submitLabel}
       </Button>
     </form>
   )

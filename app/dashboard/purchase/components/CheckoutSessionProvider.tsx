@@ -35,6 +35,12 @@ interface CheckoutSessionProviderProps {
   purchaseMetaData?: Record<string, string | number | boolean | undefined>
   receiptEmail?: string
   returnUrl?: string
+  // When provided, the session is created by this function instead of the
+  // typed one-time `createCheckoutSession(type, ...)` path. Used by the Pro
+  // upgrade wizard to mount the subscription checkout while reusing the rest of
+  // the provider (caching, in-flight dedupe, error state). It must throw on
+  // failure; the provider surfaces the message via `error`.
+  createSession?: () => Promise<CheckoutSessionResponse>
 }
 
 export const CheckoutSessionProvider = ({
@@ -43,6 +49,7 @@ export const CheckoutSessionProvider = ({
   purchaseMetaData = {},
   receiptEmail,
   returnUrl,
+  createSession,
 }: CheckoutSessionProviderProps) => {
   const [checkoutSession, setCheckoutSession] =
     useState<CheckoutSessionResponse | null>(null)
@@ -66,7 +73,10 @@ export const CheckoutSessionProvider = ({
       return pendingRequestRef.current
     }
 
-    if (!type || !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]) {
+    if (
+      !createSession &&
+      !PURCHASE_TYPES[type as keyof typeof PURCHASE_TYPES]
+    ) {
       setError('Invalid purchase type')
       reportErrorToSentry(new Error('CheckoutSessionProvider error'), {
         message: 'Invalid purchase type',
@@ -77,6 +87,24 @@ export const CheckoutSessionProvider = ({
     setIsLoading(true)
     const request = (async () => {
       try {
+        if (createSession) {
+          try {
+            const session = await createSession()
+            setCheckoutSession(session)
+            return session.clientSecret
+          } catch (err) {
+            const errorMessage =
+              err instanceof Error
+                ? err.message
+                : 'Failed to create checkout session'
+            setError(errorMessage)
+            reportErrorToSentry(new Error('CheckoutSessionProvider error'), {
+              message: errorMessage,
+            })
+            throw err
+          }
+        }
+
         const response = await createCheckoutSession(
           type,
           purchaseMetaDataRef.current,
@@ -104,7 +132,7 @@ export const CheckoutSessionProvider = ({
 
     pendingRequestRef.current = request
     return request
-  }, [checkoutSession, type, receiptEmail, returnUrl])
+  }, [checkoutSession, type, receiptEmail, returnUrl, createSession])
 
   return (
     <CheckoutSessionContext.Provider

@@ -438,6 +438,22 @@ export type APIEndpoints = {
     Request: {}
     Response: void
   }
+
+  // Pro $10/mo subscription checkout (gp-api createProCheckoutSession).
+  // `embedded: true` returns a Stripe Custom Checkout `clientSecret` to mount
+  // in-app; omitting it returns a hosted `redirectUrl` (legacy off-cohort
+  // path). `returnUrl` is where Stripe sends the candidate when a confirm
+  // requires a redirect (e.g. 3DS); gp-api defaults it when omitted.
+  'POST /v1/payments/purchase/checkout-session': {
+    Request: {
+      embedded?: boolean
+      returnUrl?: string
+    }
+    Response: {
+      clientSecret?: string
+      redirectUrl?: string
+    }
+  }
 }
 
 // Backend (snake_case) annotation types. Mirrors @goodparty_org/contracts

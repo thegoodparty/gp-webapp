@@ -354,6 +354,7 @@ export const EVENTS = {
       EinHoverHelp: 'Pro Upgrade - EIN: Hover help',
       CandidateProfileViewed: 'Pro Upgrade - Candidate Profile Viewed',
       FilingDetailsViewed: 'Pro Upgrade - Filing Details Viewed',
+      PaymentViewed: 'Pro Upgrade - Payment Viewed',
       PinEntryViewed: 'Pro Upgrade - PIN Entry Viewed',
     },
   },
