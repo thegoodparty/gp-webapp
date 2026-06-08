@@ -368,10 +368,15 @@ const buildTimeline = (
       : 'approximate'
   const voterRegTierNote = curated?.registration.tierNote ?? null
 
-  // States with same-day registration through Election Day (ND, VT, NH,
-  // etc.) have no fixed deadline — the curated table sets `date: null`.
-  // Drop the milestone rather than fabricate one from the E-offset
-  // fallback. North Dakota in particular has no voter registration at all.
+  // Drop the registration-deadline milestone for states with no fixed
+  // cutoff. The semantics differ by state but the curated table sets
+  // `date: null` for all of them:
+  //   - VT, NH — same-day registration through Election Day; voters can
+  //     register at the polls. No deadline to display.
+  //   - ND — no voter registration system at all; eligible residents
+  //     just show up to vote.
+  // Without this guard the E-offset fallback would fabricate a
+  // (electionDate - 15 days) row that doesn't apply.
   const voterRegOmitted = curated != null && curated.registration.date === null
 
   // Universal VBM states (CA, CO, etc.) have no real request deadline —
