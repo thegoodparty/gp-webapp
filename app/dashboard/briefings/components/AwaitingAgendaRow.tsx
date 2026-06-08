@@ -1,55 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronRightIcon, LoaderCircleIcon } from '@styleguide'
+import { ChevronRightIcon } from '@styleguide'
 import { formatDayTime, formatShortDate } from '@shared/briefings/dateHelpers'
 import type { BriefingSummary } from '@shared/briefings/types'
+import AgendaStatusPill from './AgendaStatusPill'
 import UploadAgendaModal from './UploadAgendaModal'
 
 type Props = {
   summary: BriefingSummary
-}
-
-type PillVariant = {
-  label: string
-  className: string
-  icon?: React.ReactNode
-}
-
-// Explicit switch keeps every userAgendaStatus enum value handled. The
-// 'completed' case happens in the brief window between the agent finishing
-// and the MeetingBriefing row landing locally — without the explicit branch
-// the row defaults to "Awaiting agenda" which is a misleading label.
-const pillFor = (status: BriefingSummary['userAgendaStatus']): PillVariant => {
-  switch (status) {
-    case 'processing':
-      return {
-        label: 'Processing your agenda…',
-        className: 'bg-primary/10 text-primary',
-        icon: <LoaderCircleIcon className="size-3 animate-spin" aria-hidden />,
-      }
-    case 'failed':
-      return {
-        label: 'Briefing failed',
-        className: 'bg-destructive/10 text-destructive',
-      }
-    case 'completed':
-      // Race window: agent finished, briefing row not yet upserted into
-      // local DB. Render a brief "Finishing up" pill instead of bouncing
-      // back to "Awaiting agenda."
-      return {
-        label: 'Finishing up…',
-        className: 'bg-primary/10 text-primary',
-        icon: <LoaderCircleIcon className="size-3 animate-spin" aria-hidden />,
-      }
-    case 'unknown':
-    case null:
-    case undefined:
-      return {
-        label: 'Awaiting agenda',
-        className: 'bg-muted text-muted-foreground',
-      }
-  }
 }
 
 export default function AwaitingAgendaRow({
@@ -58,10 +17,13 @@ export default function AwaitingAgendaRow({
   const [open, setOpen] = useState(false)
   const shortDate = formatShortDate(summary.scheduledAt)
   const dayTime = formatDayTime(summary.scheduledAt)
+  // Off-list upload rows (a user-supplied agenda for a date the schedule no
+  // longer projects) carry no meeting name; fall back so the row and modal
+  // title are never blank.
+  const meetingName = summary.meetingName || 'Your meeting'
 
   const status = summary.userAgendaStatus
   const isProcessing = status === 'processing'
-  const pill = pillFor(status)
 
   // Block re-opening the modal only while the user's agenda is actively
   // processing. The `completed` state used to lock the row too — to defend
@@ -98,15 +60,10 @@ export default function AwaitingAgendaRow({
         </span>
 
         <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
-          {summary.meetingName}
+          {meetingName}
         </span>
 
-        <span
-          className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium ${pill.className}`}
-        >
-          {pill.icon}
-          {pill.label}
-        </span>
+        <AgendaStatusPill status={status} />
 
         <ChevronRightIcon
           aria-hidden
@@ -118,7 +75,7 @@ export default function AwaitingAgendaRow({
         open={open}
         onOpenChange={setOpen}
         meetingDate={summary.slug}
-        meetingName={summary.meetingName}
+        meetingName={meetingName}
       />
     </>
   )
