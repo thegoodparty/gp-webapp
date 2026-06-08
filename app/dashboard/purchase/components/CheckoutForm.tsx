@@ -118,6 +118,14 @@ function CheckoutFormContent({
 
   const mutation = useMutation({
     mutationFn: async () => {
+      // One-time purchases complete via `onSuccess(sessionId)`. Without a
+      // session id and without an `onConfirmed` fallback we'd charge the card
+      // and then silently skip fulfillment, so fail before confirming. (The
+      // subscription path passes `onConfirmed` and no session id.)
+      if (!sessionId && !onConfirmed) {
+        throw new Error('Missing checkout session ID')
+      }
+
       if (!hasConfirmedPayment) {
         const result = await checkout.confirm({ redirect: 'if_required' })
 
