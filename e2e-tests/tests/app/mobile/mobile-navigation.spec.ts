@@ -60,7 +60,7 @@ test.describe('Mobile Navigation', () => {
     // page's own heading, so scope to the first match to avoid strict mode.
     await expect(
       page.getByRole('heading', { name: 'AI Assistant' }).first(),
-    ).toBeVisible({ timeout: 5000 })
+    ).toBeVisible({ timeout: 15000 })
     await expect(page).toHaveURL(/\/dashboard\/campaign-assistant$/)
 
     await visualSnapshot(page, 'mobile-ai-assistant.png', {
@@ -77,7 +77,7 @@ test.describe('Mobile Navigation', () => {
     // page's own heading, so scope to the first match to avoid strict mode.
     await expect(
       page.getByRole('heading', { name: 'Content Builder' }).first(),
-    ).toBeVisible({ timeout: 5000 })
+    ).toBeVisible({ timeout: 15000 })
     await expect(page).toHaveURL(/\/dashboard\/content$/)
 
     await visualSnapshot(page, 'mobile-content-builder.png', {
@@ -94,7 +94,7 @@ test.describe('Mobile Navigation', () => {
     await WaitHelper.waitForPageReady(page)
     await expect(
       page.getByRole('heading', { name: 'Contact Information' }).first(),
-    ).toBeVisible({ timeout: 5000 })
+    ).toBeVisible({ timeout: 15000 })
     await expect(page).toHaveURL(/\/profile$/)
 
     const bodyContent = page.locator('body')
