@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Card } from '@styleguide'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { getPinChannels } from 'app/dashboard/profile/texting-compliance/shared/pinChannels'
@@ -20,7 +20,14 @@ interface ProUpgrade3PinEntryProps {
 export default function ProUpgrade3PinEntry({
   tcrCompliance,
 }: ProUpgrade3PinEntryProps): React.JSX.Element {
-  const { submit, submitting, error } = useSubmitCvPin(tcrCompliance)
+  // Remount PinForm on each successful submit (bump its key) so the just-typed
+  // digits are cleared. Unlike EnterPin, this card has no redirect to escape to:
+  // if the post-submit refetch hasn't yet flipped the status off `submitted`,
+  // the form re-enables and would otherwise keep the submitted PIN on screen.
+  const [successKey, setSuccessKey] = useState(0)
+  const { submit, submitting, error } = useSubmitCvPin(tcrCompliance, {
+    onSuccess: () => setSuccessKey((key) => key + 1),
+  })
 
   // Mirror EnterPin's funnel "viewed" signal so the pro-upgrade3 cohort, which
   // sees PIN entry in-place instead of on /enter-pin, still reports it.
@@ -36,6 +43,7 @@ export default function ProUpgrade3PinEntry({
       <h2 className="text-2xl font-semibold mb-4">Texting Compliance</h2>
       <p className="text-lg font-medium">Enter your PIN</p>
       <PinForm
+        key={successKey}
         channels={getPinChannels(tcrCompliance)}
         onSubmit={submit}
         loading={submitting}

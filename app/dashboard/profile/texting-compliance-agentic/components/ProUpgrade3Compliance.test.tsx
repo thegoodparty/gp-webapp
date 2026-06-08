@@ -205,6 +205,44 @@ describe('ProUpgrade3Compliance — PIN submit', () => {
     expect(getDigitInputs()).toHaveLength(0)
   })
 
+  it('clears and re-enables the PIN form after success when the status has not yet left `submitted`', async () => {
+    const user = userEvent.setup()
+    // Every fetch — including the post-submit refetch — returns `submitted`, the
+    // race where the backend hasn't transitioned yet. The card stays mounted, so
+    // the form must reset (no stale PIN left on screen) and re-enable.
+    mockGetTcrCompliance.mockResolvedValue(tcrWith('submitted'))
+
+    api.mock(
+      'POST /v1/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin',
+      { status: 200, data: undefined },
+    )
+
+    render(<ProUpgrade3Compliance />)
+    await waitFor(() => expect(getDigitInputs()).toHaveLength(6))
+
+    const inputs = getDigitInputs()
+    for (let i = 0; i < 6; i++) {
+      await user.type(inputs[i]!, String(i + 1))
+    }
+    await user.click(screen.getByRole('button', { name: /submit/i }))
+
+    await waitFor(() => {
+      expect(mockSuccessSnackbar).toHaveBeenCalledWith(
+        expect.stringMatching(/PIN submitted/i),
+      )
+    })
+
+    // Form remounted: inputs back to empty (no submitted PIN lingering) and
+    // editable rather than frozen disabled in a loading state. The Submit button
+    // is correctly disabled again because the (now empty) form has no PIN.
+    await waitFor(() => {
+      const refreshed = getDigitInputs()
+      expect(refreshed).toHaveLength(6)
+      expect(refreshed.every((input) => input.value === '')).toBe(true)
+    })
+    expect(getDigitInputs()[0]).toBeEnabled()
+  })
+
   it('surfaces a mismatch error on a 400 without claiming success', async () => {
     const user = userEvent.setup()
     mockGetTcrCompliance.mockResolvedValue(tcrWith('submitted'))
