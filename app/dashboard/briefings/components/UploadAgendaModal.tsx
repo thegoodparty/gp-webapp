@@ -9,6 +9,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  Input,
+  Label,
   Link2Icon,
   UploadIcon,
 } from '@styleguide'
@@ -159,25 +161,21 @@ export default function UploadAgendaModal({
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
-          <label className="sr-only" htmlFor="agenda-url">
+          <Label htmlFor="agenda-url" className="sr-only">
             Meeting packet URL
-          </label>
-          <div className="relative">
-            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-              <Link2Icon className="size-4" aria-hidden />
-            </span>
-            <input
-              id="agenda-url"
-              type="url"
-              inputMode="url"
-              autoComplete="off"
-              value={url}
-              onChange={(e) => handleUrlChange(e.target.value)}
-              placeholder="Paste a link to the meeting packet"
-              disabled={submitMutation.isPending}
-              className="h-12 w-full rounded-full border border-base-border bg-transparent pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
-            />
-          </div>
+          </Label>
+          <Input
+            id="agenda-url"
+            type="url"
+            inputMode="url"
+            autoComplete="off"
+            value={url}
+            onChange={(e) => handleUrlChange(e.target.value)}
+            placeholder="Paste a link to the meeting packet"
+            disabled={submitMutation.isPending}
+            icon={<Link2Icon aria-hidden />}
+            className="h-12 rounded-full"
+          />
 
           <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
             <span className="h-px flex-1 bg-border" aria-hidden />
