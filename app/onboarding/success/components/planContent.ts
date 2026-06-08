@@ -355,15 +355,25 @@ const buildTimeline = (
   // and there is no request). Falls back to BR / E-offset only when the
   // state isn't in the curated table.
   //
-  // Year guard: the curated table is for the 2026 cycle only. For any
-  // other election year (special elections, 2027 primaries, future
-  // cycles) fall through to BR — better to show BR's date than to claim
-  // SOS authority for the wrong year's deadlines. Update by regenerating
-  // the data file for the next cycle.
-  const curated =
-    electionDate.getFullYear() === 2026
-      ? VOTER_DEADLINES_2026[stateCode.toUpperCase()]
-      : undefined
+  // Year-and-month guard: the curated table covers the Nov 3, 2026
+  // general election only. Every `date` in there is in Oct/Nov 2026 (or
+  // null for SDR states). A 2026 primary (e.g. CA's June primary) would
+  // also have year === 2026 but render the general-election deadlines —
+  // off by months and labeled as authoritative SOS data. Restrict to
+  // the Oct/Nov 2026 window so primaries fall through to BR / E-offset
+  // like every other non-2026-general election.
+  //
+  // Known limitation: `isUniversalVbm` is a state characteristic, not a
+  // year-tied date — for CA/CO/etc. in 2027+ elections this guard makes
+  // the curated lookup miss and the absentee-request row reappears. The
+  // test in planContent.test.ts documents that behavior; resolving it
+  // properly means separating year-agnostic state facts from the dated
+  // deadline data, which is a larger refactor.
+  const isCuratedWindow =
+    electionDate.getFullYear() === 2026 && electionDate.getMonth() >= 9
+  const curated = isCuratedWindow
+    ? VOTER_DEADLINES_2026[stateCode.toUpperCase()]
+    : undefined
 
   const voterRegDeadline =
     parseDateIso(curated?.registration.date ?? null) ??
@@ -385,8 +395,14 @@ const buildTimeline = (
   // electionDate-15-days row that doesn't apply).
   const voterRegHasNoDeadline =
     curated != null && curated.registration.date === null
+  // The legal basis differs: VT/NH allow same-day registration at the
+  // polls; ND has no voter-registration requirement at all (eligible
+  // residents just vote). Same outcome — no deadline — but the
+  // explanation has to be accurate.
   const NO_DEADLINE_COPY =
-    'There is no registration deadline as there is same day voting.'
+    stateCode.toUpperCase() === 'ND'
+      ? 'There is no registration deadline as North Dakota has no voter registration requirement.'
+      : 'There is no registration deadline as there is same day voting.'
   // NH (and any other no-deadline state with a non-trivial tier note)
   // has locally-set pre-registration windows that supplement the
   // same-day-voting option. Append them so the candidate still sees the

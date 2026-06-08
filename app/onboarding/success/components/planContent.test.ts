@@ -34,14 +34,14 @@ const makeInput = (overrides: Partial<PlanInput> = {}): PlanInput => ({
 })
 
 describe('buildPlanData voter-registration deadline — no-deadline states', () => {
-  const NO_DEADLINE_COPY =
+  const ND_COPY =
+    'There is no registration deadline as North Dakota has no voter registration requirement.'
+  const SDR_COPY =
     'There is no registration deadline as there is same day voting.'
 
-  it('renders the no-deadline copy for ND (no voter registration at all)', () => {
+  it('renders the ND-specific copy (no registration requirement, not same-day registration)', () => {
     const plan = buildPlanData(makeInput({ state: 'ND' }))
 
-    // The standard "deadline" milestone label must NOT appear (the row
-    // has been replaced with the explanatory copy keyed to Election Day).
     expect(
       plan.timeline.some(
         (row) => row.milestone === 'Voter registration deadline',
@@ -51,16 +51,17 @@ describe('buildPlanData voter-registration deadline — no-deadline states', () 
       (row) => row.milestone === 'Voter registration',
     )
     expect(regRow).toBeDefined()
-    expect(regRow?.notes).toBe(NO_DEADLINE_COPY)
+    // ND has no voter registration system — the SDR copy would be a
+    // wrong legal basis.
+    expect(regRow?.notes).toBe(ND_COPY)
+    expect(regRow?.notes).not.toContain('same day voting')
 
     expect(
       plan.keyDates.some((d) =>
         d.description.startsWith('Voter registration deadline'),
       ),
     ).toBe(false)
-    expect(plan.keyDates.some((d) => d.description === NO_DEADLINE_COPY)).toBe(
-      true,
-    )
+    expect(plan.keyDates.some((d) => d.description === ND_COPY)).toBe(true)
   })
 
   it('renders the no-deadline copy for VT (same-day registration through ED) and also suppresses the absentee row (VT is universal VBM)', () => {
@@ -77,10 +78,8 @@ describe('buildPlanData voter-registration deadline — no-deadline states', () 
     expect(regRow).toBeDefined()
     // VT's tier note is "Online ED; Mail ED; In-person ED" — redundant
     // with the same-day-voting sentence, so it should NOT be appended.
-    expect(regRow?.notes).toBe(NO_DEADLINE_COPY)
-    expect(plan.keyDates.some((d) => d.description === NO_DEADLINE_COPY)).toBe(
-      true,
-    )
+    expect(regRow?.notes).toBe(SDR_COPY)
+    expect(plan.keyDates.some((d) => d.description === SDR_COPY)).toBe(true)
 
     // VT is the only state that hits BOTH `voterRegHasNoDeadline` and
     // `absenteeOmitted` (universal VBM). Without this assertion a
@@ -108,7 +107,7 @@ describe('buildPlanData voter-registration deadline — no-deadline states', () 
     // NH has a meaningful tier note (locally-set deadlines) — the
     // pre-registration context should be surfaced after the
     // same-day-voting sentence rather than silently dropped.
-    expect(regRow?.notes).toContain(NO_DEADLINE_COPY)
+    expect(regRow?.notes).toContain(SDR_COPY)
     expect(regRow?.notes).toContain('Local pre-registration')
     expect(regRow?.notes).toContain('Set locally')
   })
@@ -194,5 +193,46 @@ describe('buildPlanData fallback for unknown state', () => {
     // suppressed and neither claims SOS data attribution.
     expect(regRow?.notes).not.toContain('Per state SOS data')
     expect(absenteeRow?.notes).not.toContain('Per state SOS data')
+  })
+
+  it('documents that universal-VBM absentee suppression is year-tied: CA in 2027 shows the absentee row', () => {
+    // `isUniversalVbm` is logically a state characteristic, but the
+    // year guard makes the curated lookup miss for non-2026-general
+    // elections — so the absentee row reappears for CA/CO/HI/etc. in
+    // 2027+ even though they are still universal-VBM states. The fix
+    // is to separate year-agnostic state facts from the dated deadline
+    // data; until then this test pins the current behavior so a
+    // regression elsewhere doesn't quietly change it.
+    const plan = buildPlanData(
+      makeInput({ state: 'CA', electionDateIso: '2027-11-02' }),
+    )
+
+    const absenteeRow = plan.timeline.find(
+      (row) => row.milestone === 'Absentee ballot request deadline',
+    )
+    expect(absenteeRow).toBeDefined()
+    expect(absenteeRow?.notes).not.toContain('Per state SOS data')
+  })
+
+  it('does not claim SOS authority for a 2026 primary (curated table covers the Nov general only)', () => {
+    // A CA June primary has year=2026 but doesn't share the November
+    // deadlines. The month gate keeps it on the BR / E-offset path so
+    // the wrong dates aren't labeled as SOS-verified.
+    const plan = buildPlanData(
+      makeInput({ state: 'CA', electionDateIso: '2026-06-02' }),
+    )
+
+    const regRow = plan.timeline.find(
+      (row) => row.milestone === 'Voter registration deadline',
+    )
+    expect(regRow).toBeDefined()
+    expect(regRow?.notes).not.toContain('Per state SOS data')
+    // And the absentee row is back in play for the same reason —
+    // universal-VBM suppression depends on the curated lookup, which
+    // is gated to the Nov 2026 general.
+    const absenteeRow = plan.timeline.find(
+      (row) => row.milestone === 'Absentee ballot request deadline',
+    )
+    expect(absenteeRow).toBeDefined()
   })
 })
