@@ -19,6 +19,7 @@ import {
   CONTACTS_PER_VOLUNTEER_HOUR,
   resolveWeeksRemaining,
 } from '../../components/volunteerHours'
+import { VOTER_DEADLINES_2026 } from '../data/voterDeadlines2026'
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
@@ -305,6 +306,7 @@ const buildTimeline = (
   filingDateEnd: Date | null,
   milestones: RaceMilestones | null,
   eventCount: number,
+  stateCode: string,
 ): {
   timeline: TimelineRow[]
   keyDates: KeyDate[]
@@ -344,17 +346,61 @@ const buildTimeline = (
   const voterRegOpen = parseDateIso(
     milestones?.voter_registration?.start ?? null,
   )
+
+  // Voter registration deadline + absentee request deadline pull from a
+  // curated SOS-verified table per state (see voterDeadlines2026.ts) rather
+  // than BallotReady. BR's data for these two has been wrong on enough
+  // states (CA registration showed Nov 2 vs actual Oct 19; CA "absentee
+  // request deadline" rendered even though CA is universal vote-by-mail
+  // and there is no request). Falls back to BR / E-offset only when the
+  // state isn't in the curated table.
+  const curated = VOTER_DEADLINES_2026[stateCode.toUpperCase()]
+
   const voterRegDeadline =
+    parseDateIso(curated?.registration.date ?? null) ??
     parseDateIso(milestones?.voter_registration?.end ?? null) ??
     addDays(electionDate, -15)
-  const voterRegDeadlineIsReal = milestones?.voter_registration?.end != null
+  const voterRegSource: 'curated' | 'ballotReady' | 'approximate' = curated
+    ?.registration.date
+    ? 'curated'
+    : milestones?.voter_registration?.end != null
+      ? 'ballotReady'
+      : 'approximate'
+  const voterRegTierNote = curated?.registration.tierNote ?? null
+
+  // Universal VBM states (CA, CO, etc.) have no real request deadline —
+  // ballots auto-mail to all active voters. Drop the milestone entirely
+  // for those rather than render a misleading row.
+  const absenteeOmitted = curated?.absentee.isUniversalVbm === true
   const requestBallotEnd =
+    parseDateIso(curated?.absentee.date ?? null) ??
     parseDateIso(milestones?.request_ballot?.end ?? null) ??
     addDays(electionDate, -7)
-  const requestBallotEndIsReal = milestones?.request_ballot?.end != null
+  const requestBallotEndSource: 'curated' | 'ballotReady' | 'approximate' =
+    curated?.absentee.date
+      ? 'curated'
+      : milestones?.request_ballot?.end != null
+        ? 'ballotReady'
+        : 'approximate'
+  const requestBallotTierNote = curated?.absentee.tierNote ?? null
 
   const sourceNote = (isReal: boolean, baseNote: string): string =>
     isReal ? `Per BallotReady. ${baseNote}` : `Approximate. ${baseNote}`
+
+  // For deadlines pulled from the curated table, attribute to SOS data and
+  // append the tier breakdown when methods differ (e.g. ID online vs mail).
+  const curatedNote = (
+    source: 'curated' | 'ballotReady' | 'approximate',
+    tierNote: string | null,
+    baseNote: string,
+  ): string => {
+    if (source === 'curated') {
+      const prefix = 'Per state SOS data.'
+      const tiers = tierNote ? ` Method differences — ${tierNote}.` : ''
+      return `${prefix}${tiers} ${baseNote}`
+    }
+    return sourceNote(source === 'ballotReady', baseNote)
+  }
 
   const timelineRows: Array<{ date: Date; milestone: string; notes: string }> =
     [
@@ -404,16 +450,25 @@ const buildTimeline = (
       {
         date: voterRegDeadline,
         milestone: 'Voter registration deadline',
-        notes: sourceNote(
-          voterRegDeadlineIsReal,
+        notes: curatedNote(
+          voterRegSource,
+          voterRegTierNote,
           'Push via robocall campaign.',
         ),
       },
-      {
-        date: requestBallotEnd,
-        milestone: 'Absentee ballot request deadline',
-        notes: sourceNote(requestBallotEndIsReal, 'Push via text campaign.'),
-      },
+      ...(absenteeOmitted
+        ? []
+        : [
+            {
+              date: requestBallotEnd,
+              milestone: 'Absentee ballot request deadline',
+              notes: curatedNote(
+                requestBallotEndSource,
+                requestBallotTierNote,
+                'Push via text campaign.',
+              ),
+            },
+          ]),
       {
         date: electionDate,
         milestone: 'Election Day, polls open; absentee ballots due',
@@ -453,10 +508,14 @@ const buildTimeline = (
       date: voterRegDeadline,
       description: 'Voter registration deadline.',
     },
-    {
-      date: requestBallotEnd,
-      description: 'Absentee ballot request deadline.',
-    },
+    ...(absenteeOmitted
+      ? []
+      : [
+          {
+            date: requestBallotEnd,
+            description: 'Absentee ballot request deadline.',
+          },
+        ]),
     {
       date: electionDate,
       description: 'Election Day.',
@@ -1076,6 +1135,7 @@ export const buildPlanData = (input: PlanInput): PlanData => {
     filingDateEnd,
     input.milestones,
     eventCount,
+    input.state,
   )
   const contactSchedule = buildContactSchedule(electionDateValid)
 
