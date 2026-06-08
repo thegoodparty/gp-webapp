@@ -6,6 +6,7 @@ import LoadingState from './LoadingState'
 import HeaderSection from './HeaderSection'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import ProgressSection from './ProgressSection'
+import ProUpgradeBanner from './ProUpgradeBanner'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { calculateContactGoalsFromCampaign } from '../voterGoalsHelpers'
@@ -148,6 +149,7 @@ export default function CampaignManager({
             ) : (
               <>
                 <HeaderSection />
+                <ProUpgradeBanner />
                 <ProgressSection />
                 {showLoadingState && (
                   <LoadingState
