@@ -33,23 +33,37 @@ const makeInput = (overrides: Partial<PlanInput> = {}): PlanInput => ({
   ...overrides,
 })
 
-describe('buildPlanData voter-registration deadline omission', () => {
-  it('omits the registration deadline for ND (no voter registration at all)', () => {
+describe('buildPlanData voter-registration deadline — no-deadline states', () => {
+  const NO_DEADLINE_COPY =
+    'There is no registration deadline as there is same day voting.'
+
+  it('renders the no-deadline copy for ND (no voter registration at all)', () => {
     const plan = buildPlanData(makeInput({ state: 'ND' }))
 
+    // The standard "deadline" milestone label must NOT appear (the row
+    // has been replaced with the explanatory copy keyed to Election Day).
     expect(
       plan.timeline.some(
         (row) => row.milestone === 'Voter registration deadline',
       ),
     ).toBe(false)
+    const regRow = plan.timeline.find(
+      (row) => row.milestone === 'Voter registration',
+    )
+    expect(regRow).toBeDefined()
+    expect(regRow?.notes).toBe(NO_DEADLINE_COPY)
+
     expect(
       plan.keyDates.some((d) =>
         d.description.startsWith('Voter registration deadline'),
       ),
     ).toBe(false)
+    expect(plan.keyDates.some((d) => d.description === NO_DEADLINE_COPY)).toBe(
+      true,
+    )
   })
 
-  it('omits the registration deadline for VT (same-day registration through ED)', () => {
+  it('renders the no-deadline copy for VT (same-day registration through ED)', () => {
     const plan = buildPlanData(makeInput({ state: 'VT' }))
 
     expect(
@@ -57,11 +71,14 @@ describe('buildPlanData voter-registration deadline omission', () => {
         (row) => row.milestone === 'Voter registration deadline',
       ),
     ).toBe(false)
-    expect(
-      plan.keyDates.some((d) =>
-        d.description.startsWith('Voter registration deadline'),
-      ),
-    ).toBe(false)
+    const regRow = plan.timeline.find(
+      (row) => row.milestone === 'Voter registration',
+    )
+    expect(regRow).toBeDefined()
+    expect(regRow?.notes).toBe(NO_DEADLINE_COPY)
+    expect(plan.keyDates.some((d) => d.description === NO_DEADLINE_COPY)).toBe(
+      true,
+    )
   })
 })
 

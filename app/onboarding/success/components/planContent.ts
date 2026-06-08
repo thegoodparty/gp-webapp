@@ -368,16 +368,16 @@ const buildTimeline = (
       : 'approximate'
   const voterRegTierNote = curated?.registration.tierNote ?? null
 
-  // Drop the registration-deadline milestone for states with no fixed
-  // cutoff. The semantics differ by state but the curated table sets
-  // `date: null` for all of them:
-  //   - VT, NH — same-day registration through Election Day; voters can
-  //     register at the polls. No deadline to display.
-  //   - ND — no voter registration system at all; eligible residents
-  //     just show up to vote.
-  // Without this guard the E-offset fallback would fabricate a
-  // (electionDate - 15 days) row that doesn't apply.
-  const voterRegOmitted = curated != null && curated.registration.date === null
+  // States with no fixed registration cutoff (VT, NH = same-day reg
+  // through Election Day; ND = no registration system at all) have
+  // `registration.date: null` in the curated table. Render the milestone
+  // with an explanatory note keyed to Election Day rather than falling
+  // through to the E-offset fallback (which would invent a
+  // electionDate-15-days row that doesn't apply).
+  const voterRegHasNoDeadline =
+    curated != null && curated.registration.date === null
+  const NO_DEADLINE_COPY =
+    'There is no registration deadline as there is same day voting.'
 
   // Universal VBM states (CA, CO, etc.) have no real request deadline —
   // ballots auto-mail to all active voters. Drop the milestone entirely
@@ -458,19 +458,21 @@ const buildTimeline = (
             },
           ]
         : []),
-      ...(voterRegOmitted
-        ? []
-        : [
-            {
-              date: voterRegDeadline,
-              milestone: 'Voter registration deadline',
-              notes: curatedNote(
-                voterRegSource,
-                voterRegTierNote,
-                'Push via robocall campaign.',
-              ),
-            },
-          ]),
+      voterRegHasNoDeadline
+        ? {
+            date: electionDate,
+            milestone: 'Voter registration',
+            notes: NO_DEADLINE_COPY,
+          }
+        : {
+            date: voterRegDeadline,
+            milestone: 'Voter registration deadline',
+            notes: curatedNote(
+              voterRegSource,
+              voterRegTierNote,
+              'Push via robocall campaign.',
+            ),
+          },
       ...(absenteeOmitted
         ? []
         : [
@@ -519,14 +521,15 @@ const buildTimeline = (
             } that you should personally attend.`
           : 'Identify community events in your area to attend in person.',
     },
-    ...(voterRegOmitted
-      ? []
-      : [
-          {
-            date: voterRegDeadline,
-            description: 'Voter registration deadline.',
-          },
-        ]),
+    voterRegHasNoDeadline
+      ? {
+          date: electionDate,
+          description: NO_DEADLINE_COPY,
+        }
+      : {
+          date: voterRegDeadline,
+          description: 'Voter registration deadline.',
+        },
     ...(absenteeOmitted
       ? []
       : [
