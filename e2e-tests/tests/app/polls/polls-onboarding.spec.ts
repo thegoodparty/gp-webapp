@@ -629,6 +629,9 @@ test.describe.serial('poll onboarding', () => {
         that: 'the poll is marked as expanding',
         minTimeout: 500,
         maxTimeout: 15_000,
+        // The Stripe webhook -> expansion processing occasionally runs past the
+        // default ~90s window (timed out at 92s in CI); widen it to ~240s.
+        retries: 20,
       },
       async () => {
         const res = await client.get(`/v1/polls/${pollId}`)
