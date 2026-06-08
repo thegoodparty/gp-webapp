@@ -317,8 +317,11 @@ test.describe.serial('poll onboarding', () => {
   let sharedContact: CsvRow
 
   test('poll onboarding and expansion', async ({ page }) => {
-    // Set this test's timeout to 10 minutes
-    test.setTimeout(10 * 60 * 1000)
+    // Set this test's timeout to 15 minutes. The "marked as expanding"
+    // eventual check below can sleep up to ~240s waiting on the Stripe
+    // webhook, so the overall budget must exceed the default 10 minutes to
+    // accommodate that window plus the rest of the flow.
+    test.setTimeout(15 * 60 * 1000)
     const { user, client } = await setupElectedOfficeUser(page, {
       zip: district.zip,
       office: district.office,
