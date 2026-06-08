@@ -3,7 +3,7 @@
  *
  * Converts a browser `Selection` (or a `Range`) into an
  * `{ jsonPath, start, end, quote }` anchor by walking up to the nearest
- * element carrying a `data-briefing-json-path` attribute and computing
+ * element carrying a `data-anchor-json-path` attribute and computing
  * character offsets within that element's plain text.
  *
  * Conversely, builds a DOM `Range` inside a target element from
@@ -13,8 +13,8 @@
 
 import type { AnnotationAnchor } from './types'
 
-const ANCHOR_ATTR = 'data-briefing-json-path'
-const ANCHOR_SELECTOR = '[data-briefing-json-path]'
+const ANCHOR_ATTR = 'data-anchor-json-path'
+const ANCHOR_SELECTOR = '[data-anchor-json-path]'
 
 export interface ResolvedAnchor {
   jsonPath: string

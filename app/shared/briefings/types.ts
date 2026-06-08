@@ -108,7 +108,7 @@ export interface BriefingSummary {
 // Annotations (my system) — unchanged
 // ---------------------------------------------------------------------------
 
-export type AnnotationKind = 'note' | 'chat' | 'bug_report'
+export type AnnotationKind = 'note' | 'chat' | 'bug_report' | 'review'
 export type AnnotationResourceType = 'briefing'
 
 export interface AnnotationAnchor {
@@ -156,6 +156,14 @@ export interface AnnotationBugReportData {
   submittedAt: string
 }
 
+export interface AnnotationReviewData {
+  id: string
+  body: string
+  reviewer_email: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface Annotation {
   id: string
   kind: AnnotationKind
@@ -170,6 +178,7 @@ export interface Annotation {
   note?: AnnotationNoteData
   chat?: AnnotationChatData
   bugReport?: AnnotationBugReportData
+  review?: AnnotationReviewData
 }
 
 export type CreateAnnotationInput =
@@ -188,6 +197,11 @@ export type CreateAnnotationInput =
       kind: 'chat'
       anchor: AnnotationAnchor
       payload: { firstMessage: string | null }
+    }
+  | {
+      kind: 'review'
+      anchor: AnnotationAnchor
+      payload: { body: string }
     }
 
 // ---------------------------------------------------------------------------

@@ -5,6 +5,7 @@ import { useIsImpersonating } from '@shared/hooks/useIsImpersonating'
 import { useUser } from '@shared/hooks/useUser'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { clientRequest } from 'gpApi/typed-request'
+import { usePathname } from 'next/navigation'
 import { useState, useRef, useCallback } from 'react'
 import { ArrowLeftRight, Ban } from 'lucide-react'
 import {
@@ -25,6 +26,8 @@ type SearchResult = { id: number; email: string; name: string | null }
 
 export default function ImpersonationBanner() {
   const isImpersonating = useIsImpersonating()
+  const pathname = usePathname()
+  const isReviewMode = !!pathname?.startsWith('/dashboard/admin-review/')
   const { signOut, client, setActive } = useClerk()
   const [user] = useUser()
   const { errorSnackbar } = useSnackbar()
@@ -92,7 +95,14 @@ export default function ImpersonationBanner() {
 
   async function handleStopImpersonating() {
     await signOut()
-    window.location.href = GP_ADMIN_URL
+    let returnPath = '/'
+    try {
+      returnPath = sessionStorage.getItem('gp_admin_return_to') ?? '/'
+      sessionStorage.removeItem('gp_admin_return_to')
+    } catch {
+      returnPath = '/'
+    }
+    window.location.href = GP_ADMIN_URL + returnPath
   }
 
   function handleOpenChange(next: boolean) {
@@ -113,15 +123,17 @@ export default function ImpersonationBanner() {
           You are impersonating <strong>{user?.email ?? 'this user'}</strong>
         </span>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="xSmall"
-            onClick={() => setOpen(true)}
-            className="bg-green-600 text-white border-green-600 hover:bg-green-700 hover:border-green-700"
-          >
-            <ArrowLeftRight />
-            Switch User
-          </Button>
+          {!isReviewMode && (
+            <Button
+              variant="outline"
+              size="xSmall"
+              onClick={() => setOpen(true)}
+              className="bg-green-600 text-white border-green-600 hover:bg-green-700 hover:border-green-700"
+            >
+              <ArrowLeftRight />
+              Switch User
+            </Button>
+          )}
           <Button
             variant="destructive"
             size="xSmall"

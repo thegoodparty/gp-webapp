@@ -97,8 +97,8 @@ describe('enrichForCycler', () => {
   describe('DOM resolution', () => {
     beforeEach(() => {
       document.body.innerHTML =
-        '<span data-briefing-json-path="/a">Hello world</span>' +
-        '<span data-briefing-json-path="/b">Bye</span>'
+        '<span data-anchor-json-path="/a">Hello world</span>' +
+        '<span data-anchor-json-path="/b">Bye</span>'
     })
 
     it('resolves docOrderIndex and highlightedText for an anchored annotation', () => {
@@ -160,9 +160,9 @@ describe('enrichForCycler', () => {
   describe('duplicate jsonPath dedupe', () => {
     beforeEach(() => {
       document.body.innerHTML =
-        '<span data-briefing-json-path="/dup">First</span>' +
-        '<span data-briefing-json-path="/dup">Second</span>' +
-        '<span data-briefing-json-path="/c">Third element</span>'
+        '<span data-anchor-json-path="/dup">First</span>' +
+        '<span data-anchor-json-path="/dup">Second</span>' +
+        '<span data-anchor-json-path="/c">Third element</span>'
     })
 
     it('uses the first occurrence to resolve docOrderIndex on duplicate jsonPath', () => {
@@ -192,8 +192,8 @@ describe('enrichForCycler', () => {
   describe('sort integration', () => {
     beforeEach(() => {
       document.body.innerHTML =
-        '<span data-briefing-json-path="/first">AAAA</span>' +
-        '<span data-briefing-json-path="/second">BBBB</span>'
+        '<span data-anchor-json-path="/first">AAAA</span>' +
+        '<span data-anchor-json-path="/second">BBBB</span>'
     })
 
     it('orders unanchored first, then resolved by docOrderIndex asc, then unresolved by createdAt asc', () => {
@@ -276,9 +276,9 @@ describe('predictNewAnnotationPosition', () => {
 
   it('predicts the new anchored note slots between earlier and later anchored notes by docOrderIndex', () => {
     document.body.innerHTML = `
-      <div data-briefing-json-path="a">A</div>
-      <div data-briefing-json-path="b">B</div>
-      <div data-briefing-json-path="c">C</div>
+      <div data-anchor-json-path="a">A</div>
+      <div data-anchor-json-path="b">B</div>
+      <div data-anchor-json-path="c">C</div>
     `
     const existing = [
       makeAnnotation({ id: 'na', kind: 'note', jsonPath: 'a', start: 0 }),

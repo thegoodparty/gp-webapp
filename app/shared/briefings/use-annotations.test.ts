@@ -8,6 +8,7 @@ import type { Annotation } from './types'
 const listMock = vi.fn()
 const createMock = vi.fn()
 const updateNoteMock = vi.fn()
+const updateReviewMock = vi.fn()
 const deleteMock = vi.fn()
 
 vi.mock('./annotations-api', () => ({
@@ -15,6 +16,7 @@ vi.mock('./annotations-api', () => ({
     list: (...args: unknown[]) => listMock(...args),
     create: (...args: unknown[]) => createMock(...args),
     updateNote: (...args: unknown[]) => updateNoteMock(...args),
+    updateReview: (...args: unknown[]) => updateReviewMock(...args),
     delete: (...args: unknown[]) => deleteMock(...args),
   },
 }))
@@ -27,6 +29,7 @@ vi.mock('@shared/sentry', () => ({
 import { useAnnotations, annotationsQueryKey } from './use-annotations'
 
 const MEETING_DATE = '2026-06-08'
+const TARGET = { resourceType: 'briefing', resourceId: MEETING_DATE } as const
 
 const wrapper = (qc: QueryClient) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -66,6 +69,7 @@ beforeEach(() => {
   listMock.mockReset()
   createMock.mockReset()
   updateNoteMock.mockReset()
+  updateReviewMock.mockReset()
   deleteMock.mockReset()
   reportErrorToSentryMock.mockReset()
   listMock.mockResolvedValue([])
@@ -76,7 +80,7 @@ describe('useAnnotations — error reporting', () => {
     const err = new Error('create boom')
     createMock.mockRejectedValue(err)
     const qc = newClient()
-    const { result } = renderHook(() => useAnnotations(MEETING_DATE), {
+    const { result } = renderHook(() => useAnnotations(TARGET), {
       wrapper: wrapper(qc),
     })
     await waitFor(() => expect(result.current.isLoading).toBe(false))
@@ -102,7 +106,7 @@ describe('useAnnotations — error reporting', () => {
     const err = new Error('update boom')
     updateNoteMock.mockRejectedValue(err)
     const qc = newClient()
-    const { result } = renderHook(() => useAnnotations(MEETING_DATE), {
+    const { result } = renderHook(() => useAnnotations(TARGET), {
       wrapper: wrapper(qc),
     })
     await waitFor(() => expect(result.current.isLoading).toBe(false))
@@ -124,7 +128,7 @@ describe('useAnnotations — error reporting', () => {
     const err = new Error('remove boom')
     deleteMock.mockRejectedValue(err)
     const qc = newClient()
-    const { result } = renderHook(() => useAnnotations(MEETING_DATE), {
+    const { result } = renderHook(() => useAnnotations(TARGET), {
       wrapper: wrapper(qc),
     })
     await waitFor(() => expect(result.current.isLoading).toBe(false))
@@ -149,7 +153,7 @@ describe('useAnnotations — cache writes without invalidate', () => {
     createMock.mockResolvedValue(created)
     const qc = newClient()
     const invalidateSpy = vi.spyOn(qc, 'invalidateQueries')
-    const { result } = renderHook(() => useAnnotations(MEETING_DATE), {
+    const { result } = renderHook(() => useAnnotations(TARGET), {
       wrapper: wrapper(qc),
     })
     await waitFor(() => expect(result.current.isLoading).toBe(false))
@@ -164,9 +168,7 @@ describe('useAnnotations — cache writes without invalidate', () => {
 
     await waitFor(() => expect(createMock).toHaveBeenCalled())
     await waitFor(() => {
-      const cache = qc.getQueryData<Annotation[]>(
-        annotationsQueryKey(MEETING_DATE),
-      )
+      const cache = qc.getQueryData<Annotation[]>(annotationsQueryKey(TARGET))
       expect(cache?.some((a) => a.id === 'ann_created')).toBe(true)
     })
 
@@ -200,7 +202,7 @@ describe('useAnnotations — cache writes without invalidate', () => {
 
     const qc = newClient()
     const invalidateSpy = vi.spyOn(qc, 'invalidateQueries')
-    const { result } = renderHook(() => useAnnotations(MEETING_DATE), {
+    const { result } = renderHook(() => useAnnotations(TARGET), {
       wrapper: wrapper(qc),
     })
     await waitFor(() => expect(result.current.annotations).toHaveLength(2))
@@ -210,16 +212,12 @@ describe('useAnnotations — cache writes without invalidate', () => {
     })
 
     await waitFor(() => {
-      const cache = qc.getQueryData<Annotation[]>(
-        annotationsQueryKey(MEETING_DATE),
-      )
+      const cache = qc.getQueryData<Annotation[]>(annotationsQueryKey(TARGET))
       const row = cache?.find((a) => a.id === 'ann_1')
       expect(row?.note?.body).toBe('new')
     })
 
-    const cache = qc.getQueryData<Annotation[]>(
-      annotationsQueryKey(MEETING_DATE),
-    )
+    const cache = qc.getQueryData<Annotation[]>(annotationsQueryKey(TARGET))
     expect(cache?.map((a) => a.id)).toEqual(['ann_1', 'ann_2'])
     expect(invalidateSpy).not.toHaveBeenCalled()
   })
@@ -232,7 +230,7 @@ describe('useAnnotations — cache writes without invalidate', () => {
 
     const qc = newClient()
     const invalidateSpy = vi.spyOn(qc, 'invalidateQueries')
-    const { result } = renderHook(() => useAnnotations(MEETING_DATE), {
+    const { result } = renderHook(() => useAnnotations(TARGET), {
       wrapper: wrapper(qc),
     })
     await waitFor(() => expect(result.current.annotations).toHaveLength(2))
@@ -242,9 +240,7 @@ describe('useAnnotations — cache writes without invalidate', () => {
     })
 
     await waitFor(() => {
-      const cache = qc.getQueryData<Annotation[]>(
-        annotationsQueryKey(MEETING_DATE),
-      )
+      const cache = qc.getQueryData<Annotation[]>(annotationsQueryKey(TARGET))
       expect(cache?.map((a) => a.id)).toEqual(['ann_2'])
     })
 
