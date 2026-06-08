@@ -6,7 +6,7 @@ import { resolveSelection, type ResolvedAnchor } from './anchorResolver'
 /**
  * Hook that watches the document selection and resolves it into a briefing
  * anchor when the user highlights text inside an element carrying
- * `data-briefing-json-path`.
+ * `data-anchor-json-path`.
  *
  * Returns the resolved anchor, or null if there is no valid selection.
  *

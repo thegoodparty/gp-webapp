@@ -148,6 +148,7 @@ export interface CampaignDetails {
   tier?: string
   einNumber?: string | null
   einSupportingDocument?: string | null
+  hasFiledForRace?: boolean | null
   wonGeneral?: boolean
   launchStatus?: string
   filedStatement?: string
@@ -371,6 +372,18 @@ export interface RaceTargetMetrics {
    * text" even when `filingFee` is null.
    */
   filingRequirementsText?: string | null
+  /**
+   * Structured filing-office contact for the race, sourced from BallotReady
+   * via election-api. Powers the "filing office" block on the Pro-upgrade
+   * filing-instructions screen. `filingOfficeAddress` is a single free-text
+   * block (address line 1/2, city, state, zip); `paperworkInstructions` is
+   * BallotReady's narrative on the paperwork a candidate files. All `null`
+   * when BallotReady has no office data for the race. Optional for forward-
+   * compat with API responses that pre-date the field.
+   */
+  filingOfficeAddress?: string | null
+  filingPhoneNumber?: string | null
+  paperworkInstructions?: string | null
   // Fields sourced from election-api's /campaign-strategy-context via gp-api.
   // All nullable — null when the race hash didn't resolve to a
   // Position+District or upstream data is sparse. Optional for forward-compat

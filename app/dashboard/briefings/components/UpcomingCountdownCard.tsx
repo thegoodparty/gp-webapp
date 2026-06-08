@@ -1,8 +1,13 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import { MapPin, ArrowRight } from 'lucide-react'
-import { buttonVariants } from '@styleguide'
+import { Button, buttonVariants, UploadIcon } from '@styleguide'
 import { countdownLabel } from '@shared/briefings/dateHelpers'
 import type { BriefingSummary } from '@shared/briefings/types'
+import AgendaStatusPill from './AgendaStatusPill'
+import UploadAgendaModal from './UploadAgendaModal'
 
 type Props = {
   summary: BriefingSummary
@@ -12,14 +17,25 @@ type Props = {
  * The featured callout at the top of the briefings landing page.
  *
  * Shown for the nearest upcoming briefing. Bordered card with a blue
- * UPCOMING countdown pill, meeting metadata, and a single "View briefing"
- * CTA. Only renders the View briefing CTA when the briefing is ready.
+ * UPCOMING countdown pill, meeting metadata, and a single CTA: "View briefing"
+ * once ready, otherwise an "Upload agenda" path. The upload affordance lives
+ * here as well as in AwaitingAgendaRow because the featured meeting is
+ * excluded from the Upcoming list — without it, the nearest awaiting meeting
+ * would have no submission path on the landing page.
  */
 export default function UpcomingCountdownCard({
   summary,
 }: Props): React.JSX.Element {
+  const [open, setOpen] = useState(false)
   const label = countdownLabel(summary.scheduledAt)
   const ready = summary.status === 'briefing_ready'
+  const status = summary.userAgendaStatus
+  const isProcessing = status === 'processing'
+  // Mirror AwaitingAgendaRow: allow (re)submitting unless a run is actively
+  // processing. 'completed'/'finishing up' stays openable so a briefing row
+  // that never persists doesn't trap the user without a retry.
+  const canUpload = !isProcessing
+  const meetingName = summary.meetingName || 'Your meeting'
 
   return (
     <section className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-card p-6 shadow-sm">
@@ -53,10 +69,27 @@ export default function UpcomingCountdownCard({
           </Link>
         </div>
       ) : (
-        <p className="pt-1 text-sm text-muted-foreground">
-          The briefing will be available once the agenda is posted.
-        </p>
+        <div className="flex flex-col items-start gap-3 pt-1">
+          <AgendaStatusPill status={status} />
+          {canUpload ? (
+            <Button type="button" onClick={() => setOpen(true)}>
+              <UploadIcon className="size-4" aria-hidden />
+              Upload agenda
+            </Button>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              We&apos;re building your briefing — check back shortly.
+            </p>
+          )}
+        </div>
       )}
+
+      <UploadAgendaModal
+        open={open}
+        onOpenChange={setOpen}
+        meetingDate={summary.slug}
+        meetingName={meetingName}
+      />
     </section>
   )
 }

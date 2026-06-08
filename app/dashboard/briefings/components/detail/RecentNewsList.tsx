@@ -8,7 +8,7 @@ type Props = {
 
 /**
  * Bulleted list of recent news links. Each headline is anchored for highlighting
- * via `data-briefing-json-path` so phase 4's selection toolbar can resolve it.
+ * via `data-anchor-json-path` so phase 4's selection toolbar can resolve it.
  */
 export default function RecentNewsList({
   items,
@@ -24,7 +24,7 @@ export default function RecentNewsList({
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-start gap-1 font-medium text-info hover:underline"
-            data-briefing-json-path={`${pathPrefix}/${i}/headline`}
+            data-anchor-json-path={`${pathPrefix}/${i}/headline`}
           >
             <span>{n.headline}</span>
             <ExternalLink aria-hidden className="mt-1 size-3 shrink-0" />

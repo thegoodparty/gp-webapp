@@ -22,6 +22,10 @@ const getOffsetForZone = (instant: Date, timeZone: string): string => {
 }
 
 const buildScheduledAt = (item: MeetingsListItemDto): string => {
+  // No meeting time known (a user-supplied agenda for an off-platform meeting
+  // dispatches without one). Emit a date-only value so the formatters render
+  // the date and drop the time instead of producing an invalid timestamp.
+  if (!item.meetingTime) return item.meetingDate
   const probe = new Date(`${item.meetingDate}T${item.meetingTime}:00Z`)
   const offset = getOffsetForZone(probe, item.meetingTimezone)
   return `${item.meetingDate}T${item.meetingTime}:00${offset}`
@@ -35,6 +39,7 @@ const toSummary = (item: MeetingsListItemDto): BriefingSummary => ({
   scheduledAt: buildScheduledAt(item),
   location: item.location,
   status: item.hasBriefing ? 'briefing_ready' : 'awaiting_agenda',
+  userAgendaStatus: item.userAgendaStatus ?? null,
 })
 
 export const getBriefingsList = async (): Promise<BriefingSummary[]> => {

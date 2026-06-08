@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import {
   formatBriefingMeetingDate,
   formatBriefingMeetingTime,
+  formatDayTime,
+  formatShortDate,
 } from './dateHelpers'
 
 describe('formatBriefingMeetingDate', () => {
@@ -50,5 +52,20 @@ describe('formatBriefingMeetingTime', () => {
     expect(formatBriefingMeetingTime('not-a-time')).toBe('not-a-time')
     expect(formatBriefingMeetingTime('10')).toBe('10')
     expect(formatBriefingMeetingTime('10:0')).toBe('10:0')
+  })
+})
+
+describe('formatDayTime', () => {
+  it('returns the weekday alone for a date-only string (no time known)', () => {
+    // User-supplied agenda for an off-platform meeting: buildScheduledAt
+    // emits a bare yyyy-MM-dd and we must not fabricate a midnight time or
+    // render "Invalid Date".
+    expect(formatDayTime('2026-06-08')).toBe('Mon')
+  })
+})
+
+describe('formatShortDate', () => {
+  it('formats a date-only string in UTC without an off-by-one shift', () => {
+    expect(formatShortDate('2026-06-08')).toBe('Jun 8')
   })
 })

@@ -17,6 +17,7 @@ import type {
   AnnotationNoteData,
   AnnotationBugReportData,
   AnnotationChatData,
+  AnnotationReviewData,
   CreateAnnotationInput,
 } from './types'
 import type { AnnotationsClient } from './annotations-client'
@@ -98,6 +99,20 @@ async function createBugReport(
   return finalize(briefingId, 'bug_report', input, { bugReport })
 }
 
+async function createReview(
+  briefingId: string,
+  input: Extract<CreateAnnotationInput, { kind: 'review' }>,
+): Promise<Annotation> {
+  const review: AnnotationReviewData = {
+    id: newId('review'),
+    body: input.payload.body,
+    reviewer_email: null,
+    created_at: nowIso(),
+    updated_at: nowIso(),
+  }
+  return finalize(briefingId, 'review', input, { review })
+}
+
 async function createChat(
   briefingId: string,
   input: Extract<CreateAnnotationInput, { kind: 'chat' }>,
@@ -120,7 +135,7 @@ function finalize(
   briefingId: string,
   kind: AnnotationKind,
   input: CreateAnnotationInput,
-  extras: Partial<Pick<Annotation, 'note' | 'bugReport' | 'chat'>>,
+  extras: Partial<Pick<Annotation, 'note' | 'bugReport' | 'chat' | 'review'>>,
 ): Annotation {
   const annotation: Annotation = {
     id: newId('ann'),
@@ -142,13 +157,16 @@ function finalize(
 }
 
 export const annotationsStub: AnnotationsClient = {
-  async list(briefingId) {
-    return readAll(briefingId)
+  async list(briefingId, kinds) {
+    const all = readAll(briefingId)
+    if (!kinds || kinds.length === 0) return all
+    return all.filter((a) => kinds.includes(a.kind))
   },
 
   async create(briefingId, input) {
     if (input.kind === 'note') return createNote(briefingId, input)
     if (input.kind === 'bug_report') return createBugReport(briefingId, input)
+    if (input.kind === 'review') return createReview(briefingId, input)
     return createChat(briefingId, input)
   },
 
@@ -168,6 +186,26 @@ export const annotationsStub: AnnotationsClient = {
       ...annotation,
       updatedAt: nowIso(),
       note: { ...annotation.note, body, updatedAt: nowIso() },
+    }
+    items[idx] = updated
+    writeAll(briefingId, items)
+    return updated
+  },
+
+  async updateReview(annotationId, body) {
+    const briefingId = findOwningBriefingId(annotationId)
+    if (!briefingId) throw new Error('annotation_not_found')
+    const items = readAll(briefingId)
+    const idx = items.findIndex((a) => a.id === annotationId)
+    if (idx < 0) throw new Error('annotation_not_found')
+    const annotation = items[idx]
+    if (!annotation || annotation.kind !== 'review' || !annotation.review) {
+      throw new Error('annotation_not_a_review')
+    }
+    const updated: Annotation = {
+      ...annotation,
+      updatedAt: nowIso(),
+      review: { ...annotation.review, body, updated_at: nowIso() },
     }
     items[idx] = updated
     writeAll(briefingId, items)

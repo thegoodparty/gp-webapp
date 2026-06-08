@@ -50,7 +50,7 @@ describe('<BriefingAssistantSurface> — pendingAnchor takes precedence', () => 
 
   afterEach(() => {
     document
-      .querySelectorAll('[data-briefing-json-path]')
+      .querySelectorAll('[data-anchor-json-path]')
       .forEach((el) => el.remove())
   })
 
@@ -104,7 +104,7 @@ describe('<BriefingAssistantSurface> — pendingAnchor takes precedence', () => 
     // resolveQuoteFromAnchor rebuilds the quote from the live DOM, so the
     // anchored passage must exist in the document for the quote to resolve.
     const passage = document.createElement('p')
-    passage.setAttribute('data-briefing-json-path', '/items/0/display/summary')
+    passage.setAttribute('data-anchor-json-path', '/items/0/display/summary')
     passage.textContent = 'The council will vote on the budget.'
     document.body.appendChild(passage)
 

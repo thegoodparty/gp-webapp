@@ -24,6 +24,11 @@ interface EinCheckInputProps {
   helperText?: React.ReactNode
   name?: string
   error?: boolean
+  // Fired when the help tooltip opens. Defaults to the committee-check
+  // (Phase 1) event so that flow is unchanged; other flows (e.g. the
+  // pro-upgrade EIN step) inject their own so the hover lands in the right
+  // analytics funnel instead of CommitteeCheck's.
+  onTooltipOpen?: () => void
 }
 
 export const EinCheckInput = ({
@@ -31,6 +36,8 @@ export const EinCheckInput = ({
   validated,
   setValidated = noop,
   onChange = noop,
+  onTooltipOpen = () =>
+    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverEinHelp),
   ...restProps
 }: EinCheckInputProps): React.JSX.Element => {
   const handleOnChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -60,9 +67,7 @@ export const EinCheckInput = ({
           <AsyncValidationIcon
             message={EIN_HELP_MESSAGE}
             validated={validated}
-            onTooltipOpen={() => {
-              trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverEinHelp)
-            }}
+            onTooltipOpen={onTooltipOpen}
           />
         ),
       }}

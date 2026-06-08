@@ -8,8 +8,10 @@
  * the artifact through untouched).
  *
  * Internal QA fields from the artifact (claims, required_data_points,
- * disclosure, run_metadata, per-item research) are present on the type but
- * not currently rendered.
+ * run_metadata, per-item research) are present on the type but not currently
+ * rendered. `disclosure` is rendered on the full-briefing detail page via
+ * BriefingDisclosureFooter, but is not yet shown on the placeholder /
+ * awaiting-agenda pages or the shared view.
  */
 
 import type {
@@ -89,13 +91,24 @@ export interface BriefingSummary {
   scheduledAt: string
   location: string
   status: 'briefing_ready' | 'awaiting_agenda'
+  /**
+   * State of a user-supplied agenda run for this meeting (URL or file
+   * upload). `null` (or absent) means the user has not yet submitted one.
+   *
+   * - `processing` — agenda accepted; briefing job is running
+   * - `failed` — agenda submission or run failed; user can retry
+   * - `completed` — briefing produced (the `status` will usually flip to
+   *   `briefing_ready` in the same payload, but this remains as a hint)
+   * - `unknown` — server doesn't know what state the run is in
+   */
+  userAgendaStatus?: 'processing' | 'failed' | 'completed' | 'unknown' | null
 }
 
 // ---------------------------------------------------------------------------
 // Annotations (my system) — unchanged
 // ---------------------------------------------------------------------------
 
-export type AnnotationKind = 'note' | 'chat' | 'bug_report'
+export type AnnotationKind = 'note' | 'chat' | 'bug_report' | 'review'
 export type AnnotationResourceType = 'briefing'
 
 export interface AnnotationAnchor {
@@ -143,6 +156,14 @@ export interface AnnotationBugReportData {
   submittedAt: string
 }
 
+export interface AnnotationReviewData {
+  id: string
+  body: string
+  reviewer_email: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface Annotation {
   id: string
   kind: AnnotationKind
@@ -157,6 +178,7 @@ export interface Annotation {
   note?: AnnotationNoteData
   chat?: AnnotationChatData
   bugReport?: AnnotationBugReportData
+  review?: AnnotationReviewData
 }
 
 export type CreateAnnotationInput =
@@ -175,6 +197,11 @@ export type CreateAnnotationInput =
       kind: 'chat'
       anchor: AnnotationAnchor
       payload: { firstMessage: string | null }
+    }
+  | {
+      kind: 'review'
+      anchor: AnnotationAnchor
+      payload: { body: string }
     }
 
 // ---------------------------------------------------------------------------

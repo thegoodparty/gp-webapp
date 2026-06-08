@@ -13,6 +13,10 @@ import {
   View,
 } from '@react-pdf/renderer'
 import type { PlanData } from '../components/planContent'
+import {
+  getNumberedPlanSections,
+  type PlanSectionKey,
+} from '../planSectionManifest'
 
 const FONT_OPEN_SANS = 'Open Sans'
 
@@ -486,19 +490,24 @@ type DocProps = {
 
 export type TocSection = { id: string; title: string }
 
-export const TOC_SECTIONS: TocSection[] = [
-  { id: 'exec-summary', title: 'Executive Summary' },
-  { id: 'sec-1', title: '1. Strategic Landscape' },
-  { id: 'sec-2', title: '2. Voter Insights For Your District' },
-  { id: 'sec-3', title: '3. Electoral Goals & Key Metrics' },
-  { id: 'sec-4', title: '4. Campaign Timeline' },
-  { id: 'sec-5', title: '5. Projected Minimum Resources Needed' },
-  { id: 'sec-6', title: '6. Community Engagement & Earned Media' },
-  { id: 'sec-7', title: '7. Voter Contact Plan' },
-  { id: 'sec-8', title: '8. Measurement & Accountability' },
-  { id: 'sec-9', title: '9. Methodology & Data Sources' },
-  { id: 'sec-10', title: '10. Glossary' },
-]
+// Stable PDF anchors for each section, keyed by the shared manifest. The
+// table of contents and the section pages are both ordered and numbered
+// from the manifest (see getNumberedPlanSections), so the PDF can't drift
+// from the on-screen plan and renumbers contiguously when Strategic
+// Landscape is hidden.
+const SECTION_ID: Record<PlanSectionKey, string> = {
+  executiveSummary: 'exec-summary',
+  strategicLandscape: 'strategic-landscape',
+  electoralGoals: 'electoral-goals',
+  voterInsights: 'voter-insights',
+  resources: 'resources',
+  timeline: 'timeline',
+  community: 'community',
+  voterContact: 'voter-contact',
+  measurement: 'measurement',
+  methodology: 'methodology',
+  glossary: 'glossary',
+}
 
 // Heart icon only (no wordmark). Used in the running header.
 const HeartIconSvg = ({ height = 18 }: { height?: number }) => (
@@ -774,16 +783,18 @@ const SectionPage = ({
 
 const TableOfContentsPage = ({
   plan,
+  sections,
   tocPageMap,
 }: {
   plan: PlanData
+  sections: TocSection[]
   tocPageMap: SectionPageMap | null | undefined
 }) => (
   <Page size="LETTER" style={styles.page}>
     <RunningHeader plan={plan} />
     <View style={styles.bodyStart}>
       <Text style={styles.tocHeading}>Table of Contents</Text>
-      {TOC_SECTIONS.map((section) => {
+      {sections.map((section) => {
         const pageNumber = tocPageMap?.[section.id]
         return (
           <View key={section.id} style={styles.tocRow}>
@@ -902,6 +913,20 @@ export const CampaignPlanPdfDocument = ({
 }: DocProps) => {
   const opposition = oppositionCopy(plan)
 
+  // Mirror the on-screen plan: Strategic Landscape is hidden when the
+  // strategy agent failed or returned empty (no opportunities/challenges).
+  // The download is gated until generation settles, so there's no
+  // "generating" state to consider here.
+  const showStrategicLandscape =
+    plan.opportunities.length > 0 || plan.challenges.length > 0
+  const numberedSections = getNumberedPlanSections(showStrategicLandscape)
+  const numberFor = (key: PlanSectionKey): number =>
+    numberedSections.find((s) => s.key === key)?.number ?? 0
+  const tocSections: TocSection[] = numberedSections.map((s) => ({
+    id: SECTION_ID[s.key],
+    title: `${s.number}. ${s.title}`,
+  }))
+
   return (
     <Document
       title={`Campaign plan — ${plan.candidateName || 'Candidate'}`}
@@ -910,11 +935,15 @@ export const CampaignPlanPdfDocument = ({
     >
       <CoverPage plan={plan} liveUrl={liveUrl} liveQrDataUrl={liveQrDataUrl} />
 
-      <TableOfContentsPage plan={plan} tocPageMap={tocPageMap} />
+      <TableOfContentsPage
+        plan={plan}
+        sections={tocSections}
+        tocPageMap={tocPageMap}
+      />
 
       <SectionPage
-        id="exec-summary"
-        title="Executive Summary"
+        id={SECTION_ID.executiveSummary}
+        title={`${numberFor('executiveSummary')}. Executive Summary`}
         plan={plan}
         onSectionPage={onSectionPage}
         intro="This is the whole plan in one view. If you read nothing else, read this."
@@ -965,72 +994,52 @@ export const CampaignPlanPdfDocument = ({
         />
       </SectionPage>
 
-      <SectionPage
-        id="sec-1"
-        title="1. Strategic Landscape"
-        plan={plan}
-        onSectionPage={onSectionPage}
-        intro={`${districtLabel(
-          plan,
-        )} is an electorate where name recognition and turnout (not ideological persuasion) decide most races. The following opportunities and challenges are framed against that reality.`}
-        transition="The strategic landscape is drawn from public data and historical election results. Head to your Campaign Manager to share your platform and your opponents, and we'll reframe these around what you stand for."
-      >
-        <View style={styles.twoColRow}>
-          <View style={styles.twoColCol}>
-            <Text style={styles.h3}>Opportunities</Text>
-            <Bullets items={plan.opportunities} />
-          </View>
-          <View style={styles.twoColCol}>
-            <Text style={styles.h3}>Challenges</Text>
-            <Bullets items={plan.challenges} />
-          </View>
-        </View>
-
-        <Text style={styles.h3}>Opposition Research</Text>
-        {opposition ? (
-          <Text style={styles.para}>{opposition}</Text>
-        ) : (
-          plan.opponents.map((opp) => (
-            <View key={opp.fullName} style={styles.para}>
-              <Text style={styles.paraBold}>{opp.fullName}</Text>
-              <Bullets
-                items={[
-                  ...(opp.partyAffiliation
-                    ? [`Party: ${opp.partyAffiliation}`]
-                    : []),
-                  ...(opp.incumbent === true ? ['Incumbent'] : []),
-                ]}
-              />
+      {showStrategicLandscape ? (
+        <SectionPage
+          id={SECTION_ID.strategicLandscape}
+          title={`${numberFor('strategicLandscape')}. Strategic Landscape`}
+          plan={plan}
+          onSectionPage={onSectionPage}
+          intro={`${districtLabel(
+            plan,
+          )} is an electorate where name recognition and turnout (not ideological persuasion) decide most races. The following opportunities and challenges are framed against that reality.`}
+          transition="The strategic landscape is drawn from public data and historical election results. Head to your Campaign Manager to share your platform and your opponents, and we'll reframe these around what you stand for."
+        >
+          <View style={styles.twoColRow}>
+            <View style={styles.twoColCol}>
+              <Text style={styles.h3}>Opportunities</Text>
+              <Bullets items={plan.opportunities} />
             </View>
-          ))
-        )}
-      </SectionPage>
+            <View style={styles.twoColCol}>
+              <Text style={styles.h3}>Challenges</Text>
+              <Bullets items={plan.challenges} />
+            </View>
+          </View>
+
+          <Text style={styles.h3}>Opposition Research</Text>
+          {opposition ? (
+            <Text style={styles.para}>{opposition}</Text>
+          ) : (
+            plan.opponents.map((opp) => (
+              <View key={opp.fullName} style={styles.para}>
+                <Text style={styles.paraBold}>{opp.fullName}</Text>
+                <Bullets
+                  items={[
+                    ...(opp.partyAffiliation
+                      ? [`Party: ${opp.partyAffiliation}`]
+                      : []),
+                    ...(opp.incumbent === true ? ['Incumbent'] : []),
+                  ]}
+                />
+              </View>
+            ))
+          )}
+        </SectionPage>
+      ) : null}
 
       <SectionPage
-        id="sec-2"
-        title="2. Voter Insights For Your District"
-        plan={plan}
-        onSectionPage={onSectionPage}
-        intro={
-          plan.voterInsightsSource === 'district'
-            ? 'The issues below come from district-level survey data on what voters here care about most right now. Personalize your platform around them in Campaign Manager.'
-            : plan.voterInsightsSource === 'candidate'
-              ? 'The issues below are the ones you flagged during onboarding. Keep them updated in Campaign Manager as your platform evolves.'
-              : 'These are common top issues in races at this level. Personalize them in Campaign Manager to align your plan with the actual race.'
-        }
-        transition="Voter insights sharpen as you fill in your platform and we layer in district-specific survey data. Update your issues in Campaign Manager and this section will re-frame around your priorities."
-      >
-        <DefinitionList
-          items={plan.voterInsightsIssues.map((i) => ({
-            title: i.title,
-            body: i.description,
-          }))}
-        />
-      </SectionPage>
-
-      <SectionPage
-        id="sec-3"
-        title="3. Electoral Goals & Key Metrics"
+        id={SECTION_ID.electoralGoals}
+        title={`${numberFor('electoralGoals')}. Electoral Goals & Key Metrics`}
         plan={plan}
         onSectionPage={onSectionPage}
         intro={`The numbers below are projected from historical voter data and proprietary models for ${districtLabel(
@@ -1053,30 +1062,32 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
-        id="sec-4"
-        title="4. Campaign Timeline"
+        id={SECTION_ID.voterInsights}
+        title={`${numberFor(
+          'voterInsights',
+        )}. Voter Insights For Your District`}
         plan={plan}
         onSectionPage={onSectionPage}
-        intro="Dates below are the hard gates the campaign must hit. Each is followed by an internal working deadline (one week earlier wherever possible) to preserve a buffer."
-        transition="The key dates you need to know about your race have been established. Share your launch event, fundraising rollout, and issue moments in Campaign Manager and we'll turn this into a working plan."
+        intro={
+          plan.voterInsightsSource === 'district'
+            ? 'The issues below come from district-level survey data on what voters here care about most right now. Personalize your platform around them in Campaign Manager.'
+            : plan.voterInsightsSource === 'candidate'
+              ? 'The issues below are the ones you flagged during onboarding. Keep them updated in Campaign Manager as your platform evolves.'
+              : 'These are common top issues in races at this level. Personalize them in Campaign Manager to align your plan with the actual race.'
+        }
+        transition="Voter insights sharpen as you fill in your platform and we layer in district-specific survey data. Update your issues in Campaign Manager and this section will re-frame around your priorities."
       >
-        <PlanTable
-          columns={[
-            { key: 'date', header: 'Date', width: 110, bold: true },
-            { key: 'milestone', header: 'Milestone', flex: 1.6 },
-            { key: 'notes', header: 'Notes', flex: 1.4 },
-          ]}
-          rows={plan.timeline.map((t) => ({
-            date: t.date,
-            milestone: t.milestone,
-            notes: t.notes,
+        <DefinitionList
+          items={plan.voterInsightsIssues.map((i) => ({
+            title: i.title,
+            body: i.description,
           }))}
         />
       </SectionPage>
 
       <SectionPage
-        id="sec-5"
-        title="5. Projected Minimum Resources Needed"
+        id={SECTION_ID.resources}
+        title={`${numberFor('resources')}. Projected Minimum Resources Needed`}
         plan={plan}
         onSectionPage={onSectionPage}
         intro={`We project that you need at least ${plan.winNumber.toLocaleString(
@@ -1147,8 +1158,30 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
-        id="sec-6"
-        title="6. Community Engagement & Earned Media"
+        id={SECTION_ID.timeline}
+        title={`${numberFor('timeline')}. Campaign Timeline`}
+        plan={plan}
+        onSectionPage={onSectionPage}
+        intro="Dates below are the hard gates the campaign must hit. Each is followed by an internal working deadline (one week earlier wherever possible) to preserve a buffer."
+        transition="The key dates you need to know about your race have been established. Share your launch event, fundraising rollout, and issue moments in Campaign Manager and we'll turn this into a working plan."
+      >
+        <PlanTable
+          columns={[
+            { key: 'date', header: 'Date', width: 110, bold: true },
+            { key: 'milestone', header: 'Milestone', flex: 1.6 },
+            { key: 'notes', header: 'Notes', flex: 1.4 },
+          ]}
+          rows={plan.timeline.map((t) => ({
+            date: t.date,
+            milestone: t.milestone,
+            notes: t.notes,
+          }))}
+        />
+      </SectionPage>
+
+      <SectionPage
+        id={SECTION_ID.community}
+        title={`${numberFor('community')}. Community Engagement & Earned Media`}
         plan={plan}
         onSectionPage={onSectionPage}
         intro="Earned media and in-person visibility are the highest-ROI channels in a race this size. A single mention in a local outlet or a strong showing at a civic association meeting can move more voters than any paid channel at this budget."
@@ -1199,8 +1232,8 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
-        id="sec-7"
-        title="7. Voter Contact Plan"
+        id={SECTION_ID.voterContact}
+        title={`${numberFor('voterContact')}. Voter Contact Plan`}
         plan={plan}
         onSectionPage={onSectionPage}
         intro="The contact cadence below is designed so that every likely voter receives at least 1 introductory contact, 1 persuasion contact, 1 early-vote reminder, and 1 Election Day push. Texts are the primary workhorse; robocalls layer on top to catch landline-only voters."
@@ -1239,8 +1272,8 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
-        id="sec-8"
-        title="8. Measurement & Accountability"
+        id={SECTION_ID.measurement}
+        title={`${numberFor('measurement')}. Measurement & Accountability`}
         plan={plan}
         onSectionPage={onSectionPage}
         transition="The measurement system is live in Campaign Manager. Once you personalize your plan with your goals, capacity, and timeline, the dashboard starts tracking the campaign you're actually running."
@@ -1271,8 +1304,8 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
-        id="sec-9"
-        title="9. Methodology & Data Sources"
+        id={SECTION_ID.methodology}
+        title={`${numberFor('methodology')}. Methodology & Data Sources`}
         plan={plan}
         onSectionPage={onSectionPage}
         intro="This plan was produced by GoodParty.org using public voter data, historical election results, and our proprietary models. Every metric in this document is an estimate derived from the sources below."
@@ -1320,8 +1353,8 @@ export const CampaignPlanPdfDocument = ({
       </SectionPage>
 
       <SectionPage
-        id="sec-10"
-        title="10. Glossary"
+        id={SECTION_ID.glossary}
+        title={`${numberFor('glossary')}. Glossary`}
         plan={plan}
         onSectionPage={onSectionPage}
       >

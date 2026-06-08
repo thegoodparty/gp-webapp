@@ -32,6 +32,36 @@ export interface MeetingsListItemDto {
   meetingName: string
   location: string
   hasBriefing: boolean
+  /**
+   * Status of an in-progress "user-uploaded agenda" briefing run for this
+   * meeting. `null` when the user has never submitted an agenda. Mirrors
+   * gp-api's MeetingsListItemDto.userAgendaStatus.
+   */
+  userAgendaStatus?: UserAgendaStatus | null
+}
+
+export type UserAgendaStatus = 'processing' | 'failed' | 'completed' | 'unknown'
+
+/** Request/response shapes for the user-agenda-upload flow. */
+export type UserAgendaSubmitRequest =
+  | { source: 'URL'; sourceUrl: string }
+  | { source: 'UPLOAD'; uploadId: string }
+
+export interface UserAgendaSubmitResponse {
+  experimentRunId: string
+  status: 'processing'
+}
+
+export interface UserAgendaPresignRequest {
+  contentType: 'application/pdf'
+  byteSize: number
+}
+
+export interface UserAgendaPresignResponse {
+  uploadId: string
+  uploadKey: string
+  uploadUrl: string
+  expiresAt: string
 }
 
 export interface MeetingsListResponseDto {
@@ -138,6 +168,16 @@ export type APIEndpoints = {
   'GET /v1/campaigns/mine/plan-version': {
     Request: {}
     Response: CampaignVersions
+  }
+
+  // Emails the caller their own race's filing instructions (window, fee,
+  // requirements, office contact). No body: gp-api scopes the send to the
+  // authenticated user's campaign + email via @UseCampaign()/@ReqUser().
+  'POST /v1/campaigns/mine/filing-instructions/email': {
+    Request: {}
+    Response: {
+      success: boolean
+    }
   }
 
   'POST /v1/campaigns/tcr-compliance/:tcrComplianceId/submit-cv-pin': {
@@ -325,6 +365,19 @@ export type APIEndpoints = {
     Response: MeetingBriefingOutput | MeetingBriefingAwaitingDto
   }
 
+  // User-uploaded agenda flow. Either submit a URL directly, or first call
+  // `/presign` to get a signed S3 PUT URL, upload bytes, then submit the
+  // returned uploadId/uploadKey. gp-api enqueues an experiment run and
+  // surfaces status via MeetingsListItemDto.userAgendaStatus.
+  'POST /v1/meetings/:date/briefing/agenda/presign': {
+    Request: { date: string } & UserAgendaPresignRequest
+    Response: UserAgendaPresignResponse
+  }
+  'POST /v1/meetings/:date/briefing/agenda': {
+    Request: { date: string } & UserAgendaSubmitRequest
+    Response: UserAgendaSubmitResponse
+  }
+
   'POST /v1/speech/synthesize': {
     Request: SynthesizeSpeechRequest
     Response: SynthesizeSpeechResponse
@@ -340,7 +393,7 @@ export type APIEndpoints = {
   // Annotation shape consumed by components. Briefings are addressed
   // by meeting date (YYYY-MM-DD), matching `GET /v1/meetings/:date/briefing`.
   'GET /v1/meetings/:date/briefing/annotations': {
-    Request: { date: string }
+    Request: { date: string; kinds?: string }
     Response: { annotations: ApiAnnotation[] }
   }
   'POST /v1/meetings/:date/briefing/annotations': {
@@ -348,6 +401,10 @@ export type APIEndpoints = {
     Response: ApiAnnotation
   }
   'PUT /v1/annotations/:annotationId/note': {
+    Request: { body: string }
+    Response: ApiAnnotation
+  }
+  'PUT /v1/annotations/:annotationId/review': {
     Request: { body: string }
     Response: ApiAnnotation
   }
@@ -428,12 +485,28 @@ export type APIEndpoints = {
     Request: {}
     Response: void
   }
+
+  // Pro $10/mo subscription checkout (gp-api createProCheckoutSession).
+  // `embedded: true` returns a Stripe Custom Checkout `clientSecret` to mount
+  // in-app; omitting it returns a hosted `redirectUrl` (legacy off-cohort
+  // path). `returnUrl` is where Stripe sends the candidate when a confirm
+  // requires a redirect (e.g. 3DS); gp-api defaults it when omitted.
+  'POST /v1/payments/purchase/checkout-session': {
+    Request: {
+      embedded?: boolean
+      returnUrl?: string
+    }
+    Response: {
+      clientSecret?: string
+      redirectUrl?: string
+    }
+  }
 }
 
 // Backend (snake_case) annotation types. Mirrors @goodparty_org/contracts
 // in gp-api. The AnnotationsApi client maps to/from the camelCase shape
 // the rest of the frontend uses.
-export type ApiAnnotationKind = 'note' | 'chat' | 'bug_report'
+export type ApiAnnotationKind = 'note' | 'chat' | 'bug_report' | 'review'
 export type ApiAnnotationResourceType = 'briefing'
 
 export interface ApiAnnotationAnchorInput {
@@ -498,6 +571,14 @@ export interface ApiAnnotationChat {
   created_at: string
 }
 
+export interface ApiAnnotationReview {
+  id: string
+  body: string
+  reviewer_email: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface ApiAnnotation {
   id: string
   kind: ApiAnnotationKind
@@ -512,6 +593,7 @@ export interface ApiAnnotation {
   note?: ApiAnnotationNote
   bug_report?: ApiAnnotationBugReport
   chat?: ApiAnnotationChat
+  review?: ApiAnnotationReview
 }
 
 export type ApiCreateAnnotationInput =
@@ -525,6 +607,11 @@ export type ApiCreateAnnotationInput =
       kind: 'bug_report'
       anchor: ApiAnnotationAnchorInput
       payload: { description: string }
+    }
+  | {
+      kind: 'review'
+      anchor: ApiAnnotationAnchorInput
+      payload: { body: string }
     }
 
 export type ApiArtifactResourceType = 'agenda_item'

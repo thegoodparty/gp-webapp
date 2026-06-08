@@ -25,6 +25,12 @@ function signatureOf(
     if (a.note) {
       s += `;n=${a.note.updatedAt}`
     }
+    // Review body edits bump AnnotationReview.updatedAt but not the parent
+    // Annotation.updatedAt — the same nested-payload pitfall as notes above,
+    // so the cycler would otherwise keep showing the pre-edit review body.
+    if (a.review) {
+      s += `;r=${a.review.updated_at}`
+    }
     // Attachments mutate independently of `updatedAt` on the parent
     // annotation (presign/complete + delete don't bump it before the
     // 5s OCR poll lands), so include their ids in the signature.
