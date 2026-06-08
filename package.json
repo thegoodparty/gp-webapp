@@ -138,7 +138,7 @@
     "recharts": "^2.15.3",
     "remark-gfm": "^4.0.1",
     "rss": "^1.2.2",
-    "sanitize-html": "^2.14.0",
+    "sanitize-html": "^2.17.3",
     "sass": "^1.56.0",
     "slick-carousel": "^1.8.1",
     "slugify": "^1.6.6",
