@@ -160,9 +160,13 @@ describe('ProUpgrade3Compliance — status → state mapping', () => {
 })
 
 describe('ProUpgrade3Compliance — PIN submit', () => {
-  it('submits the PIN via the existing submit-cv-pin endpoint and reports success', async () => {
+  it('submits the PIN via the existing submit-cv-pin endpoint and transitions to in-review', async () => {
     const user = userEvent.setup()
-    mockGetTcrCompliance.mockResolvedValue(tcrWith('submitted'))
+    // First fetch: mount with `submitted` → PIN form. Every fetch after the
+    // post-submit invalidateQueries returns `pending`, so the test verifies the
+    // card actually transitions off PIN entry (not just that the snackbar fired).
+    mockGetTcrCompliance.mockResolvedValueOnce(tcrWith('submitted'))
+    mockGetTcrCompliance.mockResolvedValue(tcrWith('pending'))
 
     let receivedBody: { pin?: string } = {}
     api.mock(
@@ -190,6 +194,15 @@ describe('ProUpgrade3Compliance — PIN submit', () => {
     })
     expect(receivedBody).toEqual({ pin: '123456' })
     expect(mockErrorSnackbar).not.toHaveBeenCalled()
+
+    // The invalidated query refetches `pending`, so the card must leave PIN
+    // entry for the in-review state — this fails if invalidateQueries is dropped.
+    await waitFor(() => {
+      expect(
+        screen.getByText('Your candidate profile is being reviewed'),
+      ).toBeInTheDocument()
+    })
+    expect(getDigitInputs()).toHaveLength(0)
   })
 
   it('surfaces a mismatch error on a 400 without claiming success', async () => {

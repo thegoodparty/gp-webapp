@@ -63,6 +63,11 @@ export function useSubmitCvPin(
       await queryClient.invalidateQueries({
         queryKey: TCR_COMPLIANCE_QUERY_KEY,
       })
+      // Clear the loading state on success too. EnterPin navigates away via
+      // onSuccess so it never relied on this, but the in-place card stays
+      // mounted: if the refetch hasn't yet flipped the status off `submitted`,
+      // leaving `submitting` true would freeze PinForm with no way to retry.
+      setSubmitting(false)
       onSuccess?.()
     } catch (e) {
       setError(
