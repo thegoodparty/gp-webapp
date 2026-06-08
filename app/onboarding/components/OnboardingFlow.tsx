@@ -40,6 +40,8 @@ import { OfficeSelectionStep } from './OfficeSelectionStep'
 import { ManualOfficeEntryStep } from './ManualOfficeEntryStep'
 import { PathToVictoryStep } from './PathToVictoryStep'
 import { OutreachPlanStep, computeWeeksRemaining } from './OutreachPlanStep'
+import { computeBudget, resolveVoterContactGoal } from './budget'
+import { computeCampaignHours } from './volunteerHours'
 import { PledgeStep } from './PledgeStep'
 import OnboardingTopBar from '../shared/OnboardingTopBar'
 import { WhyThisMatters } from './WhyThisMatters'
@@ -356,6 +358,7 @@ export default function OnboardingFlow({
   const [isSavingOffice, setIsSavingOffice] = useState(false)
   const [isHydratingOffice, setIsHydratingOffice] = useState(false)
   const isAdvancingRef = useRef(false)
+  const partyDesignationBlockedFiredRef = useRef(false)
   const [liveCampaign, setLiveCampaign] = useState<Campaign | null>(
     initialCampaign,
   )
@@ -445,6 +448,31 @@ export default function OnboardingFlow({
     window.scrollTo(0, 0)
   }, [activeStepId])
 
+  // V2 step-funnel `Viewed` events: fire once per step, the first time it is
+  // entered. The seen-set ref dedupes so neither a re-render nor back-and-forth
+  // navigation re-fires. manual-office-entry has no V2 event.
+  const viewedStepsFiredRef = useRef<Set<OnboardingStepId>>(new Set())
+  useEffect(() => {
+    const viewedEventByStep: Partial<Record<OnboardingStepId, string>> = {
+      welcome: EVENTS.OnboardingV2.WelcomeViewed,
+      'ballot-status': EVENTS.OnboardingV2.BallotStatusViewed,
+      'party-affiliation': EVENTS.OnboardingV2.PartyDesignationViewed,
+      'office-selection': EVENTS.OnboardingV2.OfficeViewed,
+      'path-to-victory': EVENTS.OnboardingV2.VotesNeededViewed,
+      'voter-demographics': EVENTS.OnboardingV2.VoterInsightsViewed,
+      'outreach-plan': EVENTS.OnboardingV2.ResourcesViewed,
+      pledge: EVENTS.OnboardingV2.PledgeViewed,
+    }
+    const viewedEvent = viewedEventByStep[activeStepId]
+    if (viewedEvent && !viewedStepsFiredRef.current.has(activeStepId)) {
+      viewedStepsFiredRef.current.add(activeStepId)
+      trackEvent(viewedEvent, { campaignId: campaign?.id })
+    }
+    // campaign?.id intentionally omitted from deps: the seen-set guards the
+    // single fire, and the id resolving mid-step must not re-trigger it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStepId])
+
   useEffect(() => {
     if (activeStepId !== 'office-selection') setIsHydratingOffice(false)
   }, [activeStepId])
@@ -502,6 +530,22 @@ export default function OnboardingFlow({
     answers.structuredOffice?.positionName,
     queryClient,
   ])
+
+  // V2 disqualification event: selecting a major party shows the blocking
+  // alert (there is no Continue). Dedupe to once per session via a ref so
+  // toggling between Democrat and Republican does not spam the event.
+  useEffect(() => {
+    if (
+      isMajorPartyAffiliation(answers.partyAffiliation) &&
+      !partyDesignationBlockedFiredRef.current
+    ) {
+      partyDesignationBlockedFiredRef.current = true
+      trackEvent(EVENTS.OnboardingV2.PartyDesignationBlocked, {
+        campaignId: campaign?.id,
+        partyAffiliation: answers.partyAffiliation,
+      })
+    }
+  }, [answers.partyAffiliation, campaign?.id])
 
   const updateAnswers = (answerPatch: Partial<OnboardingAnswers>) => {
     setAnswers((currentAnswers) => ({ ...currentAnswers, ...answerPatch }))
@@ -592,6 +636,13 @@ export default function OnboardingFlow({
         officeName: office.positionName,
         campaignId: campaign.id,
       })
+      trackEvent(EVENTS.OnboardingV2.OfficeCompleted, {
+        campaignId: campaign.id,
+        officeName: office.positionName,
+        officeLevel: office.level,
+        officeState: office.state,
+        electionDate: office.electionDay,
+      })
       return true
     }
 
@@ -628,6 +679,13 @@ export default function OnboardingFlow({
       officeType: office.level,
       officeName: office.positionName,
       campaignId: newCampaign.id,
+    })
+    trackEvent(EVENTS.OnboardingV2.OfficeCompleted, {
+      campaignId: newCampaign.id,
+      officeName: office.positionName,
+      officeLevel: office.level,
+      officeState: office.state,
+      electionDate: office.electionDay,
     })
     return true
   }
@@ -740,6 +798,10 @@ export default function OnboardingFlow({
       party,
       campaignId: campaign?.id,
     })
+    trackEvent(EVENTS.OnboardingV2.PartyDesignationCompleted, {
+      campaignId: campaign?.id,
+      partyAffiliation: affiliation,
+    })
     if (user?.id) {
       await identifyUser(user.id, { affiliation: party, party })
     }
@@ -787,6 +849,10 @@ export default function OnboardingFlow({
       pledgeVersion: PLEDGE_VERSION,
       campaignId: effectiveCampaignId,
     })
+    trackEvent(EVENTS.OnboardingV2.PledgeCompleted, {
+      campaignId: effectiveCampaignId,
+      pledgeVersion: PLEDGE_VERSION,
+    })
     if (user?.id) {
       await identifyUser(user.id, {
         pledgeCompleted: true,
@@ -811,10 +877,17 @@ export default function OnboardingFlow({
       trackEvent(EVENTS.Onboarding.WelcomeCompleted, {
         campaignId: campaign?.id,
       })
+      trackEvent(EVENTS.OnboardingV2.WelcomeCompleted, {
+        campaignId: campaign?.id,
+      })
     }
     if (activeStep.id === 'path-to-victory' && (liveCampaign || campaign)) {
       const trackedCampaign = liveCampaign ?? campaign
       trackEvent(EVENTS.Onboarding.PathToVictoryCompleted, {
+        campaignId: trackedCampaign?.id,
+        winNumber: trackedCampaign?.raceTargetMetrics?.winNumber ?? 0,
+      })
+      trackEvent(EVENTS.OnboardingV2.VotesNeededCompleted, {
         campaignId: trackedCampaign?.id,
         winNumber: trackedCampaign?.raceTargetMetrics?.winNumber ?? 0,
       })
@@ -823,6 +896,45 @@ export default function OnboardingFlow({
       trackEvent(EVENTS.Onboarding.KnowYourVotersCompleted, {
         campaignId: campaign?.id,
       })
+      trackEvent(EVENTS.OnboardingV2.VoterInsightsCompleted, {
+        campaignId: campaign?.id,
+      })
+    }
+    if (activeStep.id === 'outreach-plan') {
+      const metrics = liveCampaign?.raceTargetMetrics ?? null
+      const winNumber = metrics?.winNumber ?? 0
+      const projectedTurnout = metrics?.projectedTurnout ?? 0
+      const voterContactGoal = resolveVoterContactGoal(
+        metrics?.voterContactGoal,
+        winNumber,
+      )
+      // Mirror OutreachPlanStep: resources only render when both inputs are
+      // positive. When they are not, the step shows "unavailable" and there
+      // are no figures to report — send the event with the values omitted.
+      if (voterContactGoal > 0 && projectedTurnout > 0) {
+        const weeksRemaining = computeWeeksRemaining(
+          liveCampaign?.details?.electionDate,
+        )
+        // minimumBudget is the total whole-dollar campaign budget (not
+        // monthly). minimumVolunteerHours is the volunteer (door-knocking)
+        // hours total over the remaining weeks (not per week), matching the
+        // "Volunteers" row OutreachPlanStep renders.
+        const budget = computeBudget(
+          voterContactGoal,
+          projectedTurnout,
+          metrics?.filingFee ?? null,
+        )
+        const hours = computeCampaignHours(voterContactGoal, weeksRemaining)
+        trackEvent(EVENTS.OnboardingV2.ResourcesCompleted, {
+          campaignId: liveCampaign?.id ?? campaign?.id,
+          minimumBudget: budget.totalBudget,
+          minimumVolunteerHours: hours.volunteerHours,
+        })
+      } else {
+        trackEvent(EVENTS.OnboardingV2.ResourcesCompleted, {
+          campaignId: liveCampaign?.id ?? campaign?.id,
+        })
+      }
     }
     if (
       activeStep.id === 'office-selection' &&
@@ -880,6 +992,10 @@ export default function OnboardingFlow({
       trackEvent(EVENTS.Onboarding.BallotStatusCompleted, {
         candidateStage,
         campaignId: campaign?.id,
+      })
+      trackEvent(EVENTS.OnboardingV2.BallotStatusCompleted, {
+        campaignId: campaign?.id,
+        ballotStatus: answers.ballotStatus,
       })
       if (user?.id) {
         await identifyUser(user.id, {

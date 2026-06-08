@@ -568,6 +568,44 @@ export const EVENTS = {
     SourcesExpanded: 'Briefing Assistant - Sources Expanded',
     TocItemClicked: 'Briefing Assistant - TOC Item Clicked',
   },
+  // V2 onboarding flow that ends in the generated campaign plan. All new
+  // events (no reuse of legacy Onboarding/Dashboard events) so V2 funnels
+  // never mix with historical data. Server-side generation is tracked
+  // separately under `Campaign Plan V2 -` in gp-api.
+  OnboardingV2: {
+    WelcomeViewed: 'Onboarding V2 - Welcome Viewed',
+    WelcomeCompleted: 'Onboarding V2 - Welcome Completed',
+    BallotStatusViewed: 'Onboarding V2 - Ballot Status Viewed',
+    BallotStatusCompleted: 'Onboarding V2 - Ballot Status Completed',
+    PartyDesignationViewed: 'Onboarding V2 - Party Designation Viewed',
+    PartyDesignationCompleted: 'Onboarding V2 - Party Designation Completed',
+    PartyDesignationBlocked: 'Onboarding V2 - Party Designation Blocked',
+    OfficeViewed: 'Onboarding V2 - Office Viewed',
+    OfficeCompleted: 'Onboarding V2 - Office Completed',
+    VotesNeededViewed: 'Onboarding V2 - Votes Needed Viewed',
+    VotesNeededCompleted: 'Onboarding V2 - Votes Needed Completed',
+    VoterInsightsViewed: 'Onboarding V2 - Voter Insights Viewed',
+    VoterInsightsCompleted: 'Onboarding V2 - Voter Insights Completed',
+    ResourcesViewed: 'Onboarding V2 - Resources Viewed',
+    ResourcesCompleted: 'Onboarding V2 - Resources Completed',
+    PledgeViewed: 'Onboarding V2 - Pledge Viewed',
+    PledgeCompleted: 'Onboarding V2 - Pledge Completed',
+    PlanDownloaded: 'Onboarding V2 - Plan Downloaded',
+    CampaignManagerClicked: 'Onboarding V2 - Campaign Manager Clicked',
+    MediaRequested: 'Onboarding V2 - Media Requested',
+    MediaResultsReceived: 'Onboarding V2 - Media Results Received',
+    MediaDisplayed: 'Onboarding V2 - Media Displayed',
+    CommunityEventsRequested: 'Onboarding V2 - Community Events Requested',
+    CommunityEventsResultsReceived:
+      'Onboarding V2 - Community Events Results Received',
+    CommunityEventsDisplayed: 'Onboarding V2 - Community Events Displayed',
+    StrategicLandscapeRequested:
+      'Onboarding V2 - Strategic Landscape Requested',
+    StrategicLandscapeResultsReceived:
+      'Onboarding V2 - Strategic Landscape Results Received',
+    StrategicLandscapeDisplayed:
+      'Onboarding V2 - Strategic Landscape Displayed',
+  },
 } as const
 
 export const getStoredSessionId = (): number => {

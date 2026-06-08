@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Download } from 'lucide-react'
@@ -11,6 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@styleguide'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { CAMPAIGN_QUERY_KEY } from '@shared/hooks/CampaignProvider'
 import { useUser } from '@shared/hooks/useUser'
@@ -42,6 +43,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
   const [clientUser] = useUser()
   const user = clientUser ?? initialUser
   const [campaign] = useCampaign()
+  const campaignId = campaign?.id
   const [shareOpen, setShareOpen] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [hasDownloaded, setHasDownloaded] = useState(false)
@@ -274,12 +276,96 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     !isLocalNewsGenerating &&
     !voterIssuesQuery.isPending
 
+  // Per-resource lifecycle events fire exactly once each. The hooks poll on
+  // an interval, so an effect that runs on every status change would re-fire
+  // without a guard. A single ref of already-fired event keys backs a small
+  // `fireOnce` helper used by all nine lifecycle effects below.
+  const firedEventsRef = useRef<Set<string>>(new Set())
+  const fireOnce = (
+    event: string,
+    properties: Record<string, string | number | undefined>,
+  ): void => {
+    if (firedEventsRef.current.has(event)) return
+    firedEventsRef.current.add(event)
+    trackEvent(event, properties)
+  }
+
+  const localNewsReady = localNewsQuery.data?.status === 'ready'
+  const localNewsOutletCount = pressOutletsFromApi?.length ?? 0
+  const communityEventsReady = events.data !== undefined
+  const communityEventsCount = events.data?.events?.length ?? 0
+  const strategyReady = strategy.data !== undefined
+
+  // Requested — fire once on mount, when the success page is first waiting on
+  // each resource (the queries are enabled immediately). Wait for a resolved
+  // campaignId so the once-fire isn't spent on an undefined id while the
+  // invalidated campaign query is still refetching.
+  useEffect(() => {
+    if (campaignId === undefined) return
+    fireOnce(EVENTS.OnboardingV2.MediaRequested, { campaignId })
+    fireOnce(EVENTS.OnboardingV2.CommunityEventsRequested, { campaignId })
+    fireOnce(EVENTS.OnboardingV2.StrategicLandscapeRequested, { campaignId })
+  }, [campaignId])
+
+  // Results Received — fire once when each resource's status first hits ready.
+  useEffect(() => {
+    if (localNewsReady) {
+      fireOnce(EVENTS.OnboardingV2.MediaResultsReceived, {
+        campaignId,
+        outletCount: localNewsOutletCount,
+      })
+    }
+  }, [localNewsReady, localNewsOutletCount, campaignId])
+
+  useEffect(() => {
+    if (communityEventsReady) {
+      fireOnce(EVENTS.OnboardingV2.CommunityEventsResultsReceived, {
+        campaignId,
+        eventCount: communityEventsCount,
+      })
+    }
+  }, [communityEventsReady, communityEventsCount, campaignId])
+
+  useEffect(() => {
+    if (strategyReady) {
+      fireOnce(EVENTS.OnboardingV2.StrategicLandscapeResultsReceived, {
+        campaignId,
+      })
+    }
+  }, [strategyReady, campaignId])
+
+  // Displayed — fire once when the corresponding plan section renders with
+  // real (non-skeleton) data. The ready data above is what PlanSections
+  // receives, so "ready" here is the same instant the section swaps the
+  // skeleton for content. Kept as separate effects so each dedup key is
+  // independent.
+  useEffect(() => {
+    if (localNewsReady) {
+      fireOnce(EVENTS.OnboardingV2.MediaDisplayed, { campaignId })
+    }
+  }, [localNewsReady, campaignId])
+
+  useEffect(() => {
+    if (communityEventsReady) {
+      fireOnce(EVENTS.OnboardingV2.CommunityEventsDisplayed, { campaignId })
+    }
+  }, [communityEventsReady, campaignId])
+
+  useEffect(() => {
+    if (strategyReady) {
+      fireOnce(EVENTS.OnboardingV2.StrategicLandscapeDisplayed, { campaignId })
+    }
+  }, [strategyReady, campaignId])
+
   const handleShare = () => setShareOpen(true)
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
 
-  const handleDownload = async () => {
+  const handleDownload = async (
+    source: 'download-button' | 'reminder-modal',
+  ) => {
     if (downloading || !planReady) return
+    trackEvent(EVENTS.OnboardingV2.PlanDownloaded, { campaignId, source })
     setDownloading(true)
     try {
       await downloadCampaignPlanPdf(plan, { liveUrl: shareUrl || undefined })
@@ -289,21 +375,27 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
     }
   }
 
-  const goToCampaignManager = () => router.push('/dashboard')
+  const goToCampaignManager = (source: 'button' | 'reminder-modal') => {
+    trackEvent(EVENTS.OnboardingV2.CampaignManagerClicked, {
+      campaignId,
+      source,
+    })
+    router.push('/dashboard')
+  }
 
   // Remind the user to grab a copy before leaving, but only if they
   // haven't already downloaded. The reminder reappears on every attempt
   // until a download succeeds.
   const handleContinue = () => {
     if (hasDownloaded) {
-      goToCampaignManager()
+      goToCampaignManager('button')
       return
     }
     setReminderOpen(true)
   }
 
   const handleReminderDownload = async () => {
-    await handleDownload()
+    await handleDownload('reminder-modal')
     setReminderOpen(false)
   }
 
@@ -361,7 +453,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
               type="button"
               variant="outline"
               size="large"
-              onClick={handleDownload}
+              onClick={() => handleDownload('download-button')}
               loading={downloading}
               aria-label="Download campaign plan"
               className="sm:hidden"
@@ -396,7 +488,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
               variant="outline"
               size="large"
               icon={<Download className="size-5" />}
-              onClick={handleDownload}
+              onClick={() => handleDownload('download-button')}
               loading={downloading}
               className="hidden sm:inline-flex"
             >
@@ -446,7 +538,7 @@ const SuccessPage = ({ initialUser }: SuccessPageProps): React.JSX.Element => {
         planReady={planReady}
         downloading={downloading}
         onDownloadNow={handleReminderDownload}
-        onContinue={goToCampaignManager}
+        onContinue={() => goToCampaignManager('reminder-modal')}
       />
     </div>
   )
