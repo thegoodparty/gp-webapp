@@ -355,6 +355,8 @@ export const EVENTS = {
       CandidateProfileViewed: 'Pro Upgrade - Candidate Profile Viewed',
       FilingDetailsViewed: 'Pro Upgrade - Filing Details Viewed',
       PaymentViewed: 'Pro Upgrade - Payment Viewed',
+      SuccessViewed: 'Pro Upgrade - Success Viewed',
+      SuccessContinue: 'Pro Upgrade - Success: Click continue',
       PinEntryViewed: 'Pro Upgrade - PIN Entry Viewed',
     },
   },
