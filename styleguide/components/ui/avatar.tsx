@@ -6,71 +6,52 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@styleguide/lib/utils'
 
-const avatarVariants = cva(
-  'relative flex shrink-0 overflow-hidden rounded-full',
-  {
-    variants: {
-      size: {
-        xSmall: 'size-6',
-        small: 'size-8',
-        medium: 'size-10',
-        large: 'size-12',
-        xLarge: 'size-16',
-      },
-      variant: {
-        default: 'bg-avatar-default-background',
-        brightyellow: 'bg-avatar-brightyellow-background',
-        lavender: 'bg-avatar-lavender-background',
-        halogreen: 'bg-avatar-halogreen-background',
-        blue: 'bg-avatar-blue-background',
-        waxflower: 'bg-avatar-waxflower-background',
-      },
+const avatarVariants = cva('relative flex shrink-0 overflow-hidden', {
+  variants: {
+    size: {
+      xSmall: 'size-6',
+      small: 'size-8',
+      medium: 'size-10',
+      large: 'size-12',
+      xLarge: 'size-16',
     },
-    defaultVariants: {
-      size: 'medium',
-      variant: 'default',
+    shape: {
+      circle: 'rounded-full',
+      square: 'rounded-lg',
     },
   },
-)
+  defaultVariants: {
+    size: 'medium',
+    shape: 'circle',
+  },
+})
 
-const avatarBadgeVariants = cva(
-  'absolute flex items-center justify-center rounded-full bg-brand-cream ring-2 ring-brand-cream',
-  {
-    variants: {
-      size: {
-        small: 'size-3',
-        medium: 'size-4',
-        large: 'size-5',
-      },
-      position: {
-        'top-left': 'top-0 left-0',
-        'top-right': 'top-0 right-0',
-        'bottom-left': 'bottom-0 left-0',
-        'bottom-right': 'bottom-0 right-0',
-      },
-    },
-    defaultVariants: {
-      size: 'medium',
-      position: 'bottom-right',
-    },
-  },
-)
+type AvatarSize = 'xSmall' | 'small' | 'medium' | 'large' | 'xLarge'
+type AvatarShape = 'circle' | 'square'
+
+type AvatarContext = { size: AvatarSize; shape: AvatarShape }
+
+const AvatarCtx = React.createContext<AvatarContext>({
+  size: 'medium',
+  shape: 'circle',
+})
 
 interface AvatarProps
-  extends React.ComponentProps<typeof AvatarPrimitive.Root>,
+  extends
+    React.ComponentProps<typeof AvatarPrimitive.Root>,
     VariantProps<typeof avatarVariants> {}
 
-interface AvatarBadgeProps
-  extends React.ComponentProps<'div'>,
-    VariantProps<typeof avatarBadgeVariants> {}
-
-function Avatar({ className, size, variant, ...props }: AvatarProps) {
+function Avatar({ className, size, shape, ...props }: AvatarProps) {
   return (
-    <AvatarPrimitive.Root
-      data-slot="avatar"
-      className={cn(avatarVariants({ size, variant, className }))}
-      {...props}
-    />
+    <AvatarCtx.Provider
+      value={{ size: size ?? 'medium', shape: shape ?? 'circle' }}
+    >
+      <AvatarPrimitive.Root
+        data-slot="avatar"
+        className={cn(avatarVariants({ size, shape, className }))}
+        {...props}
+      />
+    </AvatarCtx.Provider>
   )
 }
 
@@ -91,11 +72,14 @@ function AvatarFallback({
   className,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
+  const { size, shape } = React.useContext(AvatarCtx)
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        'flex size-full items-center justify-center rounded-full text-sm font-medium',
+        'flex size-full items-center justify-center bg-muted border border-base-border font-medium',
+        shape === 'square' ? 'rounded-lg' : 'rounded-full',
+        size === 'xSmall' ? 'text-xs' : 'text-sm',
         className,
       )}
       {...props}
@@ -108,11 +92,13 @@ function AvatarIcon({
   children,
   ...props
 }: React.ComponentProps<'div'>) {
+  const { shape } = React.useContext(AvatarCtx)
   return (
     <div
       data-slot="avatar-icon"
       className={cn(
-        'flex size-full items-center justify-center rounded-full',
+        'flex size-full items-center justify-center bg-muted border border-base-border',
+        shape === 'square' ? 'rounded-lg' : 'rounded-full',
         className,
       )}
       {...props}
@@ -122,25 +108,9 @@ function AvatarIcon({
   )
 }
 
-function AvatarBadge({
-  className,
-  size,
-  position,
-  ...props
-}: AvatarBadgeProps) {
-  return (
-    <div
-      data-slot="avatar-badge"
-      className={cn(avatarBadgeVariants({ size, position, className }))}
-      {...props}
-    />
-  )
-}
-
 // Compound component pattern
 Avatar.Image = AvatarImage
 Avatar.Fallback = AvatarFallback
 Avatar.Icon = AvatarIcon
-Avatar.Badge = AvatarBadge
 
-export { Avatar, AvatarImage, AvatarFallback, AvatarIcon, AvatarBadge }
+export { Avatar, AvatarImage, AvatarFallback, AvatarIcon }
