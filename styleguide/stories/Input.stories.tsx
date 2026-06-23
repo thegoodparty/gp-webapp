@@ -49,6 +49,12 @@ export const Playground: StoryObj<PlaygroundArgs> = {
   ),
 }
 
+export const Default: Story = {
+  args: {
+    placeholder: 'Enter your text here',
+  },
+}
+
 export const WithLabel: Story = {
   render: () => (
     <div className="grid w-full max-w-sm items-center gap-1.5">
